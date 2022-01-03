@@ -1,0 +1,83 @@
+import styled from "styled-components";
+import {Column, ColumnConfig} from "@ant-design/charts";
+
+const dataSource = [
+    {
+        period: '2017',
+        value: 2100,
+        label: 'Inspections'
+    }, {
+        period: '2017',
+        value: 75,
+        label: 'Leaks Detected'
+    },
+    {
+        period: '2018',
+        value: 2075,
+        label: 'Inspections'
+
+    }, {
+        period: '2018',
+        value: 60,
+        label: 'Leaks Detected'
+
+    }, {
+        period: '2019',
+        value: 1900,
+        label: 'Inspections'
+
+    }, {
+        period: '2019',
+        value: 100,
+        label: 'Leaks Detected'
+
+    }, {
+        period: '2020',
+        value: 1750,
+        label: 'Inspections'
+
+    }, {
+        period: '2020',
+        value: 50,
+        label: 'Leaks Detected'
+
+    }
+]
+
+const Wrapper = styled.div`
+  background: #fff;
+  padding: 20px;
+  width: 40%;
+`
+
+
+const LDAR = () => {
+    const config: ColumnConfig = {
+        data: dataSource,
+        // isStack: true,
+        xField: 'period',
+        yField: 'value',
+        seriesField: 'label',
+        isGroup: true,
+        label: {
+            position: 'middle',
+            layout: [
+                {type: 'interval-adjust-position'},
+                {type: 'interval-hide-overlap'},
+                {type: 'adjust-color'},
+            ],
+        }
+    };
+    return (
+        <Wrapper>
+            <h2>
+                LDAR Leaks Detected - YoY
+            </h2>
+
+            <Column {...config} />
+
+        </Wrapper>
+    )
+}
+
+export default LDAR
