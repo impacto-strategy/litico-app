@@ -3,7 +3,7 @@ import ResourceService from "../Services/ResourceService";
 import {Card, Input, List, Space, Tag} from "antd";
 import {CheckCircleFilled} from "@ant-design/icons";
 
-const SasbIndicatorSelector: FC<{ defaultValue: any[], onUpdate: (ids: any[]) => void, onSelect?: (standard: any) => void }> = ({
+const SasbIndicatorSelector: FC<{ defaultValue: any[], onUpdate?: (ids: any[]) => void, onSelect?: (standard: any) => void }> = ({
                                                                                                                                     defaultValue = [],
                                                                                                                                     onUpdate = (ids) => null,
                                                                                                                                     onSelect = () => null
@@ -27,7 +27,6 @@ const SasbIndicatorSelector: FC<{ defaultValue: any[], onUpdate: (ids: any[]) =>
         ResourceService.index({
             resourceName: 'sasb-standards'
         }).then(({data}) => setIndicators(data))
-
     }, [setIndicators])
 
     const selectIndicator = useCallback((id: any) => {
@@ -53,7 +52,9 @@ const SasbIndicatorSelector: FC<{ defaultValue: any[], onUpdate: (ids: any[]) =>
             onUpdate(defaultValue)
         }
         getIndicators()
-    }, [defaultValue, getIndicators, onUpdate])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
 
     return (
         <div style={{width: '100%'}}>

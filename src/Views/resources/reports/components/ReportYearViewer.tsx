@@ -133,7 +133,7 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
         return updatingMetric?.id
     }, [updatingMetric])
 
-    const loadSasbStandard = (standard: any) => {
+    const loadSasbStandard = useCallback((standard: any) => {
         form.setFieldsValue({
             name: standard.topic,
             description: standard.accounting_metric,
@@ -143,7 +143,7 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
         })
 
         setLoadingSasbStandards(false)
-    }
+    }, [form])
 
     const editThisMetric = useCallback((item: any) => {
         setUpdatingMetric(true)
@@ -273,7 +273,7 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
                                     onCancel={() => setLoadingSasbStandards(false)}
                                     width={1000}
                                 >
-                                    <SasbIndicatorSelector onSelect={loadSasbStandard} defaultValue={[]}
+                                    <SasbIndicatorSelector defaultValue={[]} onSelect={loadSasbStandard}
                                                            onUpdate={() => null}/>
                                 </Modal>}
 
