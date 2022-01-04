@@ -90,7 +90,7 @@ const Home: FC = () => {
                                     src={"https://ik.imagekit.io/nginr/hrm-favicon__0GlLjdC7.png?updatedAt=1636936723321"}
                                     width={24} alt={""}/>
                                 <div>HRM Resources</div>
-                                <span>John Doe</span>
+                                <span>{user.name}</span>
                                 {user && (
                                     <span style={{cursor: 'pointer'}} onClick={handleLogout}>
                                         Logout

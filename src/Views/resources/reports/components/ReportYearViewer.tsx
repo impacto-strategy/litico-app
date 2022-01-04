@@ -146,7 +146,8 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
     }, [form])
 
     const editThisMetric = useCallback((item: any) => {
-        setUpdatingMetric(true)
+        setUpdatingMetric(item)
+
         form.setFieldsValue({
             ...item
         })

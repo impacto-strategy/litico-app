@@ -49,11 +49,9 @@ export function AuthProvider({children}: any) {
 
     function logout() {
         return new Promise((res) => {
-            AuthService.logout().then((res2) => {
-                if (res2.status === 204) {
-                    localStorage.removeItem('_U')
-                    setUser(undefined)
-                }
+            AuthService.logout().finally(() => {
+                localStorage.removeItem('_U')
+                setUser(undefined)
                 res(0);
             })
         });

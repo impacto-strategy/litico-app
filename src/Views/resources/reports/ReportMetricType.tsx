@@ -48,7 +48,6 @@ const ReportMetricType = () => {
     return (
         <Wrapper>
             <Space direction="vertical" style={{width: '100%'}} size={"large"}>
-
                 <PageHeader
                     ghost={false}
                     onBack={() => window.history.back()}
@@ -61,7 +60,8 @@ const ReportMetricType = () => {
                             {metricData && <Row>
                                 <Col xs={2} sm={4} md={6} lg={8} xl={10}>
                                     <Space direction={'vertical'}>
-                                        {metricData.result && <Card title={"Total"} style={{marginBottom: 20}}>
+
+                                        {!!metricData.result && <Card title={"Total"} style={{marginBottom: 20}}>
                                             <Statistic
                                                 value={metricData.result}
                                                 valueStyle={{color: "#1890ff"}}
@@ -69,7 +69,7 @@ const ReportMetricType = () => {
                                             />
                                         </Card>}
                                         <p><Tag
-                                            color={['High', 'Very Hight'].includes(metricData.risk) ? 'red' : 'orange'}>Risk: {metricData.risk}</Tag>
+                                            color={['High', 'Very High'].includes(metricData.risk) ? 'red' : 'orange'}>Risk: {metricData.risk}</Tag>
                                             <Tag>{metricData.isNumeric ? 'Quantitative' : 'Qualitative'}</Tag>
                                         </p>
                                         <p>{metricData.description}</p>
