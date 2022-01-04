@@ -1,12 +1,11 @@
 import axios from "axios";
 
 const APIClient = axios.create({
-    baseURL: 'http://localhost',
+    baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app',
     withCredentials: true, // required to handle the CSRF token
 });
 
 APIClient.defaults.withCredentials = true
-
 
 /*
  * Add a response interceptor
