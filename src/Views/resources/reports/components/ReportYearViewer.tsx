@@ -100,15 +100,16 @@ const ReportYearViewer: FC<ReportYearViewer> = ({report}) => {
         ResourceService.store({
             resourceName: 'metric-types',
             fields
-        }).then(({data}) => {
+        }).then(() => {
             setUpdatingMetric(false)
             getMetricTypes()
+            form.resetFields()
         }).catch(e => {
             console.log(e)
         }).finally(() => {
             setInitLoading(false)
         })
-    }, [])
+    }, [form, getMetricTypes])
 
     const updateResource = useCallback((fields, id) => {
 
@@ -117,32 +118,39 @@ const ReportYearViewer: FC<ReportYearViewer> = ({report}) => {
             resourceName: 'metric-types',
             resourceID: id,
             fields
-        }).then(({data}) => {
+        }).then(() => {
             setUpdatingMetric(false)
             getMetricTypes()
+            form.resetFields()
         }).catch(e => {
             console.log(e)
         }).finally(() => {
             setInitLoading(false)
         })
-    }, [])
+    }, [form, getMetricTypes])
 
     const editingExistingMetric = useMemo(() => {
         return updatingMetric?.id
     }, [updatingMetric])
 
     const loadSasbStandard = (standard: any) => {
-        console.log(standard)
         form.setFieldsValue({
             name: standard.topic,
             description: standard.accounting_metric,
             formula: 'SUM',
-            isNumeric: standard.unit_of_measure ? true : false,
+            isNumeric: !!standard.unit_of_measure,
             measurement_units: standard.unit_of_measure ?? undefined
         })
 
         setLoadingSasbStandards(false)
     }
+
+    const editThisMetric = useCallback((item: any) => {
+        setUpdatingMetric(true)
+        form.setFieldsValue({
+            ...item
+        })
+    }, [form])
 
     return (
         <div>
@@ -193,13 +201,13 @@ const ReportYearViewer: FC<ReportYearViewer> = ({report}) => {
                                     dataSource={template.metric_types}
                                     renderItem={(item: any) => <List.Item
                                         actions={[<Button key={'edit button'}
-                                                          onClick={() => setUpdatingMetric(item)}>Edit</Button>]}
+                                                          onClick={() => editThisMetric(item)}>Edit</Button>]}
                                     >
                                         <List.Item.Meta
                                             title={item.name}
                                             description={<Space direction={'vertical'}>
                                                 <div><Tag
-                                                    color={['High', 'Very Hight'].includes(item.risk) ? 'red' : 'orange'}>Risk: {item.risk}</Tag>
+                                                    color={['High', 'Very High'].includes(item.risk) ? 'red' : 'orange'}>Risk: {item.risk}</Tag>
                                                     <Tag>{item.isNumeric ? 'Quantitative' : 'Qualitative'}</Tag>
                                                 </div>
                                                 <p>{item.description}</p></Space>}
@@ -222,13 +230,13 @@ const ReportYearViewer: FC<ReportYearViewer> = ({report}) => {
 
                 size={"large"}
                 onClose={() => Modal.confirm({
-                    title: 'Do you Want to discard unsaved changes?',
+                    title: 'Do you want to discard unsaved changes?',
                     icon: <ExclamationCircleOutlined/>,
                     onOk() {
+                        form.resetFields()
                         setUpdatingMetric(false)
                     },
                     onCancel() {
-
                     },
                 })}
                 visible
@@ -239,8 +247,11 @@ const ReportYearViewer: FC<ReportYearViewer> = ({report}) => {
                         layout="vertical"
                         initialValues={{
                             year: report.year,
-                            ...updatingMetric
+                            isNumeric: false,
+                            isPositive: true,
+                            risk: "Moderate"
                         }}
+
                         onFinish={(values) => editingExistingMetric ? updateResource(values, updatingMetric.id) : createResource(values)}
                     >
                         <Tabs defaultActiveKey="1" type="card" size={"large"}
@@ -251,6 +262,7 @@ const ReportYearViewer: FC<ReportYearViewer> = ({report}) => {
                                 <Divider orientation={"right"}>
                                     <Button type={"ghost"} onClick={() => setLoadingSasbStandards(true)}>Load SASB
                                         Standard</Button>
+                                    <Button type={"ghost"} onClick={() => form.resetFields()}>Clear</Button>
                                 </Divider>
 
                                 {loadingSasbStandards && <Modal
@@ -262,7 +274,7 @@ const ReportYearViewer: FC<ReportYearViewer> = ({report}) => {
                                     width={1000}
                                 >
                                     <SasbIndicatorSelector onSelect={loadSasbStandard} defaultValue={[]}
-                                                           onUpdate={(id) => null}/>
+                                                           onUpdate={() => null}/>
                                 </Modal>}
 
                                 <Form.Item required label="Year" name={"year"}>
@@ -287,7 +299,7 @@ const ReportYearViewer: FC<ReportYearViewer> = ({report}) => {
 
 
                                 <Form.Item valuePropName={"checked"} label="Is Numeric?" name={"isNumeric"}>
-                                    <Switch defaultChecked onChange={setIsNumeric}/>
+                                    <Switch onChange={setIsNumeric}/>
                                 </Form.Item>
                                 {isNumeric && <>
                                     <Form.Item label="Measurement Units" name={"measurement_units"}>
@@ -303,7 +315,6 @@ const ReportYearViewer: FC<ReportYearViewer> = ({report}) => {
                                 </>}
 
                                 <Form.Item label="Risk" name={"risk"}>
-
                                     <Select
                                         options={['None', 'Negligible', 'Low', 'Moderate', 'High', 'Very High'].map((i) => ({value: i}))}/>
                                 </Form.Item>

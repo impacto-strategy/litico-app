@@ -29,7 +29,7 @@ const ReportCategorySelector: FC<{
     }, [getOptions])
 
     return (
-        <AutoComplete options={modOptions} placeholder="Please enter facility name"
+        <AutoComplete options={modOptions} placeholder="Please enter category"
                       onSelect={() => null}
                       allowClear
                       defaultValue={value?.toString()}
