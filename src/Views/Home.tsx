@@ -81,14 +81,14 @@ const Home: FC = () => {
 
                     <Row>
                         <Col span={8}>
-                            <a onClick={() => setCollapsed(!collapsed)} className={"trigger"}>
-                                {collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}</a>
+                            <div onClick={() => setCollapsed(!collapsed)} className={"trigger"}>
+                                {collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}</div>
                         </Col>
                         <Col span={8} offset={8}>
                             <div className={"companySelector"}>
                                 <img
                                     src={"https://ik.imagekit.io/nginr/hrm-favicon__0GlLjdC7.png?updatedAt=1636936723321"}
-                                    width={24}/>
+                                    width={24} alt={""}/>
                                 <div>HRM Resources</div>
                                 <span>John Doe</span>
                                 {user && (

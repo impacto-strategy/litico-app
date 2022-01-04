@@ -21,7 +21,6 @@ const EditReport = () => {
 
     const {year, quarter} = useParams()
 
-    const [initLoading, setInitLoading] = useState(true)
     const [metricTypes, setMetricTypes] = useState([])
 
 
@@ -46,13 +45,13 @@ const EditReport = () => {
             params: {year, withSessionCount: true}
         })
             .then(({data}) => setMetricTypes(data.metric_types))
-            .finally(() => setInitLoading(false))
-    }, [setMetricTypes])
+
+    }, [year])
 
 
     useEffect(() => {
         getMetrics()
-    }, [])
+    }, [getMetrics])
 
     return (
         <Wrapper>

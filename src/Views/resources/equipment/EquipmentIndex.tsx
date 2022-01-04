@@ -102,7 +102,7 @@ const EquipmentIndex: FC = () => {
             ) : (
                 text
             ),
-    }), []);
+    }), [facility_name, handleReset, handleSearch, searchText, searchedColumn]);
 
     const startMoving = (record: any) => {
         setIsMoving(record)
@@ -160,7 +160,7 @@ const EquipmentIndex: FC = () => {
 
         return _columns
 
-    }, [fields])
+    }, [fields, getColumnSearchProps])
 
     useEffect(() => {
         setDataSource([])
@@ -177,7 +177,7 @@ const EquipmentIndex: FC = () => {
         })
 
 
-    }, [resourceName])
+    }, [facility_name, resourceName])
 
     return (
         <Wrapper>

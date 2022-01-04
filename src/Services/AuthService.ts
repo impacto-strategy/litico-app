@@ -1,6 +1,6 @@
 import APIClient from "./ApiService";
 
-export default {
+const AuthService = {
     async login(payload: { [key: string]: any }) {
         await APIClient.get("/sanctum/csrf-cookie",);
         return APIClient.post("/login", payload);
@@ -33,3 +33,6 @@ export default {
         return APIClient.put("/user/profile-information", payload);
     },
 };
+
+
+export default AuthService

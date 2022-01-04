@@ -53,7 +53,7 @@ const SasbIndicatorSelector: FC<{ defaultValue: any[], onUpdate: (ids: any[]) =>
             onUpdate(defaultValue)
         }
         getIndicators()
-    }, [getIndicators])
+    }, [defaultValue, getIndicators, onUpdate])
 
     return (
         <div style={{width: '100%'}}>
@@ -66,7 +66,7 @@ const SasbIndicatorSelector: FC<{ defaultValue: any[], onUpdate: (ids: any[]) =>
                         grid={{gutter: 16, column: 2}}
                         dataSource={filteredIndicators}
                         renderItem={(item: any) => (
-                            <a key={item.id} onClick={() => selectIndicator(item.id)}><List.Item>
+                            <div key={item.id} onClick={() => selectIndicator(item.id)}><List.Item>
                                 <Card
                                     title={<div> {selectedIndicators.includes(item.id) &&
                                     <CheckCircleFilled style={{marginRight: 10, color: 'green'}}/>} {item.topic}</div>}
@@ -77,7 +77,7 @@ const SasbIndicatorSelector: FC<{ defaultValue: any[], onUpdate: (ids: any[]) =>
                                     </Card.Meta>
                                 </Card>
                             </List.Item>
-                            </a>
+                            </div>
                         )}
                     />
                 </div>

@@ -41,12 +41,12 @@ const NewLocation: FC = () => {
         ResourceService.store({
             resourceName: 'locations',
             fields
-        }).then(res => {
+        }).then(() => {
             navigate('/locations')
         }).catch(e => {
             console.log(e)
         })
-    }, [])
+    }, [navigate])
 
     return (
         <Wrapper>

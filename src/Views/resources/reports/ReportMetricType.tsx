@@ -19,12 +19,7 @@ const ContentWrapper = styled.section`
   padding-bottom: 40px;
 
 `
-const IconText = ({icon, text}: any) => (
-    <Space>
-        {React.createElement(icon)}
-        {text}
-    </Space>
-);
+
 
 const ReportMetricType = () => {
     const {metricTypeID, year, quarter} = useParams()
@@ -44,10 +39,12 @@ const ReportMetricType = () => {
             .then(({data}) => setMetricData(data))
             .finally(() => setInitLoading(false))
 
-    }, [])
+    }, [metricTypeID, quarter, year])
+
     useEffect(() => {
         getMetric()
     }, [getMetric])
+
     return (
         <Wrapper>
             <Space direction="vertical" style={{width: '100%'}} size={"large"}>
@@ -56,7 +53,7 @@ const ReportMetricType = () => {
                     ghost={false}
                     onBack={() => window.history.back()}
                     title={initLoading ?
-                        <div style={{width: 200, background: '#fafafa', height: '20px'}}></div> : metricData?.name}
+                        <div style={{width: 200, background: '#fafafa', height: '20px'}}/> : metricData?.name}
                     subTitle={`ESG Report |  ${year} - ${quarter}`}
                 ><Divider/>
                     <ContentWrapper>

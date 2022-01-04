@@ -32,7 +32,7 @@ const {Panel} = Collapse;
 
 const {Title} = Typography
 
-type ReportYearViewer = {
+type TReportYearViewer = {
     report: any | {
         year: number
         reports: any[]
@@ -52,7 +52,7 @@ const ReportCard = styled.div<{ notStarted?: boolean }>`
   opacity: ${props => props.notStarted ? 0.5 : 1};
 `
 
-const ReportYearViewer: FC<ReportYearViewer> = ({report}) => {
+const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
 
     const [form] = Form.useForm()
 

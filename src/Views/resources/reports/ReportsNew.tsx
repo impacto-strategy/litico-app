@@ -20,12 +20,12 @@ const ReportsNew = () => {
         ResourceService.store({
             resourceName: 'reports',
             fields
-        }).then(res => {
+        }).then(() => {
             navigate('/reports')
         }).catch(e => {
             console.log(e)
         })
-    }, [])
+    }, [navigate])
 
     return (
 

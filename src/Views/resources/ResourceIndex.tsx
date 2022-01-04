@@ -98,7 +98,7 @@ const ResourceIndex: FC = () => {
             ) : (
                 text
             ),
-    }), []);
+    }), [facility_name, handleReset, handleSearch, searchText, searchedColumn]);
 
 
     const columns = useMemo(() => {
@@ -140,7 +140,7 @@ const ResourceIndex: FC = () => {
         })
 
 
-    }, [fields])
+    }, [fields, getColumnSearchProps])
 
     useEffect(() => {
         setDataSource([])
@@ -160,7 +160,7 @@ const ResourceIndex: FC = () => {
         })
 
 
-    }, [resourceName])
+    }, [facility_name, resourceName])
 
     return (
         <Wrapper>

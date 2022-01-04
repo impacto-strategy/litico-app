@@ -1,6 +1,6 @@
-import {FC, useCallback, useEffect, useState} from "react";
+import {FC} from "react";
 import styled from "styled-components";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -23,17 +23,6 @@ const Title = styled.h1`
 
 const MetricsPeriodSelector: FC = () => {
 
-    const navigate = useNavigate()
-
-    const [companiesOption, setCompaniesOption] = useState([])
-
-    useEffect(() => {
-
-    }, [])
-
-    const submitForm = useCallback((fields) => {
-
-    }, [])
 
     return (
         <Wrapper>

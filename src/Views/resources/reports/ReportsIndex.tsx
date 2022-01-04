@@ -16,11 +16,6 @@ const Wrapper = styled.section`
 
 `
 
-const Title = styled.h1`
-  margin-bottom: 40px;
-  font-size: 1.5rem;
-  color: #333;
-`
 
 const ContentWrapper = styled.div`
   background: #fff;
