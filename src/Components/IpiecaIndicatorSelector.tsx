@@ -49,7 +49,8 @@ const IpiecaIndicatorSelector: FC<{ defaultValue: any[], onUpdate: (ids: any[]) 
             onUpdate(defaultValue)
         }
         getIndicators()
-    }, [defaultValue, getIndicators, onUpdate])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [getIndicators, onUpdate])
 
     return (
         <div style={{width: '100%'}}>
