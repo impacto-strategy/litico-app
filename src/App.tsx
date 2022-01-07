@@ -14,7 +14,7 @@ import ReportsNew from "./Views/resources/reports/ReportsNew";
 import AddMetric from "./Views/AddMetric";
 import EditReport from "./Views/resources/reports/EditReport";
 import ReportMetricType from "./Views/resources/reports/ReportMetricType";
-
+import CompaniesNew from "./Views/resources/companies/CompaniesNew";
 
 
 const App: FC = () => {
@@ -32,6 +32,7 @@ const App: FC = () => {
                 <Route path="metrics/:year" element={<Metrics/>}/>
                 <Route path="reports" element={<ReportsIndex/>}/>
                 <Route path="reports/new" element={<ReportsNew/>}/>
+                <Route path="companies/new" element={<CompaniesNew/>}/>
                 <Route path="reports/:year/:quarter" element={<EditReport/>}/>
                 <Route path="reports/:year/:quarter/:metricTypeID" element={<ReportMetricType/>}/>
                 <Route path="add-metric" element={<AddMetric/>}/>

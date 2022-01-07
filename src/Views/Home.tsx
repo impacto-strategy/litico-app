@@ -1,4 +1,4 @@
-import React, {FC, useState} from "react";
+import React, {FC, useCallback, useEffect, useState} from "react";
 import useAuth from "../Providers/Auth/useAuth";
 import {Link, Outlet, useNavigate} from "react-router-dom";
 import {
@@ -9,17 +9,33 @@ import {
     MenuUnfoldOutlined,
     ToolOutlined
 } from '@ant-design/icons';
-import {Col, Layout, Menu, Row} from 'antd';
+import {Col, Dropdown, Layout, Menu, Row} from 'antd';
+import ResourceService from "../Services/ResourceService";
 
 const {Header, Content, Sider} = Layout;
+
+const CompanyMenu = ({companies, onClick} : {companies: any[], onClick: (ev: any) => void}) => {
+
+
+    return (
+        <Menu onClick={onClick}>
+            {companies.map(company => <Menu.Item key={company.id}>
+                {company.name}
+            </Menu.Item>
+            )}
+        </Menu>
+    )
+}
 
 
 const Home: FC = () => {
 
     const [collapsed, setCollapsed] = useState(false)
+    const [companies, setCompanies] = useState<any[]>([])
 
 
-    const {user, logout} = useAuth();
+
+    const {user, logout, switchCompany} = useAuth();
     const navigate = useNavigate();
 
 
@@ -28,6 +44,19 @@ const Home: FC = () => {
         navigate("/");
     };
 
+    useEffect(() => {
+        ResourceService.index({
+            resourceName:'companies'
+        }).then(({data}) => {
+            setCompanies(data)
+        })
+    }, [])
+
+    const handleCompanyChange = useCallback((ev) => {
+      switchCompany(ev.key).finally(() => {
+          window.location.reload()
+      })
+    }, [switchCompany])
 
     return (
         <Layout id={"components-layout-demo-fixed-sider"}>
@@ -86,10 +115,19 @@ const Home: FC = () => {
                         </Col>
                         <Col span={8} offset={8}>
                             <div className={"companySelector"}>
-                                <img
-                                    src={"https://ik.imagekit.io/nginr/hrm-favicon__0GlLjdC7.png?updatedAt=1636936723321"}
-                                    width={24} alt={""}/>
-                                <div>HRM Resources</div>
+                                <Dropdown overlay={<CompanyMenu onClick={handleCompanyChange} companies={companies}/>} trigger={['click']}>
+                                    <div style={{
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem'
+                                    }}>
+                                        <img
+                                            src={user.selectedCompany.logo}
+                                            width={24} alt={""}/>
+                                        <div>{user.selectedCompany.name}</div>
+                                    </div>
+                                </Dropdown>
                                 <span>{user.name}</span>
                                 {user && (
                                     <span style={{cursor: 'pointer'}} onClick={handleLogout}>

@@ -4,7 +4,7 @@ import {Button, Checkbox, Col, Form, Input, Row} from 'antd';
 import useAuth from "../../Providers/Auth/useAuth"
 import styled from "styled-components";
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {AxiosResponse} from "axios";
 
 
@@ -51,13 +51,19 @@ const FormWrap = styled.h1`
 
 const Login = () => {
     const navigate = useNavigate();
-    const {login} = useAuth();
+    const {login, user} = useAuth();
 
     const {state} = useLocation();
 
     const [errors, setErrors] = useState([])
     const [loading, setLoading] = useState(false)
 
+
+    useEffect(() => {
+        if(user){
+            navigate('/dashboard')
+        }
+    }, [navigate, user])
 
     const onFinish = (values: any) => {
 

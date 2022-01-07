@@ -1,10 +1,12 @@
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import AuthService from '../../Services/AuthService'
+import ApiService from "../../Services/ApiService";
 
 type TAuthContext = {
     user?: any,
     login: ({email, password, remember}: { email: string, password: string, remember?: boolean }) => Promise<unknown>
     logout: () => Promise<unknown>
+    switchCompany: (companyID: number) => Promise<unknown>
     loading?: boolean
 }
 
@@ -57,6 +59,19 @@ export function AuthProvider({children}: any) {
         });
     }
 
+    function switchCompany(companyID: number) {
+        return new Promise((res) => {
+            ApiService.get(`/api/switchCompany/${companyID}`).then(({data}) => {
+                if(data.id) {
+                    localStorage.setItem('_U', JSON.stringify(data))
+                }
+                setUser(data)
+                res(0)
+            })
+
+        });
+    }
+
 
     const memoedValue = useMemo(
         () => ({
@@ -64,6 +79,7 @@ export function AuthProvider({children}: any) {
             loading,
             login,
             logout,
+            switchCompany
         }),
         [user, loading]
     );
