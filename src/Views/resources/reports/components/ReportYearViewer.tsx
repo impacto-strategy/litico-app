@@ -10,6 +10,7 @@ import {
     InputNumber,
     List,
     Modal,
+    notification,
     PageHeader,
     Row,
     Select,
@@ -19,7 +20,7 @@ import {
     Tag,
     Typography,
 } from "antd";
-import {ExclamationCircleOutlined} from '@ant-design/icons'
+import {DeleteOutlined, ExclamationCircleOutlined} from '@ant-design/icons'
 import styled from "styled-components";
 import ResourceService from "../../../../Services/ResourceService";
 import ReportCategorySelector from "../../../../Components/ReportCategorySelector";
@@ -86,6 +87,27 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
             setInitLoading(false)
         })
     }, [report.year])
+
+    const deleteMetricTypes = useCallback(() => {
+        setInitLoading(true)
+
+
+        ResourceService.delete({
+            resourceName: 'metric-types',
+            resourceID: updatingMetric.id
+        }).then(({data}) => {
+            notification['success']({
+                message: 'Metric Deleted!',
+                description: `Successfully deleted metric.`,
+            });
+            setUpdatingMetric(false)
+            getMetricTypes()
+            form.resetFields()
+        }).finally(() => {
+            setInitLoading(false)
+        })
+
+    }, [form, getMetricTypes, updatingMetric.id])
 
     useEffect(() => {
 
@@ -187,7 +209,7 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
                     ghost
                     subTitle={"These metrics can be used to generate Quarterly and EOY  reports for year " + report.year}
                     extra={<Button key="b1" type={"primary"} onClick={() => setUpdatingMetric(true)}>
-                        Add Metric
+                        Add Metric Type
                     </Button>}
                 >
                 </PageHeader>
@@ -226,7 +248,7 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
             </div>
             {updatingMetric &&
             <Drawer
-                title={editingExistingMetric ? 'Editing Metric - ' + updatingMetric.name : `Adding New Metric`}
+                title={editingExistingMetric ? 'Editing Metric - ' + updatingMetric.name : `Adding New Metric Type`}
                 placement="right"
 
                 size={"large"}
@@ -343,7 +365,22 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
                             </Tabs.TabPane>
                         </Tabs>
                     </Form>
-
+                    <hr/>
+                    <Button danger
+                            type={"text"}
+                            onClick={() => Modal.confirm({
+                                title: 'Are you sure you want to delete this metric type?',
+                                icon: <DeleteOutlined/>,
+                                okText: "Delete",
+                                type:"error",
+                                okType: "danger",
+                                onOk() {
+                                    deleteMetricTypes()
+                                },
+                                onCancel() {
+                                },
+                            })}
+                    >Delete Metric Type</Button>
                 </FormWrapper>
             </Drawer>}
         </div>

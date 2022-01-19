@@ -1,4 +1,4 @@
-import {Button, Checkbox, Divider, Form, Input, InputNumber, Select, Typography, Upload,} from 'antd';
+import {Button, Checkbox, Divider, Form, Input, InputNumber, notification, Select, Typography, Upload,} from 'antd';
 import {
     BlockOutlined,
     BoldOutlined,
@@ -171,12 +171,24 @@ const initialValue: Descendant[] = [
     {
         type: 'paragraph',
         children: [
-            {text: 'Start typing...'},
+            {text: ''},
         ],
     }
 ]
 
+const openNotificationWithIcon = (type: string) => {
+    // @ts-ignore
+    notification[type]({
+        message: 'Metric Added!',
+        placement: 'bottomRight',
+        description:
+            `Successfully added metric.`,
+    });
+};
+
 const AddMetric = () => {
+
+    const [form] = Form.useForm()
 
     const [loading, setLoading] = useState(false)
     const [facilities, setFacilities] = useState([])
@@ -238,7 +250,10 @@ const AddMetric = () => {
         ResourceService.store({
             resourceName: 'sessions',
             fields: {...values, notes: JSON.stringify(value), metric_type_id: selectedMetricType.id}
-        }).then(() => window.location.reload()).finally(() => setLoading(false))
+        }).then(() => {
+            openNotificationWithIcon('success')
+            form.resetFields()
+        }).finally(() => setLoading(false))
     };
 
 
@@ -250,7 +265,7 @@ const AddMetric = () => {
                 </Typography.Title>
             </Divider>
             <Form
-
+                form={form}
                 name="validate_other"
                 {...formItemLayout}
                 onFinish={onFinish}
@@ -321,7 +336,7 @@ const AddMetric = () => {
 
                 <Form.Item label="Metric Value">
                     <Form.Item name="metric_value" noStyle>
-                        {selectedMetricType.isNumeric ? <InputNumber/> : <Input/>}
+                        {selectedMetricType.isNumeric ? <InputNumber style={{width: '55%'}} size={"large"}/> : <Input/>}
                     </Form.Item>
                     {selectedMetricType.measurement_units &&
                     <span className="ant-form-text"> {selectedMetricType.measurement_units}</span>}

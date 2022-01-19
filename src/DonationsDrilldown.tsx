@@ -6,97 +6,107 @@ const dataSource = [
     {
         month: "Jan",
         value: 9500,
-        foundation: "The Bridge Project"
+        foundation: "Food Bank of The Rockies"
     },
 
     {
         month: "May",
         value: 3000,
-        foundation: "Cleo Parker Robinson Dance Ensemble"
+        foundation: "Weld County Food Bank"
     },
     {
         month: "May",
         value: 1000,
-        foundation: "Colorado Ballet"
+        foundation: "Great Plains Food Bank"
     },
     {
         month: "May",
         value: 7500,
-        foundation: "Colorado Science & Engineering Fair"
+        foundation: "McKenzie County Health System"
     },
     {
         month: "May",
         value: 1000,
-        foundation: "Denver Center of Performing Arts"
+        foundation: "Colorado Children’s Hospital"
     },
     {
         month: "Jun",
         value: 29000,
-        foundation: "Denver Earth Resources Library"
+        foundation: "A Precious Child"
     },
     {
         month: "Jun",
         value: 15000,
-        foundation: "Energy Outreach Colorado"
+        foundation: "McKenzie County School District"
     },
     {
         month: "Jul",
         value: 14000,
-        foundation: "Howard County Volunteer Fire Department"
+        foundation: "Colorado Energy Foundation"
     },
 
     {
         month: "Jul",
         value: 1000,
-        foundation: "The Wyoming Two Fly Foundation"
+                foundation: "Food Bank of The Rockies"
+
     },
 
     {
         month: "Jul",
         value: 1625,
-        foundation: "Weld County Fair"
+                foundation: "Weld County Food Bank"
+
     },
     {
         month: "Aug",
         value: 1000,
-        foundation: "Colorado Ballet"
+                foundation: "Great Plains Food Bank"
+
     },
     {
         month: "Aug",
         value: 7500,
-        foundation: "Colorado Science & Engineering Fair"
+                foundation: "McKenzie County Health System"
+
     },
     {
         month: "Sep",
         value: 1000,
-        foundation: "Denver Center of Performing Arts"
+                foundation: "Colorado Children’s Hospital"
+
     },
     {
         month: "Oct",
         value: 29000,
-        foundation: "Denver Earth Resources Library"
+                foundation: "A Precious Child"
+
     },
     {
         month: "Nov",
         value: 15000,
-        foundation: "Energy Outreach Colorado"
+                foundation: "McKenzie County School District"
+
     },
     {
         month: "Nov",
         value: 14000,
-        foundation: "Howard County Volunteer Fire Department"
+                foundation: "Colorado Energy Foundation"
+
     },
 
     {
         month: "Dec",
         value: 1000,
-        foundation: "The Wyoming Two Fly Foundation"
+                        foundation: "McKenzie County Health System"
+
     },
 
     {
         month: "Dec",
         value: 1625,
-        foundation: "Weld County Fair"
+                        foundation: "Colorado Children’s Hospital"
+
     },
 ]
 

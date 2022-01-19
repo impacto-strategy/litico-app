@@ -92,14 +92,14 @@ const Home: FC = () => {
                                 Locations
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="5" icon={<DatabaseOutlined/>}>
-                            <Link to={`/facilities`}>
-                                Facilities
-                            </Link>
-                        </Menu.Item>
                         <Menu.Item key="6" icon={<ToolOutlined/>}>
                             <Link to={`/equipments`}>
                                 Equipment
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="5" icon={<DatabaseOutlined/>}>
+                            <Link to={`/facilities`}>
+                                Facilities
                             </Link>
                         </Menu.Item>
                     </Menu>

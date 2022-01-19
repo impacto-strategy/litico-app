@@ -16,6 +16,9 @@ const ResourceService = {
     async update(payload: { resourceName: string, resourceID: number, fields: any }) {
         return await APIClient.put(`/api/${payload.resourceName}/${payload.resourceID}`, {...payload.fields})
     },
+    async delete(payload: { resourceName: string, resourceID: number}) {
+        return await APIClient.delete(`/api/${payload.resourceName}/${payload.resourceID}`)
+    },
 };
 
 export default ResourceService

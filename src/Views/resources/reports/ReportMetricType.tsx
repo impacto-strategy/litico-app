@@ -4,6 +4,7 @@ import {Avatar, Card, Col, Descriptions, Divider, List, PageHeader, Row, Skeleto
 import React, {useCallback, useEffect, useState} from "react";
 import ResourceService from "../../../Services/ResourceService";
 import {serializeHtml} from "../../../utils";
+import {orderBy} from "lodash";
 
 
 const Wrapper = styled.section`
@@ -128,7 +129,7 @@ const ReportMetricType = () => {
                                     <Card title={"Activity"} type={"inner"}>
                                         <List
                                             itemLayout="horizontal"
-                                            dataSource={metricData.sessions}
+                                            dataSource={orderBy(metricData.sessions, 'created_at', 'desc')}
                                             renderItem={(item: any) => (
                                                 <List.Item>
                                                     <List.Item.Meta
