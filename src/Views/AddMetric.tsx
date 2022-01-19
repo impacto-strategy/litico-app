@@ -180,7 +180,6 @@ const openNotificationWithIcon = (type: string) => {
     // @ts-ignore
     notification[type]({
         message: 'Metric Added!',
-        placement: 'bottomRight',
         description:
             `Successfully added metric.`,
     });

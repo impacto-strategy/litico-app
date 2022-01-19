@@ -48,64 +48,64 @@ const dataSource = [
     {
         month: "Jul",
         value: 1000,
-                foundation: "Food Bank of The Rockies"
+        foundation: "Food Bank of The Rockies"
 
     },
 
     {
         month: "Jul",
         value: 1625,
-                foundation: "Weld County Food Bank"
+        foundation: "Weld County Food Bank"
 
     },
     {
         month: "Aug",
         value: 1000,
-                foundation: "Great Plains Food Bank"
+        foundation: "Great Plains Food Bank"
 
     },
     {
         month: "Aug",
         value: 7500,
-                foundation: "McKenzie County Health System"
+        foundation: "McKenzie County Health System"
 
     },
     {
         month: "Sep",
         value: 1000,
-                foundation: "Colorado Children’s Hospital"
+        foundation: "Colorado Children’s Hospital"
 
     },
     {
         month: "Oct",
         value: 29000,
-                foundation: "A Precious Child"
+        foundation: "A Precious Child"
 
     },
     {
         month: "Nov",
         value: 15000,
-                foundation: "McKenzie County School District"
+        foundation: "McKenzie County School District"
 
     },
     {
         month: "Nov",
         value: 14000,
-                foundation: "Colorado Energy Foundation"
+        foundation: "Colorado Energy Foundation"
 
     },
 
     {
         month: "Dec",
         value: 1000,
-                        foundation: "McKenzie County Health System"
+        foundation: "McKenzie County Health System"
 
     },
 
     {
         month: "Dec",
         value: 1625,
-                        foundation: "Colorado Children’s Hospital"
+        foundation: "Colorado Children’s Hospital"
 
     },
 ]
