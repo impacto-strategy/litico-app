@@ -40,7 +40,7 @@ const DemoLine = () => {
             label: {
                 formatter: (v: any) => `${(v / 10e5).toFixed(1)} M`,
             },
-            max: 30000000,
+            max: 25000000,
             title: {
                 text: 'Gross Annual Volume of Flared Gas (Mcf)',
                 style: {
@@ -49,6 +49,7 @@ const DemoLine = () => {
             },
         }, {
             max: 30,
+            min: 0,
             label: {
                 formatter: (v: any) => `${v}%`,
             },
