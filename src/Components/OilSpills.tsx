@@ -45,7 +45,7 @@ const OilSpills = () => {
             style: {
                 textAlign: 'center',
             },
-            formatter: (text) => text.value + '%'
+            formatter: (text) => text.value
         },
         color: [ '#E8684A', '#F6BD16'],
         conversionTag: {},
@@ -64,7 +64,7 @@ const OilSpills = () => {
             label: {
                 autoHide: false,
                 autoRotate: false,
-                formatter: (text) => `${text}%`
+                formatter: (text) => `${text}`
             },
         },
 
