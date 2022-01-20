@@ -6,18 +6,7 @@ const Wrapper = styled.div`
   background: #fff;
   padding: 20px;
   width: 62%;
-
 `
-
-const COLOR_PLATE_10 = [
-
-    '#E8684A',
-    '#6DC8EC',
-    '#9270CA',
-    '#FF9D4D',
-    '#269A99',
-    '#FF99C3',
-];
 
 const data = [
     {

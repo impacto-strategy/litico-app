@@ -43,7 +43,8 @@ const DemoLine = () => {
         xField: 'year',
         yField: 'Metric Tons',
         seriesField: 'name',
-        color: COLOR_PLATE_10,
+        color:
+        COLOR_PLATE_10,
         // yAxis: {
         //     base:10,
         //     label: {

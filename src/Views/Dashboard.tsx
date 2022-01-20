@@ -46,11 +46,9 @@ const Dashboard: FC = () => {
                 <MethaneEmissions/>
                 <Flaring/>
                 <OilSpills/>
-
                 <Emissions2020/>
                 <Emissions2020CO2/>
                 <LDAR/>
-
                 <GenderWidget/>
                 {/*<Donations/>*/}
                 <DonationsDrilldown/>
