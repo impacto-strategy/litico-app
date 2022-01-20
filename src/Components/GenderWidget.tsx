@@ -9,19 +9,19 @@ const Wrapper = styled.div`
 
 const GenderWidget = () => {
     const data = [
-        {type: 'Male', value: 72},
-        {type: 'Female', value: 28}
+        {type: 'Male', value: 50},
+        {type: 'Female', value: 50}
     ];
     const config: PieConfig = {
         angleField: 'value',
         colorField: 'type',
         radius: 0.75,
-legend: false,
+        legend: false,
         label: {
             type: 'inner',
-            autoRotate:false,
+            autoRotate: false,
             offset: '-50%',
-            content: ({ percent, type }) => `${(percent * 100).toFixed(0)}% ${type}\nEmployees`,
+            content: ({percent, type}) => `${(percent * 100).toFixed(0)}% ${type}\nDirectors`,
 
             style: {
                 fontSize: 16,
@@ -34,6 +34,9 @@ legend: false,
     return (
         <Wrapper>
             <h2>Gender in the workplace - 2020</h2>
+            <h4>% Female Directors that make
+                up Independent Board of
+                Directors</h4>
             <Pie {...config} />
         </Wrapper>
     )

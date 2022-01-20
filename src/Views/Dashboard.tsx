@@ -32,7 +32,7 @@ const Dashboard: FC = () => {
             </div>
             <div>
                 <Divider>
-                    Overview
+                    Environment
                 </Divider>
             </div>
 
@@ -47,11 +47,27 @@ const Dashboard: FC = () => {
                 <MethaneEmissions/>
                 <Flaring/>
                 <OilSpills/>
-                <Staff/>
-                <GenderWidget/>
                 <Emissions2020/>
                 <Emissions2020CO2/>
                 <LDAR/>
+
+            </div>
+            <div>
+                <Divider>
+                    Social
+                </Divider>
+            </div>
+            <div style={{
+                padding: '0 24p 90px 24px',
+                textAlign: 'center',
+                display: 'flex',
+                gap: '2rem',
+                flexWrap: 'wrap'
+            }}>
+
+                <Staff/>
+                <GenderWidget/>
+
                 {/*<Donations/>*/}
                 <DonationsDrilldown/>
             </div>

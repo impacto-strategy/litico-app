@@ -19,20 +19,21 @@ const data = [
         "year": "2018",
         "staff": 736,
         females: 17,
-        minority: 28
+        minority: 208
     }, {
         "name": "2019",
         "year": "2019",
         "staff": 504,
         females: 25,
-minority: 30
+        minority: 151
 
     }, {
+
         "name": "2020",
         "year": "2020",
         "staff": 402,
         females: 50,
-        minority: 28
+        minority: 113
     },
     {
         "year": "2021",
@@ -46,43 +47,44 @@ const Staff = () => {
 
         data: [data, data],
         xField: 'year',
-        yField: ['females', 'staff'],
-        yAxis:[{
-            max: 60, min: 0,
-            label:{
-                formatter: text => text + '%'
+        yField: ['minority', 'staff'],
+        yAxis: [{
+            max: 900, min: 0,
+            label: {
+                formatter: text => text
             },
             title: {
-                text: '% Female Directors'
-,
-            style:{
-                    fontSize: 16,
-                lineHeight: 20,
-
-            }},
-        },
-            {
-            max: 900, min: 0,
-            title: {
-                text: 'Total Staff',
-                style:{
+                text: 'Female and/or Minority'
+                ,
+                style: {
                     fontSize: 16,
                     lineHeight: 20,
 
-                }}
-        }],
+                }
+            },
+        },
+            {
+                max: 900, min: 0,
+                title: {
+                    text: 'Total Staff',
+                    style: {
+                        fontSize: 16,
+                        lineHeight: 20,
+
+                    }
+                }
+            }],
 
         geometryOptions: [
             {
                 label: {
                     formatter: (datum) => {
-                        return `${datum.females}% Female Directors`;
+                        return `${datum.minority} Females and/or Minorities \n(${(datum.minority/datum.staff *100).toFixed(0)}%)\n`;
                     },
                 },
                 geometry: 'line',
-                smooth: false,
+                smooth: true,
                 color: '#29cae4',
-                stepType: 'vh',
                 point: {
                     shape: 'circle',
                     size: 4,
@@ -123,7 +125,7 @@ const Staff = () => {
                 Careers
             </h2>
             <h4>
-                % Female Directors that make up Independent Board of Directors
+                Female and/or Minority in Total Workforce
             </h4>
             <DualAxes  {...config} />
         </Wrapper>);
