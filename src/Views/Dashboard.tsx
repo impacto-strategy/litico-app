@@ -1,14 +1,17 @@
-import  {FC} from "react";
+import {FC} from "react";
 import GenderWidget from "../Components/GenderWidget";
 import Emissions2020 from "../Components/Emissions2020";
 import Emissions2020CO2 from "../Components/Emissions2020CO2";
-import Donations from "../Components/Donations";
 import DonationsDrilldown from "../DonationsDrilldown";
 import LDAR from "../Components/LDAR";
 import {Button, Divider} from "antd";
 
 import {PlusCircleOutlined} from '@ant-design/icons'
 import {Link} from "react-router-dom";
+import WhitingAllData from "../Components/WhitingAllData";
+import MethaneEmissions from "../Components/MethaneEmissions";
+import Flaring from "../Components/Flaring";
+import OilSpills from "../Components/OilSpills";
 
 const Dashboard: FC = () => {
     return (
@@ -28,7 +31,7 @@ const Dashboard: FC = () => {
             </div>
             <div>
                 <Divider>
-                    2020
+                    Overview
                 </Divider>
             </div>
 
@@ -39,12 +42,17 @@ const Dashboard: FC = () => {
                 gap: '2rem',
                 flexWrap: 'wrap'
             }}>
+                <WhitingAllData/>
+                <MethaneEmissions/>
+                <Flaring/>
+                <OilSpills/>
+
                 <Emissions2020/>
                 <Emissions2020CO2/>
                 <LDAR/>
 
                 <GenderWidget/>
-                <Donations/>
+                {/*<Donations/>*/}
                 <DonationsDrilldown/>
             </div>
             <div style={{paddingBottom: 40}}/>
