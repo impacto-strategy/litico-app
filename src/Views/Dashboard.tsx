@@ -12,6 +12,7 @@ import WhitingAllData from "../Components/WhitingAllData";
 import MethaneEmissions from "../Components/MethaneEmissions";
 import Flaring from "../Components/Flaring";
 import OilSpills from "../Components/OilSpills";
+import Staff from "../Components/Staff";
 
 const Dashboard: FC = () => {
     return (
@@ -46,10 +47,11 @@ const Dashboard: FC = () => {
                 <MethaneEmissions/>
                 <Flaring/>
                 <OilSpills/>
+                <Staff/>
+                <GenderWidget/>
                 <Emissions2020/>
                 <Emissions2020CO2/>
                 <LDAR/>
-                <GenderWidget/>
                 {/*<Donations/>*/}
                 <DonationsDrilldown/>
             </div>

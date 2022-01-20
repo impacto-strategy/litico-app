@@ -114,7 +114,7 @@ const dataSource = [
 const Wrapper = styled.div`
   background: #fff;
   padding: 20px;
-  width: 90%;
+  width: 55%;
 `
 
 const DonationsDrilldown = () => {

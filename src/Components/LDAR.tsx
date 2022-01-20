@@ -5,41 +5,41 @@ const dataSource = [
     {
         period: '2017',
         value: 2100,
-        label: 'Inspections'
+        label: 'Leaks Detected'
     }, {
         period: '2017',
         value: 75,
-        label: 'Leaks Detected'
+        label: 'Inspections'
     },
     {
         period: '2018',
         value: 2075,
-        label: 'Inspections'
+        label: 'Leaks Detected'
 
     }, {
         period: '2018',
         value: 60,
-        label: 'Leaks Detected'
+        label: 'Inspections'
 
     }, {
         period: '2019',
         value: 1900,
-        label: 'Inspections'
+        label: 'Leaks Detected'
 
     }, {
         period: '2019',
         value: 100,
-        label: 'Leaks Detected'
-
-    }, {
-        period: '2020',
-        value: 1750,
         label: 'Inspections'
 
     }, {
         period: '2020',
-        value: 50,
+        value: 1750,
         label: 'Leaks Detected'
+
+    }, {
+        period: '2020',
+        value: 50,
+        label: 'Inspections'
 
     }
 ]
@@ -71,7 +71,7 @@ const LDAR = () => {
     return (
         <Wrapper>
             <h2>
-                LDAR Leaks Detected - YoY
+                LDAR Inspections - YoY
             </h2>
 
             <Column {...config} />
