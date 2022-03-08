@@ -54,7 +54,7 @@ const GoalViewer: FC<GoalViewerProps> = ({metricType, year, onClose = () => null
                 }
             }))
 
-    }, [metricType.name])
+    }, [form, metricType.name])
 
     const updateGoal = useCallback((fields, id) => {
 

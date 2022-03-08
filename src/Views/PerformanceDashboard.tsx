@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useEffect, useState} from 'react'
+import React, {FC, useEffect, useState} from 'react'
 import {Card, Divider, Statistic} from "antd";
 import styled from "styled-components";
 import ResourceService from "../Services/ResourceService";
@@ -12,12 +12,13 @@ const Wrapper = styled.div`
 `
 
 
-const PerformanceDashboard: FC<PerformanceDashboardProps> = ({}) => {
+const PerformanceDashboard: FC<PerformanceDashboardProps> = () => {
 
     const [indicators, setIndicators] = useState<any[]>([])
-    const [initLoading, setInitLoading] = useState(true)
+    const [, setInitLoading] = useState(true)
 
     useEffect(() => {
+
         ResourceService.index({
             resourceName: 'performance-indicators',
         }).then(({data}) => {
@@ -25,11 +26,10 @@ const PerformanceDashboard: FC<PerformanceDashboardProps> = ({}) => {
         }).finally(() => {
             setInitLoading(false)
         })
-    }, [])
-
-    const getRiskLevel = useCallback(() => {
 
     }, [])
+
+
 
     return (
         <>
