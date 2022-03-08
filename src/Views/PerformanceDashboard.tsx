@@ -54,6 +54,7 @@ const PerformanceDashboard: FC<PerformanceDashboardProps> = ({}) => {
                                 value={item.result}
                                 valueStyle={{color: "#1890ff"}}
                             />
+                            Low: {item.low} | Low: {item.moderate} | High: {item.high} |
                         </Card>
                     </Wrapper>
                 ))}
