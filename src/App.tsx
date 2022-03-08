@@ -15,6 +15,7 @@ import AddMetric from "./Views/AddMetric";
 import EditReport from "./Views/resources/reports/EditReport";
 import ReportMetricType from "./Views/resources/reports/ReportMetricType";
 import CompaniesNew from "./Views/resources/companies/CompaniesNew";
+import PerformanceDashboard from "./Views/PerformanceDashboard";
 
 
 const App: FC = () => {
@@ -36,6 +37,7 @@ const App: FC = () => {
                 <Route path="reports/:year/:quarter" element={<EditReport/>}/>
                 <Route path="reports/:year/:quarter/:metricTypeID" element={<ReportMetricType/>}/>
                 <Route path="add-metric" element={<AddMetric/>}/>
+                <Route path="performance" element={<PerformanceDashboard/>}/>
             </Route>
 
             <Route path={"/login"} element={<Login/>}/>

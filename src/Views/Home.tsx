@@ -5,6 +5,7 @@ import {
     BarChartOutlined,
     ContainerOutlined,
     DatabaseOutlined,
+    FundOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     ToolOutlined
@@ -80,6 +81,11 @@ const Home: FC = () => {
                         <Menu.Item key="1" icon={<ContainerOutlined/>}>
                             <Link to={`/reports`}>
                                 Reports
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="2" icon={<FundOutlined/>}>
+                            <Link to={`/performance`}>
+                                Performance
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="3" icon={<DatabaseOutlined/>}>

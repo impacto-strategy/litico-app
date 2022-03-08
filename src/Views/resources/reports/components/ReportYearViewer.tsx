@@ -28,6 +28,7 @@ import {groupBy, map} from "lodash";
 import {Link} from "react-router-dom";
 import IpiecaIndicatorSelector from "../../../../Components/IpiecaIndicatorSelector";
 import SasbIndicatorSelector from "../../../../Components/SasbIndicatorSelector";
+import GoalViewer from "./GoalViewer";
 
 const {Panel} = Collapse;
 
@@ -61,6 +62,8 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
     const [loadingSasbStandards, setLoadingSasbStandards] = useState(false)
 
     const [updatingMetric, setUpdatingMetric] = useState<boolean | any>(false)
+
+    const [updatingGoal, setUpdatingGoal] = useState<boolean | any>(false)
 
     const [isNumeric, setIsNumeric] = useState(true)
 
@@ -223,7 +226,11 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
                                     itemLayout="horizontal"
                                     dataSource={template.metric_types}
                                     renderItem={(item: any) => <List.Item
-                                        actions={[<Button key={'edit button'}
+                                        actions={[item.isNumeric && <Button key={'goal button'}
+                                                                            type={"primary"}
+                                                                            ghost
+                                                                            onClick={() => setUpdatingGoal(item)}>Set Goal</Button>,
+                                            <Button key={'edit button'}
                                                           onClick={() => editThisMetric(item)}>Edit</Button>]}
                                     >
                                         <List.Item.Meta
@@ -236,6 +243,8 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
                                                 <p>{item.description}</p></Space>}
                                         />
 
+
+
                                     </List.Item>
                                     }
                                 />}
@@ -246,11 +255,20 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
                 </Collapse>}
 
             </div>
+            {updatingGoal && <Modal
+                title={`Setting Goal for ${updatingGoal.name}`}
+                centered
+                visible
+                footer={null}
+                onCancel={() => setUpdatingGoal(false)}
+                width={1000}
+            >
+                <GoalViewer year={report.year} metricType={updatingGoal}/>
+            </Modal>}
             {updatingMetric &&
             <Drawer
                 title={editingExistingMetric ? 'Editing Metric - ' + updatingMetric.name : `Adding New Metric Type`}
                 placement="right"
-
                 size={"large"}
                 onClose={() => Modal.confirm({
                     title: 'Do you want to discard unsaved changes?',
@@ -289,7 +307,7 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
                                 </Divider>
 
                                 {loadingSasbStandards && <Modal
-                                    title="Modal 1000px width"
+                                    title="Load From SASB"
                                     centered
                                     visible
                                     footer={null}
