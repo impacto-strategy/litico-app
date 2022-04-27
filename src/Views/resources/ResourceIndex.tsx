@@ -136,6 +136,10 @@ const ResourceIndex: FC = () => {
                     to={`/${_field.link_to.route}?${_field.link_to.key}=${record[_field.link_to.valueIndex]}`}>{text}</Link>
             }
 
+            if (_field.external_ref) {
+                _field.render = (text: any, record: any, index: any) => <a href={`${record[_field.external_ref.key]}`} target='blank'>{`${record[_field.external_ref.key]}`}</a>
+            }
+
             return _field
         })
 

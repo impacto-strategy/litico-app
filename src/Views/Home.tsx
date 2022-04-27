@@ -8,7 +8,8 @@ import {
     FundOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    ToolOutlined
+    ToolOutlined,
+    WarningOutlined
 } from '@ant-design/icons';
 import {Col, Dropdown, Layout, Menu, Row} from 'antd';
 import ResourceService from "../Services/ResourceService";
@@ -108,7 +109,15 @@ const Home: FC = () => {
                                 Facilities
                             </Link>
                         </Menu.Item>
+                        <Menu.Item key="7" icon={<WarningOutlined />}>
+                            <Link to={`/complaints`}>
+                                Complaints
+                            </Link>
+                        </Menu.Item>
                     </Menu>
+                    <div style={{ position: 'absolute', bottom: '50px', paddingLeft: '24px'}}>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhz31TSBov8mui_c617Nm7m0nyPPRkr-FqIoCnAEiiXPphTg/viewform" target="blank">Send Feedback</a>
+                    </div>
                 </>
             </Sider>
             <Layout className="site-layout" style={{marginLeft: collapsed ? 80 : 200, transition: '.2s ease'}}>
