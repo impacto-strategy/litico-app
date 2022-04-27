@@ -115,7 +115,7 @@ const Home: FC = () => {
                             </Link>
                         </Menu.Item>
                     </Menu>
-                    <div style={{ position: 'absolute', bottom: '50px', paddingLeft: '24px'}}>
+                    <div style={{position: 'absolute', bottom: '50px', paddingLeft: '24px'}}>
                         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhz31TSBov8mui_c617Nm7m0nyPPRkr-FqIoCnAEiiXPphTg/viewform" target="blank">Send Feedback</a>
                     </div>
                 </>
