@@ -4,6 +4,7 @@ import Emissions2020 from "../Components/Emissions2020";
 import Emissions2020CO2 from "../Components/Emissions2020CO2";
 import DonationsDrilldown from "../DonationsDrilldown";
 import LDAR from "../Components/LDAR";
+import Productions from "../Components/Productions";
 import {Button, Divider} from "antd";
 
 import {PlusCircleOutlined} from '@ant-design/icons'
@@ -49,8 +50,9 @@ const Dashboard: FC = () => {
                 <OilSpills/>
                 <Emissions2020/>
                 <Emissions2020CO2/>
+                <Productions productType="oil" title="Oil Production by Month" />
+                <Productions productType="gas" title="Gas Production by Month" />
                 <LDAR/>
-
             </div>
             <div>
                 <Divider>
