@@ -24,7 +24,7 @@ const Emissions2020CO2: FC<{units: string, title: string}> = props => {
             })
 
     }, [props.units])
-    console.log(_data);
+
     useEffect(() => {
         getEmissions()
     }, [ getEmissions])
