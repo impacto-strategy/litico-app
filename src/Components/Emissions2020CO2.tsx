@@ -1,69 +1,60 @@
+import React, {FC, useEffect, useState, useCallback }  from 'react';
 import styled from "styled-components";
-import {Bar, BarConfig} from "@ant-design/charts";
-
-const dataSource = [
-    {
-        label: 'Natural Gas Pneumatic Devices',
-        value: 65.0
-    },
-    {
-        label: 'Natural Gas Driven Pneumatic Pumps',
-        value: 38.4
-
-    },
-    {
-        label: 'Dehydrators',
-        value: 291.1
-    },
-    {
-        label: 'Completions and Workovers with Hydraulic Fracturing',
-        value: 10.7
-    },
-    {
-        label: 'Atmospheric Storage Tanks',
-        value: 1356.0
-
-    },
-    {
-        label: 'Reciprocating Compressors',
-        value: 0.8
-
-    },
-    {
-        label: 'Equipment Leaks Surveys and Population Counts',
-        value: 3.1
-
-    },
-    {
-        label: 'Combustion Equipment',
-        value: 41876.3
-    }
-]
+import { Bar, BarConfig } from "@ant-design/charts";
+import { filter } from "lodash";
+import ResourceService from "../Services/ResourceService";
 
 const Wrapper = styled.div`
   background: #fff;
   padding: 20px;
-
-  width: 40%;
 `
 
+const Containter = styled.div`
+  width: 46%;
+`
 
-const Emissions2020CO2 = () => {
+const Emissions2020CO2: FC<{units: string, title: string}> = props => {
+    const [_data, setEmissionData] = useState<any>([])
+
+    const getEmissions = useCallback(() => {
+            ResourceService.index({
+                resourceName: 'emissions'
+            }).then(({ data }) => {
+                setEmissionData(filter(data, (em) => {return  em.units === props.units && em.value > 0 }))
+            })
+
+    }, [props.units])
+    console.log(_data);
+    useEffect(() => {
+        getEmissions()
+    }, [ getEmissions])
+
+
     const config: BarConfig = {
-        data: dataSource,
+        data: _data,
+        isGroup: true,
         xField: 'value',
-        yField: 'label',
-        seriesField: 'label',
+        yField: 'epa_requirement_description',
+        yAxis: {
+            label: {
+                formatter: (text) => `${text.substring(0, 20)}`
+            },
+        },
+        seriesField: 'date',
         legend: false,
     };
     return (
-        <Wrapper>
-            <h2>
-                Carbon Dioxide Emissions for Production
-            </h2>
+        <Containter>
+            {_data.length > 0 &&
+                <Wrapper>
+                    <h2>
+                        {props.title}
+                    </h2>
 
-            <Bar {...config} />
-        </Wrapper>
+                    <Bar {...config} />
+                </Wrapper>
+            }
+        </Containter>
     )
 }
 

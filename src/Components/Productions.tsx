@@ -10,7 +10,7 @@ const Wrapper = styled.div`
 `
 
 const Containter = styled.div`
-  width: 90%;
+  width: 93%;
 `
 
 const Productions: FC<{productType: string, title: string}> = props => {

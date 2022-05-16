@@ -49,7 +49,9 @@ const Dashboard: FC = () => {
                 <Flaring/>
                 <OilSpills/>
                 <Emissions2020/>
-                <Emissions2020CO2/>
+                <Emissions2020CO2 units="mt CO2" title="Carbon Dioxide Emissions for Production" />
+                <Emissions2020CO2 units="mt CH4" title="Methane Emissions for Production" />
+                <Emissions2020CO2 units="mt N2O" title="Nitrous Oxide Emissions for Production" />
                 <Productions productType="oil" title="Oil Production by Month" />
                 <Productions productType="gas" title="Gas Production by Month" />
                 <LDAR/>
