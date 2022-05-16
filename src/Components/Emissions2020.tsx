@@ -41,7 +41,7 @@ const dataSource = [
 const Wrapper = styled.div`
   background: #fff;
   padding: 20px;
-  width: 50%;
+  width: 46%;
 `
 
 
