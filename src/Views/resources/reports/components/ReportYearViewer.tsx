@@ -236,15 +236,15 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
                                         <List.Item.Meta
                                             title={item.name}
                                             description={<Space direction={'vertical'}>
+                                                { item.value > 0 &&
+                                                    <p>{item.value.toLocaleString()} ({item.measurement_units})</p>
+                                                }
                                                 <div><Tag
                                                     color={['High', 'Very High'].includes(item.risk) ? 'red' : 'orange'}>Risk: {item.risk}</Tag>
                                                     <Tag>{item.isNumeric ? 'Quantitative' : 'Qualitative'}</Tag>
                                                 </div>
                                                 <p>{item.description}</p></Space>}
                                         />
-
-
-
                                     </List.Item>
                                     }
                                 />}
@@ -328,6 +328,10 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
 
                                 <Form.Item required label="Metric Name" name={"name"}>
                                     <Input/>
+                                </Form.Item>
+
+                                <Form.Item required label="Metric Value" name={"value"}>
+                                    <InputNumber style={{width: '150px'}}/>
                                 </Form.Item>
 
                                 <Form.Item label="Metric Description" name={"description"}>
