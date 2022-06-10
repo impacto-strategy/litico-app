@@ -23,24 +23,20 @@ const ContentWrapper = styled.section`
 
 
 const ReportMetricType = () => {
-    const {metricTypeID, year, quarter} = useParams()
+    const {metricID} = useParams()
 
     const [initLoading, setInitLoading] = useState(true)
-    const [metricData, setMetricData] = useState<any>(null)
+    const [metricData, setMetricData] = useState<any>({report:[], reporting_standard: ''})
 
     const getMetric = useCallback(() => {
         ResourceService.get({
-            resourceName: 'metric-types',
-            resourceID: Number(metricTypeID) as number,
-            params: {
-                year,
-                period: quarter
-            }
+            resourceName: 'esg-metrics',
+            resourceID: Number(metricID) as number
         })
-            .then(({data}) => setMetricData(data))
+            .then(({data}) => setMetricData(data[0]))
             .finally(() => setInitLoading(false))
 
-    }, [metricTypeID, quarter, year])
+    }, [metricID])
 
     useEffect(() => {
         getMetric()
@@ -53,8 +49,8 @@ const ReportMetricType = () => {
                     ghost={false}
                     onBack={() => window.history.back()}
                     title={initLoading ?
-                        <div style={{width: 200, background: '#fafafa', height: '20px'}}/> : metricData?.name}
-                    subTitle={`ESG Report |  ${year} - ${quarter}`}
+                        <div style={{width: 200, background: '#fafafa', height: '20px'}}/> : metricData?.metric_name}
+                    subTitle={`ESG Report | ${metricData.report.year} - ${metricData.report.period}`}
                 ><Divider/>
                     <ContentWrapper>
                         <Skeleton active loading={initLoading}>
@@ -62,11 +58,12 @@ const ReportMetricType = () => {
                                 <Col xs={2} sm={4} md={6} lg={8} xl={10}>
                                     <Space direction={'vertical'}>
 
-                                        {!!metricData.result && <Card title={"Total"} style={{marginBottom: 20}}>
+                                        {!!metricData.value && <Card title={"Total"} style={{marginBottom: 20}}>
                                             <Statistic
-                                                value={metricData.result}
+                                                value={metricData.measurement_units === '%' ? (metricData.value * 100).toLocaleString() :  metricData.value}
                                                 valueStyle={{color: "#1890ff"}}
-                                                suffix={metricData.measurement_units ?? ''}
+                                                suffix={metricData.measurement_units !== '$' ? metricData.measurement_units : ''}
+                                                prefix={metricData.measurement_units === '$' ? '$' : ''}
                                             />
                                         </Card>}
                                         <p><Tag
@@ -74,54 +71,38 @@ const ReportMetricType = () => {
                                             <Tag>{metricData.isNumeric ? 'Quantitative' : 'Qualitative'}</Tag>
                                         </p>
                                         <p>{metricData.description}</p>
+                                        <p>{metricData.organization}</p>
 
                                         {metricData.narrative && <><Divider>Narrative</Divider>
                                             <p>
                                                 {metricData.narrative}
                                             </p></>}
-
-                                        {metricData.ipieca_indicators && <><Divider>IPIECA Indicators</Divider> <List
+                                            <><Divider>Standards</Divider> <List
                                             grid={{gutter: 16, column: 2}}
-                                            dataSource={metricData.ipieca_indicators}
-                                            renderItem={(item: any) => (
+                                            dataSource={metricData.reporting_standard.split(';')}
+                                            renderItem={(item: any, idx) => (
                                                 <List.Item>
                                                     <Card
-                                                        title={item.name}>
+                                                        title={metricData.metric_name}>
                                                         <Card.Meta title={<Tag>
-                                                            {item.indicator}
-                                                        </Tag>} description={item.module}>
-                                                        </Card.Meta>
-                                                    </Card>
-                                                </List.Item>
-                                            )}
-                                        /></>}
-
-                                        {metricData.sasb_standards && <><Divider>SASB Standards</Divider> <List
-                                            grid={{gutter: 16, column: 2}}
-                                            dataSource={metricData.sasb_standards}
-                                            renderItem={(item: any) => (
-                                                <List.Item>
-                                                    <Card
-                                                        title={item.topic}>
-                                                        <Card.Meta title={<Tag>
-                                                            {item.code}
-                                                        </Tag>} description={item.accounting_metric}>
+                                                            {metricData.metric_code.split(';')[idx]}
+                                                        </Tag>} description={'This is the Standard description. Still need.'}>
                                                         </Card.Meta>
                                                         <Divider/>
                                                         <Descriptions column={1} size={"small"} layout={"horizontal"}>
-                                                            {item.unit_of_measure && <Descriptions.Item
+                                                            {metricData.measurement_units && <Descriptions.Item
                                                                 label={"Unit OF Measure"}>
-                                                                <Tag>{item.unit_of_measure}</Tag>
+                                                                <Tag>{metricData.measurement_units}</Tag>
                                                             </Descriptions.Item>}
                                                             <Descriptions.Item
                                                                 label={"Category"}>
-                                                                <Tag>{item.category}</Tag>
+                                                                <Tag>{metricData.category}</Tag>
                                                             </Descriptions.Item>
                                                         </Descriptions>
                                                     </Card>
                                                 </List.Item>
                                             )}
-                                        /></>}
+                                        /></>
                                     </Space>
                                 </Col>
 

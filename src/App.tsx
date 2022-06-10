@@ -34,8 +34,8 @@ const App: FC = () => {
                 <Route path="reports" element={<ReportsIndex/>}/>
                 <Route path="reports/new" element={<ReportsNew/>}/>
                 <Route path="companies/new" element={<CompaniesNew/>}/>
-                <Route path="reports/:year/:quarter" element={<EditReport/>}/>
-                <Route path="reports/:year/:quarter/:metricTypeID" element={<ReportMetricType/>}/>
+                <Route path="reports/:id" element={<EditReport/>}/>
+                <Route path="reports/:reportID/metrics/:metricID" element={<ReportMetricType/>}/>
                 <Route path="add-metric" element={<AddMetric/>}/>
                 <Route path="performance" element={<PerformanceDashboard/>}/>
             </Route>
