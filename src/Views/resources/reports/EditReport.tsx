@@ -3,7 +3,7 @@ import {Link, useParams} from "react-router-dom";
 import styled from "styled-components";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import ResourceService from "../../../Services/ResourceService";
-import {groupBy, map, sortBy} from "lodash";
+import {flatten, groupBy, map, uniq, sortBy} from "lodash";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -23,12 +23,18 @@ const EditReport = () => {
 
     const {id} = useParams()
 
-    const [report, setReport] = useState<any>({esg_metrics: [], year: ''})
-
+    const [report, setReport] = useState<any>({ esg_metrics: [], year: '' })
     const modReport = useMemo(() => {
-        return sortBy(map(groupBy(report.esg_metrics, 'category'), (metric_types, cat) => ({
-            category: cat,
-            metric_types
+        let subMetrics = map(groupBy(report.esg_metrics, 'metric_subtype'), (metrics, key) => ({
+            category: metrics[0].category,
+            metric_name: metrics[0].metric_name,
+            metric_subtype: key,
+            metric_codes: metrics.map((m) => m.metric_code.split(';')),
+            metrics
+        }))
+        return sortBy(map(groupBy(subMetrics, 'category'), (subtype_metrics, category) => ({
+            category: category,
+            subtype_metrics
         })), (item) => {
             const order: any = {
                 'Environmental': 0,
@@ -64,34 +70,34 @@ const EditReport = () => {
                 </PageHeader>
                 <ContentWrapper>
                     <Tabs defaultActiveKey={"0"}>
-                        {modReport.map(({category, metric_types}, idx) => (
+                        {modReport.map(({ category, subtype_metrics }, idx) => (
                             <Tabs.TabPane tab={category} key={idx}>
                                 <Row gutter={40}>
-                                    {metric_types.map((item: any) => (
+                                    {subtype_metrics.map((item: any) => (
                                         <Col span={8} key={item.id} style={{ marginBottom: 32 }}>
                                             <Card
                                                 title={item.metric_name}
                                                 type='inner'
                                                 extra={<Link
-                                                    to={`/reports/${report.id}/metrics/${item.id}`}>View</Link>}
+                                                    to={`/reports/${report.id}/metrics?metric_name=${item.metric_name}&metric_subtype=${item.metric_subtype}`}>View</Link>}
                                                     actions={[
-                                                        <div>{item.metric_code.split(';').length} Entr{item.metric_code.split(';').length === 1 ? 'y' : 'ies'}</div>,
+                                                        <div>{item.metrics.length} Entr{item.metrics.length === 1 ? 'y' : 'ies'}</div>,
                                                         <div>0 Pending Approval</div>,
                                                     ]}
                                             >
                                                 <Space direction={'vertical'}>
                                                     <p>{item.metric_subtype}</p>
-                                                    <p>{item.description} {item.organization}</p>
                                                     <p><Tag
-                                                        color={['High', 'Very Hight'].includes(item.risk) ? 'red' : 'orange'}>Risk: {item.risk}</Tag>
-                                                        <Tag>{item.isNumeric ? 'Quantitative' : 'Qualitative'}</Tag>
+                                                        color={['High', 'Very High'].includes(item.risk) ? 'red' : 'orange'}>Risk: {item.risk}</Tag>
+                                                        {map(uniq(flatten(map(item.metric_codes))), (met: any) => (
+                                                            <Tag>{met}</Tag>
+                                                        ))}
                                                     </p>
                                                 </Space>
                                             </Card>
-                                         </Col>
+                                        </Col>
                                     ))}
                                 </Row>
-
                             </Tabs.TabPane>
                         ))}
 

@@ -91,11 +91,10 @@ const ReportYearViewer: FC<TReportYearViewer> = ({ report }) => {
             }
         }).then(({data}) => {
             setMetricTypes(data.metric_types)
-            console.log(metricTypes)
         }).finally(() => {
             setInitLoading(false)
         })
-    }, [report.year, metricTypes])
+    }, [report.year])
 
     const deleteMetricTypes = useCallback(() => {
         setInitLoading(true)
