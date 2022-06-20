@@ -98,7 +98,7 @@ const ReportYearViewer: FC<TReportYearViewer> = ({ report }) => {
 
     const deleteMetricTypes = useCallback(() => {
         setInitLoading(true)
-
+        console.log(metricTypes)
 
         ResourceService.delete({
             resourceName: 'metric-types',
@@ -115,7 +115,7 @@ const ReportYearViewer: FC<TReportYearViewer> = ({ report }) => {
             setInitLoading(false)
         })
 
-    }, [form, getMetricTypes, updatingMetric.id])
+    }, [form, getMetricTypes, updatingMetric.id, metricTypes])
 
     useEffect(() => {
 
