@@ -12,7 +12,7 @@ import {
 import {getQuarterFromDate} from "../utils";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import ResourceService from "../Services/ResourceService";
-
+import Cookies from 'js-cookie';
 import {BaseEditor, createEditor, Descendant, Editor, Element as SlateElement, Transforms,} from 'slate'
 
 import {Editable, ReactEditor, Slate, useSlate, withReact} from 'slate-react'
@@ -28,6 +28,8 @@ declare module 'slate' {
 }
 
 const {Option} = Select;
+
+const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app'
 
 const formItemLayout = {
     labelCol: {span: 6},
@@ -186,9 +188,11 @@ const openNotificationWithIcon = (type: string) => {
 };
 
 const AddMetric = () => {
-
+    let token = Cookies.get('XSRF-TOKEN')
     const [form] = Form.useForm()
-
+    const headers = {
+        'X-XSRF-TOKEN': token || ''
+    }
     const [loading, setLoading] = useState(false)
     const [facilities, setFacilities] = useState([])
 
@@ -366,7 +370,7 @@ const AddMetric = () => {
                 </Form.Item>
                 <Form.Item label="Upload">
                     <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-                        <Upload.Dragger name="files" action="/upload.do">
+                        <Upload.Dragger name="files" action={`${baseUrl}/api/uploads`} withCredentials={true} headers={headers}>
                             <p className="ant-upload-drag-icon">
                                 <InboxOutlined/>
                             </p>

@@ -3,7 +3,7 @@ import {Link, useParams} from "react-router-dom";
 import styled from "styled-components";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import ResourceService from "../../../Services/ResourceService";
-import {groupBy, map, sortBy} from "lodash";
+import {flatten, groupBy, map, uniq, sortBy} from "lodash";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -16,18 +16,25 @@ const Wrapper = styled.section`
 const ContentWrapper = styled.div`
   background: #fff;
   padding: 60px 30px;
+  margin-bottom: 32px;
 `
+
 const EditReport = () => {
 
-    const {year, quarter} = useParams()
+    const {id} = useParams()
 
-    const [metricTypes, setMetricTypes] = useState([])
-
-
-    const modMetricTypes = useMemo(() => {
-        return sortBy(map(groupBy(metricTypes, 'report_category.name'), (metric_types, cat) => ({
-            category: cat,
-            metric_types
+    const [report, setReport] = useState<any>({ esg_metrics: [], year: '' })
+    const modReport = useMemo(() => {
+        let subMetrics = map(groupBy(report.esg_metrics, 'metric_subtype'), (metrics, key) => ({
+            category: metrics[0].category,
+            metric_name: metrics[0].metric_name,
+            metric_subtype: key,
+            metric_codes: metrics.map((m) => m.metric_code.split(';')),
+            metrics
+        }))
+        return sortBy(map(groupBy(subMetrics, 'category'), (subtype_metrics, category) => ({
+            category: category,
+            subtype_metrics
         })), (item) => {
             const order: any = {
                 'Environmental': 0,
@@ -36,72 +43,67 @@ const EditReport = () => {
             }
             return order[item.category]
         })
-    }, [metricTypes])
+    }, [report])
 
-
-    const getMetrics = useCallback(() => {
-        ResourceService.index({
-            resourceName: 'metric-types',
-            params: {year, withSessionCount: true}
+    const getReport = useCallback(() => {
+        ResourceService.get({
+            resourceName: 'reports',
+            resourceID: Number(id) as number
         })
-            .then(({data}) => setMetricTypes(data.metric_types))
+            .then(({ data }) => setReport(data[0]))
 
-    }, [year])
-
+    }, [id])
 
     useEffect(() => {
-        getMetrics()
-    }, [getMetrics])
+        getReport()
+    }, [getReport])
 
     return (
         <Wrapper>
-            <Space direction="vertical" style={{width: '100%'}} size={"large"}>
+            <Space direction="vertical" style={{ width: '100%' }} size={"large"}>
 
                 <PageHeader
                     ghost={false}
                     onBack={() => window.history.back()}
-                    title={`Edit Report | ${year} - ${quarter}`}
+                    title={`Edit Report | ${report.year}`}
                 >
                 </PageHeader>
                 <ContentWrapper>
-                    <Tabs defaultActiveKey={"0"} style={{marginBottom: 32}}>
-                        {modMetricTypes.map(({category, metric_types}, idx) => (
-                            <Tabs.TabPane tab={category} key={idx.toString()}>
+                    <Tabs defaultActiveKey={"0"}>
+                        {modReport.map(({ category, subtype_metrics }, idx) => (
+                            <Tabs.TabPane tab={category} key={idx}>
                                 <Row gutter={40}>
-
-                                    {metric_types.map((item: any) => (
-                                        <Col span={8} key={item.id}>
-                                            <Card title={item.name}
-                                                  type={item.sessions.length > 0 ? 'inner' : undefined}
-                                                  extra={<Link
-                                                      to={`/reports/${year}/${quarter}/${item.id}`}>View</Link>}
-                                                  style={{width: '100%', opacity: item.sessions.length > 0 ? 1 : 0.8}}
-                                                  actions={[
-                                                      <div>{item.sessions.length} Entr{item.sessions.length === 1 ? 'y' : 'ies'}</div>,
-                                                      <div>0 Pending Approval</div>,
-                                                  ]}
+                                    {subtype_metrics.map((item: any) => (
+                                        <Col span={8} key={item.id} style={{ marginBottom: 32 }}>
+                                            <Card
+                                                title={item.metric_name}
+                                                type='inner'
+                                                extra={<Link
+                                                    to={`/reports/${report.id}/metrics?metric_name=${item.metric_name}&metric_subtype=${item.metric_subtype}`}>View</Link>}
+                                                    actions={[
+                                                        <div>{item.metrics.length} Entr{item.metrics.length === 1 ? 'y' : 'ies'}</div>,
+                                                        <div>0 Pending Approval</div>,
+                                                    ]}
                                             >
-
                                                 <Space direction={'vertical'}>
-
-                                                    <p>{item.description}</p>
+                                                    <p>{item.metric_subtype}</p>
                                                     <p><Tag
-                                                        color={['High', 'Very Hight'].includes(item.risk) ? 'red' : 'orange'}>Risk: {item.risk}</Tag>
-                                                        <Tag>{item.isNumeric ? 'Quantitative' : 'Qualitative'}</Tag>
+                                                        color={['High', 'Very High'].includes(item.risk) ? 'red' : 'orange'}>Risk: {item.risk}</Tag>
+                                                        {map(uniq(flatten(map(item.metric_codes))), (met: any) => (
+                                                            <Tag>{met}</Tag>
+                                                        ))}
                                                     </p>
                                                 </Space>
                                             </Card>
                                         </Col>
                                     ))}
                                 </Row>
-
                             </Tabs.TabPane>
                         ))}
 
                     </Tabs>
                 </ContentWrapper>
             </Space>
-
         </Wrapper>
     )
 }

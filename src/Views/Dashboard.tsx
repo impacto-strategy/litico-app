@@ -5,10 +5,8 @@ import Emissions2020CO2 from "../Components/Emissions2020CO2";
 import DonationsDrilldown from "../DonationsDrilldown";
 import LDAR from "../Components/LDAR";
 import Productions from "../Components/Productions";
-import {Button, Divider} from "antd";
+import {Divider} from "antd";
 
-import {PlusCircleOutlined} from '@ant-design/icons'
-import {Link} from "react-router-dom";
 import WhitingAllData from "../Components/WhitingAllData";
 import MethaneEmissions from "../Components/MethaneEmissions";
 import Flaring from "../Components/Flaring";
@@ -19,18 +17,6 @@ const Dashboard: FC = () => {
     return (
         <div className="site-layout-background"
         >
-            <div>
-                <Divider orientation={"center"}>
-                    Quick Links
-                </Divider>
-                <Button.Group style={{justifyContent: 'center', width: '100%'}}>
-                    <Link to={"/add-metric"}>
-                        <Button icon={<PlusCircleOutlined/>} type={"primary"}>
-                            Add Metric
-                        </Button>
-                    </Link>
-                </Button.Group>
-            </div>
             <div>
                 <Divider>
                     Environment

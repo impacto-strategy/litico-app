@@ -19,8 +19,9 @@ import {
     Tabs,
     Tag,
     Typography,
+    Upload,
 } from "antd";
-import {DeleteOutlined, ExclamationCircleOutlined} from '@ant-design/icons'
+import {DeleteOutlined, ExclamationCircleOutlined, UploadOutlined} from '@ant-design/icons'
 import styled from "styled-components";
 import ResourceService from "../../../../Services/ResourceService";
 import ReportCategorySelector from "../../../../Components/ReportCategorySelector";
@@ -29,9 +30,10 @@ import {Link} from "react-router-dom";
 import IpiecaIndicatorSelector from "../../../../Components/IpiecaIndicatorSelector";
 import SasbIndicatorSelector from "../../../../Components/SasbIndicatorSelector";
 import GoalViewer from "./GoalViewer";
+import Cookies from 'js-cookie';
 
 const {Panel} = Collapse;
-
+const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app';
 const {Title} = Typography
 
 type TReportYearViewer = {
@@ -54,8 +56,11 @@ const ReportCard = styled.div<{ notStarted?: boolean }>`
   opacity: ${props => props.notStarted ? 0.5 : 1};
 `
 
-const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
-
+const ReportYearViewer: FC<TReportYearViewer> = ({ report }) => {
+    let token = Cookies.get('XSRF-TOKEN')
+    const headers = {
+        'X-XSRF-TOKEN': token || ''
+    }
     const [form] = Form.useForm()
 
     const [initLoading, setInitLoading] = useState(true)
@@ -72,11 +77,11 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
     const [metricTypes, setMetricTypes] = useState([])
 
     const modMetricTypes = useMemo(() => {
-        return map(groupBy(metricTypes, 'report_category.name'), (metric_types, cat) => ({
+        return map(groupBy(report.reports[0].esg_metrics, 'category'), (metric_types, cat) => ({
             category: cat,
             metric_types
         }))
-    }, [metricTypes])
+    }, [report.reports])
 
     const getMetricTypes = useCallback(() => {
         ResourceService.index({
@@ -93,7 +98,7 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
 
     const deleteMetricTypes = useCallback(() => {
         setInitLoading(true)
-
+        console.log(metricTypes)
 
         ResourceService.delete({
             resourceName: 'metric-types',
@@ -110,7 +115,7 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
             setInitLoading(false)
         })
 
-    }, [form, getMetricTypes, updatingMetric.id])
+    }, [form, getMetricTypes, updatingMetric.id, metricTypes])
 
     useEffect(() => {
 
@@ -191,7 +196,7 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
                         gutter={{xs: 8, sm: 16, md: 24, lg: 32}}>
                         {report.reports.map((rep: any) => (
                             <Col key={rep.year + '_col' + rep.period} span={4}>
-                                <Link to={`/reports/${rep.year}/${rep.period}`}>
+                                <Link to={`/reports/${rep.id}`}>
                                     <ReportCard>
                                         <Title level={4}>{isPeriodAnnual(rep.period) ? 'EOY' : rep.period}</Title>
                                     </ReportCard>
@@ -211,20 +216,22 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
                 <PageHeader
                     ghost
                     subTitle={"These metrics can be used to generate Quarterly and EOY  reports for year " + report.year}
-                    extra={<Button key="b1" type={"primary"} onClick={() => setUpdatingMetric(true)}>
-                        Add Metric Type
-                    </Button>}
+                    extra={
+                        <Upload name="files" action={`${baseUrl}/api/uploads?report_id=${report.reports[0].id}`} withCredentials={true} headers={headers}>
+                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                        </Upload>
+                    }
                 >
                 </PageHeader>
-                {modMetricTypes && <Collapse defaultActiveKey={Object.keys(modMetricTypes)}>
+                {modMetricTypes && <Collapse >
                     {
-                        modMetricTypes.map((template, cat) => (
-                            <Panel header={template.category} key={cat}>
+                        modMetricTypes.map(({category, metric_types }, idx) => (
+                            <Panel header={category} key={idx}>
 
                                 {<List
                                     loading={initLoading}
                                     itemLayout="horizontal"
-                                    dataSource={template.metric_types}
+                                    dataSource={metric_types}
                                     renderItem={(item: any) => <List.Item
                                         actions={[item.isNumeric && <Button key={'goal button'}
                                                                             type={"primary"}
@@ -234,16 +241,20 @@ const ReportYearViewer: FC<TReportYearViewer> = ({report}) => {
                                                           onClick={() => editThisMetric(item)}>Edit</Button>]}
                                     >
                                         <List.Item.Meta
-                                            title={item.name}
+                                            title={item.metric_name}
                                             description={<Space direction={'vertical'}>
-                                                { item.value > 0 &&
-                                                    <p>{item.value.toLocaleString()} ({item.measurement_units})</p>
+                                                {(item.value > 0 && item.measurement_units === '%' &&
+                                                    <p>{(item.value * 100).toLocaleString()}{item.measurement_units}</p>)
+                                                    || (item.value > 0 && item.measurement_units === '$' &&
+                                                    <p>{item.measurement_units}{item.value.toFixed(2)}</p>)
+                                                    || (item.value > 0 &&
+                                                    <p>{item.value} {item.measurement_units}</p>)
                                                 }
                                                 <div><Tag
                                                     color={['High', 'Very High'].includes(item.risk) ? 'red' : 'orange'}>Risk: {item.risk}</Tag>
                                                     <Tag>{item.isNumeric ? 'Quantitative' : 'Qualitative'}</Tag>
                                                 </div>
-                                                <p>{item.description}</p></Space>}
+                                                <p>{item.description} {item.organization}</p></Space>}
                                         />
                                     </List.Item>
                                     }

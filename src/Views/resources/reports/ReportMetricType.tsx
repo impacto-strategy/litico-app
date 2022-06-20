@@ -1,10 +1,11 @@
-import {useParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 import styled from "styled-components";
-import {Avatar, Card, Col, Descriptions, Divider, List, PageHeader, Row, Skeleton, Space, Statistic, Tag} from "antd";
+import {Button, Card, Col, Descriptions, Divider, List, PageHeader, Row, Skeleton, Space, Table, Tag } from "antd";
+import {PlusOutlined} from '@ant-design/icons'
 import React, {useCallback, useEffect, useState} from "react";
 import ResourceService from "../../../Services/ResourceService";
-import {serializeHtml} from "../../../utils";
-import {orderBy} from "lodash";
+import { flatten, map, uniq } from "lodash";
+import moment from 'moment';
 
 
 const Wrapper = styled.section`
@@ -23,24 +24,92 @@ const ContentWrapper = styled.section`
 
 
 const ReportMetricType = () => {
-    const {metricTypeID, year, quarter} = useParams()
-
+    const {reportID} = useParams()
+    const [searchParams] = useSearchParams();
+    const columns = [{
+        title: 'Organization',
+        dataIndex: 'organization',
+        key: 'organization',
+    },
+    {
+        title: 'Value',
+        dataIndex: 'value',
+        key: 'value',
+    },
+    {
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date',
+    },
+    {
+        title: 'City',
+        dataIndex: 'city',
+        key: 'city',
+    },
+    {
+        title: 'State',
+        dataIndex: 'state',
+        key: 'state',
+    },
+    {
+        title: 'Type A',
+        dataIndex: 'type_a',
+        key: 'type_a',
+    },
+    {
+        title: 'Type B',
+        dataIndex: 'type_b',
+        key: 'type_b',
+    },
+    {
+        title: 'User',
+        dataIndex: 'user_name',
+        key: 'user_name',
+    },
+    {
+        title: 'Submitted on',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY h:mm')}
+            </span>
+        ),
+    }]
     const [initLoading, setInitLoading] = useState(true)
-    const [metricData, setMetricData] = useState<any>(null)
+    const [reportData, setReportData] = useState<any>({year: '', period: '', esg_metrics: [], report: {}})
+    const [metricStandards, setMetricStandards] = useState<any>()
 
-    const getMetric = useCallback(() => {
-        ResourceService.get({
-            resourceName: 'metric-types',
-            resourceID: Number(metricTypeID) as number,
-            params: {
-                year,
-                period: quarter
-            }
+
+    const getStandards = useCallback((metricCodes: any) =>{
+        ResourceService.index({
+            resourceName: 'standards',
+            params: {metric_codes: JSON.stringify(metricCodes).replaceAll(" ", "").replaceAll("n/a", "")}
         })
-            .then(({data}) => setMetricData(data))
+            .then(({ data }) => {
+                setMetricStandards(data);
+            })
             .finally(() => setInitLoading(false))
 
-    }, [metricTypeID, quarter, year])
+    }, [setMetricStandards])
+
+    const getMetric = useCallback(() => {
+        ResourceService.index({
+            resourceName: 'esg-metrics',
+            params: {
+                metric_name: searchParams.get("metric_name"),
+                metric_subtype: searchParams.get("metric_subtype"),
+                report_id: reportID
+            }
+        })
+            .then(({ data }) => {
+                setReportData(data);
+                let codes = map(data.esg_metrics, 'metric_code').map((m) => m.split(';'));
+                getStandards(uniq(flatten(codes)).filter(c => c !== 'n/a'));
+            })
+            .finally(() => setInitLoading(false))
+
+    }, [reportID, searchParams, getStandards])
 
     useEffect(() => {
         getMetric()
@@ -53,65 +122,44 @@ const ReportMetricType = () => {
                     ghost={false}
                     onBack={() => window.history.back()}
                     title={initLoading ?
-                        <div style={{width: 200, background: '#fafafa', height: '20px'}}/> : metricData?.name}
-                    subTitle={`ESG Report |  ${year} - ${quarter}`}
-                ><Divider/>
+                        <div style={{width: 200, background: '#fafafa', height: '20px'}}/> : reportData?.esg_metrics[0]?.metric_name}
+                    subTitle={`ESG Report | ${reportData?.year} - ${reportData?.period}`}
+                ><Divider />
                     <ContentWrapper>
                         <Skeleton active loading={initLoading}>
-                            {metricData && <Row>
-                                <Col xs={2} sm={4} md={6} lg={8} xl={10}>
+                            {reportData && <Row>
+                                <Col span={24}>
+                                    <Table
+                                        title={() => `${reportData?.esg_metrics[0]?.metric_name} - ${reportData?.esg_metrics[0]?.metric_subtype}`}
+                                        footer={() =>
+                                            <Button icon={<PlusOutlined/>}>
+                                                Add Metric
+                                            </Button>
+                                        }
+                                        pagination={false}
+                                        columns={columns} dataSource={reportData?.esg_metrics} rowKey={'id'} />
+                                </Col>
+                            </Row>}
+                            <Row>
+                                <Col span={24}>
                                     <Space direction={'vertical'}>
-
-                                        {!!metricData.result && <Card title={"Total"} style={{marginBottom: 20}}>
-                                            <Statistic
-                                                value={metricData.result}
-                                                valueStyle={{color: "#1890ff"}}
-                                                suffix={metricData.measurement_units ?? ''}
-                                            />
-                                        </Card>}
-                                        <p><Tag
-                                            color={['High', 'Very High'].includes(metricData.risk) ? 'red' : 'orange'}>Risk: {metricData.risk}</Tag>
-                                            <Tag>{metricData.isNumeric ? 'Quantitative' : 'Qualitative'}</Tag>
-                                        </p>
-                                        <p>{metricData.description}</p>
-
-                                        {metricData.narrative && <><Divider>Narrative</Divider>
-                                            <p>
-                                                {metricData.narrative}
-                                            </p></>}
-
-                                        {metricData.ipieca_indicators && <><Divider>IPIECA Indicators</Divider> <List
+                                        <Divider>Standards</Divider>
+                                        <List
                                             grid={{gutter: 16, column: 2}}
-                                            dataSource={metricData.ipieca_indicators}
-                                            renderItem={(item: any) => (
+                                            dataSource={metricStandards}
+                                            renderItem={(item: any, idx) => (
                                                 <List.Item>
                                                     <Card
-                                                        title={item.name}>
+                                                        title={item.metric_name}>
                                                         <Card.Meta title={<Tag>
-                                                            {item.indicator}
-                                                        </Tag>} description={item.module}>
-                                                        </Card.Meta>
-                                                    </Card>
-                                                </List.Item>
-                                            )}
-                                        /></>}
-
-                                        {metricData.sasb_standards && <><Divider>SASB Standards</Divider> <List
-                                            grid={{gutter: 16, column: 2}}
-                                            dataSource={metricData.sasb_standards}
-                                            renderItem={(item: any) => (
-                                                <List.Item>
-                                                    <Card
-                                                        title={item.topic}>
-                                                        <Card.Meta title={<Tag>
-                                                            {item.code}
-                                                        </Tag>} description={item.accounting_metric}>
+                                                            {item.metric_code}
+                                                        </Tag>} description={item.description}>
                                                         </Card.Meta>
                                                         <Divider/>
                                                         <Descriptions column={1} size={"small"} layout={"horizontal"}>
-                                                            {item.unit_of_measure && <Descriptions.Item
-                                                                label={"Unit OF Measure"}>
-                                                                <Tag>{item.unit_of_measure}</Tag>
+                                                            {item.measurement_units && <Descriptions.Item
+                                                                label={"Unit Of Measure"}>
+                                                                <Tag>{item.measurement_units}</Tag>
                                                             </Descriptions.Item>}
                                                             <Descriptions.Item
                                                                 label={"Category"}>
@@ -121,57 +169,10 @@ const ReportMetricType = () => {
                                                     </Card>
                                                 </List.Item>
                                             )}
-                                        /></>}
+                                        />
                                     </Space>
                                 </Col>
-
-                                <Col xs={2} sm={4} md={6} lg={8} xl={10} offset={4}>
-                                    <Card title={"Activity"} type={"inner"}>
-                                        <List
-                                            itemLayout="horizontal"
-                                            dataSource={orderBy(metricData.sessions, 'created_at', 'desc')}
-                                            renderItem={(item: any) => (
-                                                <List.Item>
-                                                    <List.Item.Meta
-                                                        description={
-                                                            <div>{new Date(item.created_at).toLocaleString('en-US', {
-                                                                month: 'short',
-                                                                day: '2-digit',
-                                                                year: 'numeric'
-                                                            })}, {new Date(item.created_at).toLocaleString('en-US', {
-                                                                timeStyle: 'short'
-                                                            })}</div>}
-                                                        avatar={<Avatar
-                                                            src={`https://avatars.dicebear.com/api/initials/${item.user.name}.svg`}/>}
-                                                        title={<a href="https://ant.design">{item.user.name}</a>}
-
-                                                    />
-                                                    &nbsp;
-                                                    {item.dimensions[0].metrics[0] !== '' &&
-                                                    <div style={{
-                                                        padding: 20,
-                                                        background: '#fafafa',
-                                                        border: '1px solid #eee'
-                                                    }}>
-                                                        {serializeHtml(JSON.parse(item.dimensions[0].metrics[0].notes))}
-                                                    </div>}
-                                                    <Divider orientation={"left"}>
-                                                        Data Recorded
-                                                    </Divider>
-                                                    <Card>
-                                                        <Statistic
-                                                            title={item.dimensions[0].name}
-                                                            value={item.dimensions[0].metrics[0].value}
-                                                            valueStyle={{color: "#1890ff"}}
-                                                            suffix={metricData.measurement_units ?? ''}
-                                                        />
-                                                    </Card>
-                                                </List.Item>
-                                            )}
-                                        />
-                                    </Card>
-                                </Col>
-                            </Row>}
+                            </Row>
                         </Skeleton>
                     </ContentWrapper>
 
