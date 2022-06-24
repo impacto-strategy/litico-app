@@ -3,7 +3,7 @@ import Emissions2020 from "../Components/Emissions2020";
 import Emissions2020CO2 from "../Components/Emissions2020CO2";
 import StackedBarWidget from "../Components/StackedBarWidget";
 import PieWidget from "../Components/PieWidget";
-import DonationsDrilldown from "../DonationsDrilldown";
+// import DonationsDrilldown from "../DonationsDrilldown";
 import LDAR from "../Components/LDAR";
 import Productions from "../Components/Productions";
 import {Divider} from "antd";
@@ -13,7 +13,7 @@ import WhitingAllData from "../Components/WhitingAllData";
 import MethaneEmissions from "../Components/MethaneEmissions";
 import Flaring from "../Components/Flaring";
 import OilSpills from "../Components/OilSpills";
-import Staff from "../Components/Staff";
+// import Staff from "../Components/Staff";
 import {filter, flatten, map, sortBy} from "lodash";
 
 const Dashboard: FC = () => {
