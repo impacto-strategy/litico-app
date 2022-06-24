@@ -1,8 +1,8 @@
 import {FC, useCallback, useEffect, useMemo, useState} from "react";
-import GenderWidget from "../Components/GenderWidget";
 import Emissions2020 from "../Components/Emissions2020";
 import Emissions2020CO2 from "../Components/Emissions2020CO2";
 import StackedBarWidget from "../Components/StackedBarWidget";
+import PieWidget from "../Components/PieWidget";
 import DonationsDrilldown from "../DonationsDrilldown";
 import LDAR from "../Components/LDAR";
 import Productions from "../Components/Productions";
@@ -35,6 +35,12 @@ const Dashboard: FC = () => {
         return flatten(map(filter(metrics.esg_metrics, { 'type_a': 'Women Employees' }), (m: any) => ([
             { label: m.date, type: 'Female', value: m.num_1 },
             { label: m.date, type: 'Male', value: m.denominator - m.num_1 }
+        ])))
+    }, [metrics])
+
+    const getEthnicityData = useMemo(() => {
+        return flatten(map(filter(metrics.esg_metrics, { 'type_a': 'Ethnicity' }), (m: any) => ([
+            { label: m.date, type: m.type_b, value: m.value }
         ])))
     }, [metrics])
 
@@ -84,14 +90,16 @@ const Dashboard: FC = () => {
                 flexWrap: 'wrap'
             }}>
                 {/* <Staff/> */}
-                {/* <GenderWidget/> */}
                 {/*<Donations/>*/}
                 {/* <DonationsDrilldown /> */}
                 {getDonationData.length > 0 &&
-                    <StackedBarWidget isGroup={false} isPercentage={false} data={getDonationData} label={'currency'} width={'62%'} title="Donations by Organization" subTitle="$ Organization Donations by Year" />
+                    <StackedBarWidget isGroup={false} isPercentage={false} data={getDonationData} label={'currency'} width={'62%'} title="Annual Charitable Contributions" subTitle="" />
                 }
                 {getGenderData.length > 0 &&
-                    <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} width={'32%'} title="Roster by Gender" subTitle="% Women Employees by Year" />
+                    <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} width={'32%'} title="Employees by Gender" subTitle="" />
+                }
+                {getEthnicityData.length > 0 &&
+                    <PieWidget width={'32%'} data={getEthnicityData} label="ethnicity" title="Employee Diversity" subTitle="" />
                 }
             </div>
             <div style={{paddingBottom: 40}}/>
