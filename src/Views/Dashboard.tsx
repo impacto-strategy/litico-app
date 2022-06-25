@@ -39,7 +39,7 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getEthnicityData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'type_a': 'Ethnicity' }), (m: any) => ([
+        return flatten(map(filter(metrics.esg_metrics, { 'type_a': 'Ethnicity', date: '2021' }), (m: any) => ([
             { label: m.date, type: m.type_b, value: m.value }
         ])))
     }, [metrics])
@@ -99,7 +99,7 @@ const Dashboard: FC = () => {
                     <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} width={'32%'} title="Employees by Gender" subTitle="" />
                 }
                 {getEthnicityData.length > 0 &&
-                    <PieWidget width={'32%'} data={getEthnicityData} label="ethnicity" title="Employee Diversity" subTitle="" />
+                    <PieWidget width={'32%'} data={getEthnicityData} label="ethnicity" title="Employee Diversity" subTitle="2021" />
                 }
             </div>
             <div style={{paddingBottom: 40}}/>
