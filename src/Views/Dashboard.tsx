@@ -40,9 +40,9 @@ const Dashboard: FC = () => {
         return co2 + (ch4 * 25) + (n20 * 298)
     }
 
-    const getTotalProduction = (year: string) => {
+    const getTotalProduction = useCallback((year: string) => {
         return sumBy(filter(production, 'year'), 'amount')
-    }
+    }, [production])
 
     const getDonationData = useMemo(() => {
         return sortBy(flatten(map(filter(metrics.esg_metrics, { 'type_a': 'Community Investment' }), (m: any) => ([
@@ -67,7 +67,7 @@ const Dashboard: FC = () => {
         return flatten(map(groupBy(filter(emissions, { period: 'yearly' }), 'date'), (e: any) => ([
             { name: "GHG Emissions (CO2e)", type: e[0].date, value: getTotalEmissions(e), intensity: getTotalEmissions(e) / getTotalProduction(e[0].date) }
         ])))
-    }, [emissions])
+    }, [emissions, getTotalProduction])
 
     const getIntensityData = useMemo(() => {
         return flatten(map(getYearlyEmissionData, (data) => ([
