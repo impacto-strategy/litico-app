@@ -1,8 +1,6 @@
-import React, {FC, useState, useEffect, useCallback } from 'react';
+import { FC } from 'react';
 import { Line, LineConfig } from "@ant-design/charts";
 import styled from "styled-components";
-import { filter } from "lodash";
-import ResourceService from "../Services/ResourceService";
 
 const Wrapper = styled.div`
   background: #fff;
@@ -13,24 +11,9 @@ const Containter = styled.div`
   width: 93%;
 `
 
-const Productions: FC<{productType: string, title: string}> = props => {
-  const [_data, setProductionData] = useState<any>([])
-
-  const getMetricTypes = useCallback(() => {
-        ResourceService.index({
-            resourceName: 'productions'
-        }).then(({ data }) => {
-            setProductionData(filter(data, { 'product': props.productType }))
-        })
-
-  }, [props.productType])
-  
-  useEffect(() => {
-      getMetricTypes()
-  }, [ getMetricTypes])
-
+const Productions: FC<{ data: any, productType: string, title: string}> = props => {
     const config: LineConfig = {
-        data: _data,
+        data: props.data,
         xField: 'date',
         yField: 'amount',
         smooth: true,
@@ -46,7 +29,7 @@ const Productions: FC<{productType: string, title: string}> = props => {
     };
     return (
         <Containter>
-            {_data.length > 0 &&
+            {props.data.length > 0 &&
             <Wrapper>
                 <h2>
                     {props.title}
