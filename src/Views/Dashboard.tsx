@@ -3,7 +3,7 @@ import Emissions2020 from "../Components/Emissions2020";
 import Emissions2020CO2 from "../Components/Emissions2020CO2";
 import ColumnWidget from "../Components/ColumnWidget";
 import LineWidget from "../Components/LineWidget";
-import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
+// import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
 import StackedBarWidget from "../Components/StackedBarWidget";
 import PieWidget from "../Components/PieWidget";
 // import DonationsDrilldown from "../DonationsDrilldown";
@@ -67,7 +67,7 @@ const Dashboard: FC = () => {
         return flatten(map(groupBy(filter(emissions, { period: 'yearly' }), 'date'), (e: any) => ([
             { name: "GHG Emissions (CO2e)", type: e[0].date, value: getTotalEmissions(e), intensity: getTotalEmissions(e) / getTotalProduction(e[0].date) }
         ])))
-    }, [emissions, getTotalProduction])
+    }, [emissions])
 
     const getIntensityData = useMemo(() => {
         return flatten(map(getYearlyEmissionData, (data) => ([
