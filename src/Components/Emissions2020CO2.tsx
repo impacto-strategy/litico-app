@@ -1,8 +1,6 @@
-import React, {FC, useEffect, useState, useCallback }  from 'react';
+import {FC}  from 'react';
 import styled from "styled-components";
 import { Bar, BarConfig } from "@ant-design/charts";
-import { filter } from "lodash";
-import ResourceService from "../Services/ResourceService";
 
 const Wrapper = styled.div`
   background: #fff;
@@ -13,25 +11,9 @@ const Containter = styled.div`
   width: 46%;
 `
 
-const Emissions2020CO2: FC<{units: string, title: string}> = props => {
-    const [_data, setEmissionData] = useState<any>([])
-
-    const getEmissions = useCallback(() => {
-            ResourceService.index({
-                resourceName: 'emissions'
-            }).then(({ data }) => {
-                setEmissionData(filter(data, (em) => {return  em.units === props.units && em.value > 0 }))
-            })
-
-    }, [props.units])
-
-    useEffect(() => {
-        getEmissions()
-    }, [ getEmissions])
-
-
+const Emissions2020CO2: FC<{ units: string, title: string, data: any }> = props => {
     const config: BarConfig = {
-        data: _data,
+        data: props.data,
         isGroup: true,
         xField: 'value',
         yField: 'epa_requirement_description',
@@ -45,7 +27,7 @@ const Emissions2020CO2: FC<{units: string, title: string}> = props => {
     };
     return (
         <Containter>
-            {_data.length > 0 &&
+            {props.data.length > 0 &&
                 <Wrapper>
                     <h2>
                         {props.title}
