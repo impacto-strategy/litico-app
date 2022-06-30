@@ -28,11 +28,12 @@ const ColumnWidget: FC<{ data: any, title: string }> = props => {
             style: {
                 textAlign: 'center',
             },
-            formatter: (text) => text.value.toFixed(4)
+            formatter: (text) => text.name === 'intensity' ? text.value.toFixed(4) : text.value
         },
         tooltip: {
             formatter: (text) => {
-                return { name: text.name, value: text.value.toFixed(4) }
+                let value = text.name === 'intensity' ? text.value.toFixed(4) : text.value
+                return { name: text.name, value: value }
             }
         }
     };
