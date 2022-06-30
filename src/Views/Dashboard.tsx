@@ -3,7 +3,7 @@ import Emissions2020 from "../Components/Emissions2020";
 import Emissions2020CO2 from "../Components/Emissions2020CO2";
 import ColumnWidget from "../Components/ColumnWidget";
 import LineWidget from "../Components/LineWidget";
-// import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
+import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
 import StackedBarWidget from "../Components/StackedBarWidget";
 import PieWidget from "../Components/PieWidget";
 // import DonationsDrilldown from "../DonationsDrilldown";
@@ -22,6 +22,8 @@ import {filter, flatten, groupBy, map, sortBy, sumBy} from "lodash";
 const Dashboard: FC = () => {
     const [metrics, setMetrics] = useState({ esg_metrics: [] })
     const [emissions, setEmissions] = useState<any>([])
+    const [spills, setSpills] = useState<any>([])
+    const [complaints, setComplaints] = useState<any>([])
     const [n20Emission, setN2oEmissions] = useState<any>([])
     const [co2Emission, setC02Emissions] = useState<any>([])
     const [ch4Emission, setCh4Emissions] = useState<any>([])
@@ -30,8 +32,14 @@ const Dashboard: FC = () => {
     const getAllMetrics = useCallback(() => {
         ResourceService.index({
             resourceName: 'esg-metrics'
-        }).then(({ data }) => { setMetrics(data); console.log(data)})
+        }).then(({ data }) => {setMetrics(data)})
     }, [setMetrics])
+
+    const getAllSpills = useCallback(() => {
+        ResourceService.index({
+            resourceName: 'spills'
+        }).then(({ data }) => {setSpills(data)})
+    }, [setSpills])
 
     const getTotalEmissions = (data: any) => {
         let co2 = sumBy(filter(data, { units: 'mt CO2' }), 'value')
@@ -43,6 +51,15 @@ const Dashboard: FC = () => {
     const getTotalProduction = useCallback((year: string) => {
         return sumBy(filter(production, 'year'), 'amount')
     }, [production])
+
+    const getSpillIntensity = useCallback((num: number, date: string) => {
+        let yearlyProduction = getTotalProduction(date)
+        if (yearlyProduction > 0) {
+            return num / yearlyProduction
+        } else {
+            return 0
+        }
+    }, [getTotalProduction])
 
     const getDonationData = useMemo(() => {
         return sortBy(flatten(map(filter(metrics.esg_metrics, { 'type_a': 'Community Investment' }), (m: any) => ([
@@ -83,6 +100,36 @@ const Dashboard: FC = () => {
             })
     }, [])
 
+    const getComplaints = useCallback(() => {
+        ResourceService.index({
+            resourceName: 'complaints'
+        }).then(({ data }) => {
+            setComplaints(data)
+        })
+}, [])
+
+    const getYearlyComplaintsData = useMemo(() => {
+        return flatten(map([2017, 2018, 2019, 2020, 2021], (e) => ( [
+            {name: "Complaints Count", type: e, value: filter(complaints, (c: any) => {
+                const date = new Date(c['date'])
+                const year = date.getFullYear()
+
+                return year === e
+            }).length }
+        ])))
+    }, [complaints])
+
+    const getYearlySpillsData = useMemo(() => {
+        let spillsCountByYear = groupBy(spills, (e: any) => {
+            let date = new Date(e['date'])
+            let year = date.getFullYear();
+            return year
+        });
+        return flatten(map(spillsCountByYear, (e, key) => ([
+            { name: "Spills Count", type: key, value: e.length, intensity: getSpillIntensity(e.length, key) }
+        ])))
+    }, [spills, getSpillIntensity])
+
     const getEmissions = useCallback(() => {
             ResourceService.index({
                 resourceName: 'emissions'
@@ -98,7 +145,9 @@ const Dashboard: FC = () => {
         getAllMetrics()
         getOilProduction()
         getEmissions()
-    }, [getAllMetrics, getOilProduction, getEmissions])
+        getAllSpills()
+        getComplaints()
+    }, [getAllMetrics, getOilProduction, getEmissions, getAllSpills, getComplaints])
 
     return (
         <div className="site-layout-background"
@@ -118,8 +167,9 @@ const Dashboard: FC = () => {
             }}>
                 <LineWidget data={getYearlyEmissionData} label="Year" title="Greenhouse Gas Emissions"/>
                 {/* <WhitingAllData /> */}
-                {/* <DualAxesLineColWidget data={getYearlyEmissionData} /> */}
                 <ColumnWidget data={getIntensityData} title="Greenhouse Gas Intensity" />
+                <DualAxesLineColWidget data={getYearlySpillsData} lineLabel="Total Spills" title="Spills with Intensity" />
+                <ColumnWidget data={getYearlyComplaintsData} title="Total Complaints" />
                 <MethaneEmissions/>
                 <Flaring/>
                 <OilSpills/>
@@ -127,8 +177,8 @@ const Dashboard: FC = () => {
                 <Emissions2020CO2 data={co2Emission} units="mt CO2" title="Carbon Dioxide Emissions for Production" />
                 <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" />
-                <Productions data={filter(production, { 'product': 'oil' })} productType="oil" title="Oil Production by Month" />
-                <Productions data={filter(production, { 'product': 'gas' })}productType="gas" title="Gas Production by Month" />
+                <Productions data={filter(production, { 'product': 'oil' })} productType="oil" title="Oil Production" />
+                <Productions data={filter(production, { 'product': 'gas' })}productType="gas" title="Gas Production" />
                 <LDAR/>
             </div>
             <div>
