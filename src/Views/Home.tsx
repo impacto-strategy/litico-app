@@ -8,6 +8,7 @@ import {
     FundOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
+    SwitcherOutlined,
     ToolOutlined,
     WarningOutlined
 } from '@ant-design/icons';
@@ -107,6 +108,11 @@ const Home: FC = () => {
                         <Menu.Item key="5" icon={<DatabaseOutlined/>}>
                             <Link to={`/facilities`}>
                                 Facilities
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="8" icon={<SwitcherOutlined />}>
+                            <Link to={`/standards`}>
+                                Standards
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="7" icon={<WarningOutlined />}>
