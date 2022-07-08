@@ -2,7 +2,7 @@ import {FC, useCallback, useEffect, useMemo, useState} from "react";
 import Emissions2020 from "../Components/Emissions2020";
 import Emissions2020CO2 from "../Components/Emissions2020CO2";
 import ColumnWidget from "../Components/ColumnWidget";
-import LineWidget from "../Components/LineWidget";
+// import LineWidget from "../Components/LineWidget";
 import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
 import StackedBarWidget from "../Components/StackedBarWidget";
 import PieWidget from "../Components/PieWidget";
@@ -11,6 +11,7 @@ import LDAR from "../Components/LDAR";
 import Productions from "../Components/Productions";
 import {Divider} from "antd";
 import ResourceService from "../Services/ResourceService";
+import useAuth from "../Providers/Auth/useAuth";
 
 // import WhitingAllData from "../Components/WhitingAllData";
 import MethaneEmissions from "../Components/MethaneEmissions";
@@ -29,6 +30,7 @@ const Dashboard: FC = () => {
     const [ch4Emission, setCh4Emissions] = useState<any>([])
     const [production, setProductionData] = useState<any>([])
 
+    const {user} = useAuth();
     const getAllMetrics = useCallback(() => {
         ResourceService.index({
             resourceName: 'esg-metrics'
@@ -169,10 +171,18 @@ const Dashboard: FC = () => {
                 {/* <WhitingAllData /> */}
                 <DualAxesLineColWidget data={getYearlySpillsData} lineLabel="Total Spills" title="Spills with Intensity" />
                 <ColumnWidget data={getYearlyComplaintsData} title="Total Complaints" />
-                <MethaneEmissions/>
-                <Flaring/>
-                <OilSpills/>
-                <Emissions2020/>
+                { user.selectedCompany.name === 'Demo Energy' &&
+                    <MethaneEmissions/>
+                }
+                { user.selectedCompany.name === 'Demo Energy' &&
+                    <Flaring/>
+                }
+                { user.selectedCompany.name === 'Demo Energy' &&
+                    <OilSpills/>
+                }
+                { user.selectedCompany.name === 'Demo Energy' &&
+                    <Emissions2020/>
+                }
                 <Emissions2020CO2 data={co2Emission} units="mt CO2" title="Carbon Dioxide Emissions for Production" />
                 <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" />
