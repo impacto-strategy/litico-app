@@ -165,9 +165,8 @@ const Dashboard: FC = () => {
                 gap: '2rem',
                 flexWrap: 'wrap'
             }}>
-                <LineWidget data={getYearlyEmissionData} label="Year" title="Greenhouse Gas Emissions"/>
+                <DualAxesLineColWidget data={getYearlyEmissionData} lineLabel="Greenhouse Gas Emissions" title="Greenhouse Gas Emissions with Intensity"/>
                 {/* <WhitingAllData /> */}
-                <ColumnWidget data={getIntensityData} title="Greenhouse Gas Intensity" />
                 <DualAxesLineColWidget data={getYearlySpillsData} lineLabel="Total Spills" title="Spills with Intensity" />
                 <ColumnWidget data={getYearlyComplaintsData} title="Total Complaints" />
                 <MethaneEmissions/>
