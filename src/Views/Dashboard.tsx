@@ -88,12 +88,6 @@ const Dashboard: FC = () => {
         ])))
     }, [emissions, getTotalProduction])
 
-    const getIntensityData = useMemo(() => {
-        return flatten(map(getYearlyEmissionData, (data) => ([
-            { name: 'intensity', type: data.type, value: data.intensity }
-        ])))
-    }, [getYearlyEmissionData])
-
     const getOilProduction = useCallback(() => {
             ResourceService.index({
                 resourceName: 'productions'
