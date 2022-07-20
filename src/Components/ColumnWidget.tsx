@@ -31,9 +31,13 @@ const ColumnWidget: FC<{ data: any, title: string }> = props => {
             formatter: (text) => text.name === 'intensity' ? text.value.toFixed(4) : text.value
         },
         tooltip: {
-            formatter: (text) => {
-                let value = text.name === 'intensity' ? text.value.toFixed(4) : text.value
-                return { name: text.name, value: value }
+            enterable: true,
+            customContent: (title, items: any) => {
+                let list = ''
+                if (items && items[0]?.data && items[0].data.complaints) {
+                    list = items[0].data.complaints.map((c: any) => `<li>${c.complaintant} - ${c.date} - <a href="${c.url}" target="_blank">details</a></li>`)
+                }
+                return `<ul style="padding: 20px;">${list}</ul>`;
             }
         }
     };

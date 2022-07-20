@@ -105,14 +105,18 @@ const Dashboard: FC = () => {
 }, [])
 
     const getYearlyComplaintsData = useMemo(() => {
-        return flatten(map([2017, 2018, 2019, 2020, 2021], (e) => ( [
-            {name: "Complaints Count", type: e, value: filter(complaints, (c: any) => {
+        return flatten(map([2017, 2018, 2019, 2020, 2021], (e) => {
+            let comps: any[] = filter(complaints, (c: any) => {
                 const date = new Date(c['date'])
                 const year = date.getFullYear()
 
                 return year === e
-            }).length }
-        ])))
+            })
+            return [
+                {name: "Complaints Count", type: e, value: comps.length, complaints: comps }
+            ]
+        }
+        ))
     }, [complaints])
 
     const getYearlySpillsData = useMemo(() => {
@@ -161,9 +165,23 @@ const Dashboard: FC = () => {
                 gap: '2rem',
                 flexWrap: 'wrap'
             }}>
-                <DualAxesLineColWidget data={getYearlyEmissionData} lineLabel="Greenhouse Gas Emissions" title="Greenhouse Gas Emissions with Intensity"/>
+                <DualAxesLineColWidget
+                    data={getYearlyEmissionData}
+                    lineLabel="Greenhouse Gas Emissions (mt)"
+                    title="Greenhouse Gas Emissions Mass & Intensity"
+                    width="94"
+                    y1Lablel = "GHG Emissions (mt)"
+                    y2Lablel = "GHG Emission Intensity (mt/BoE)"
+                />
                 {/* <WhitingAllData /> */}
-                <DualAxesLineColWidget data={getYearlySpillsData} lineLabel="Total Spills" title="Spills with Intensity" />
+                <DualAxesLineColWidget
+                    data={getYearlySpillsData}
+                    lineLabel="Total Spills"
+                    title="Spills with Intensity"
+                    width="62"
+                    y1Lablel = ""
+                    y2Lablel = ""
+                />
                 <ColumnWidget data={getYearlyComplaintsData} title="Total Complaints" />
                 { user.selectedCompany.name === 'Demo Energy' &&
                     <MethaneEmissions/>
