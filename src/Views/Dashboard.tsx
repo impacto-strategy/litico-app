@@ -126,7 +126,7 @@ const Dashboard: FC = () => {
             return year
         });
         return flatten(map(spillsCountByYear, (e, key) => ([
-            { name: "Spills Count", type: key, value: e.length, intensity: getSpillIntensity(e.length, key) }
+            { name: "Spills Count", type: key, value: e.length, intensity: getSpillIntensity(e.length, key), data: e }
         ])))
     }, [spills, getSpillIntensity])
 
@@ -170,8 +170,9 @@ const Dashboard: FC = () => {
                     lineLabel="Greenhouse Gas Emissions (mt)"
                     title="Greenhouse Gas Emissions Mass & Intensity"
                     width="94"
-                    y1Lablel = "GHG Emissions (mt)"
-                    y2Lablel = "GHG Emission Intensity (mt/BoE)"
+                    y1Lablel="GHG Emissions (mt)"
+                    y2Lablel="GHG Emission Intensity (mt/BoE)"
+                    includeModal={false}
                 />
                 {/* <WhitingAllData /> */}
                 <DualAxesLineColWidget
@@ -179,8 +180,9 @@ const Dashboard: FC = () => {
                     lineLabel="Total Spills"
                     title="Spills with Intensity"
                     width="62"
-                    y1Lablel = ""
-                    y2Lablel = ""
+                    y1Lablel="Spills"
+                    y2Lablel="Spill Intensity"
+                    includeModal={true}
                 />
                 <ColumnWidget data={getYearlyComplaintsData} title="Total Complaints" />
                 { user.selectedCompany.name === 'Demo Energy' &&
