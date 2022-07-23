@@ -1,7 +1,8 @@
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Column, ColumnConfig } from "@ant-design/charts";
 import styled from "styled-components";
-
+import { Modal, Table } from 'antd';
+import { sortBy } from 'lodash';
 
 const Wrapper = styled.div`
   background: #fff;
@@ -9,9 +10,44 @@ const Wrapper = styled.div`
   width: 30%;
 `
 
-const ColumnWidget: FC<{ data: any, title: string }> = props => {
+const ColumnWidget: FC<{ data: any, title: string, includeModal: boolean, modalTitle: string }> = props => {
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [drillDownData, setDrillDownData] = useState<any>([]);
+
+    const columns = [
+        {
+          title: 'Date',
+          dataIndex: 'date',
+          key: 'date',
+        },
+        {
+          title: 'Complaintant',
+          dataIndex: 'complaintant',
+          key: 'complaintant',
+        },
+        {
+          title: 'Link',
+          dataIndex: 'url',
+          key: 'url',
+            render: (data: any) => <a href={`${data}`} target='blank'>See complaint</a>
+        },
+    ];
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setIsModalVisible(false);
+    };
+
+    useEffect(() => {
+        if (drillDownData.length > 0) showModal();
+    }, [drillDownData]);
+
     const config: ColumnConfig = {
         data: props.data,
+        animation: false,
         color: ['#477EB7', '#5AC5BF', '#46AD75'],
         xField: 'type',
         yField: 'value',
@@ -30,14 +66,14 @@ const ColumnWidget: FC<{ data: any, title: string }> = props => {
             },
             formatter: (text) => text.name === 'intensity' ? text.value.toFixed(4) : text.value
         },
-        tooltip: {
-            enterable: true,
-            customContent: (title, items: any) => {
-                let list = ''
-                if (items && items[0]?.data && items[0].data.complaints) {
-                    list = items[0].data.complaints.map((c: any) => `<li>${c.complaintant} - ${c.date} - <a href="${c.url}" target="_blank">details</a></li>`)
-                }
-                return `<ul style="padding: 20px;">${list}</ul>`;
+        onReady: (plot: any) => {
+            if (props.includeModal) {
+                plot.on('interval:click', (args: any) => {
+                    let elements = sortBy(args.data.data.items, function(em:any) {
+                        return new Date(em.date);
+                      });
+                    setDrillDownData(elements);
+              });
             }
         }
     };
@@ -46,7 +82,12 @@ const ColumnWidget: FC<{ data: any, title: string }> = props => {
             <h2>
                 {props.title}
             </h2>
-            <Column style={{height: 500}} {...config} />
+            <Column style={{ height: 500 }} {...config} />
+            {props.includeModal &&
+                <Modal title={props.modalTitle} visible={isModalVisible} onOk={closeModal} onCancel={closeModal} width={1000}>
+                    <Table dataSource={drillDownData} columns={columns} />
+                </Modal>
+            }
         </Wrapper>
     )
 }
