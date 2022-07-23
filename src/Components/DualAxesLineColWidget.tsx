@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import styled from "styled-components";
 import { DualAxes } from '@ant-design/plots';
 import { Modal, Table } from 'antd';
@@ -50,6 +50,11 @@ const DualAxesLineColWidget: FC<{ data: any, lineLabel: string, title: string, w
       key: 'resolution_date',
     },
   ];
+
+  useEffect(() => {
+    if (drillDownData.length > 0) showModal();
+  }, [drillDownData]);
+
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -103,11 +108,10 @@ const DualAxesLineColWidget: FC<{ data: any, lineLabel: string, title: string, w
     onReady: (plot: any) => {
       if (props.includeModal) {
         plot.on('interval:click', (args: any) => {
-          let elements = sortBy(args.data.data.data, function(em:any) {
+          let elements = sortBy(args.data.data.items, function(em:any) {
             return new Date(em.date);
           });
           setDrillDownData(elements)
-          if (drillDownData.length > 0) showModal()
         });
       }
     }
@@ -118,11 +122,11 @@ const DualAxesLineColWidget: FC<{ data: any, lineLabel: string, title: string, w
         {props.title}
       </h2>
       <DualAxes {...config} />
-      <Modal title={props.y1Lablel} visible={isModalVisible} onOk={closeModal} onCancel={closeModal} width={1000}>
-        <Table dataSource={drillDownData} columns={columns} />
-        
-      </Modal>
-
+      {props.includeModal &&
+        <Modal title={props.y1Lablel} visible={isModalVisible} onOk={closeModal} onCancel={closeModal} width={1000}>
+          <Table dataSource={drillDownData} columns={columns} />
+        </Modal>
+      }
     </Wrapper>
   )
 };

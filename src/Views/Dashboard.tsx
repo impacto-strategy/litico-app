@@ -113,7 +113,7 @@ const Dashboard: FC = () => {
                 return year === e
             })
             return [
-                {name: "Complaints Count", type: e, value: comps.length, complaints: comps }
+                {name: "Complaints Count", type: e, value: comps.length, items: comps }
             ]
         }
         ))
@@ -126,7 +126,7 @@ const Dashboard: FC = () => {
             return year
         });
         return flatten(map(spillsCountByYear, (e, key) => ([
-            { name: "Spills Count", type: key, value: e.length, intensity: getSpillIntensity(e.length, key), data: e }
+            { name: "Spills Count", type: key, value: e.length, intensity: getSpillIntensity(e.length, key), items: e }
         ])))
     }, [spills, getSpillIntensity])
 
@@ -184,7 +184,7 @@ const Dashboard: FC = () => {
                     y2Lablel="Spill Intensity"
                     includeModal={true}
                 />
-                <ColumnWidget data={getYearlyComplaintsData} title="Total Complaints" />
+                <ColumnWidget data={getYearlyComplaintsData} title="Total Complaints" modalTitle="Complaints" includeModal={true} />
                 { user.selectedCompany.name === 'Demo Energy' &&
                     <MethaneEmissions/>
                 }
