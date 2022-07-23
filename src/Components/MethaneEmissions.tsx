@@ -8,17 +8,6 @@ const Wrapper = styled.div`
   width: 46%;
 `
 
-const COLOR_PLATE_10 = [
-
-    '#F6BD16',
-    '#E8684A',
-    '#6DC8EC',
-    '#9270CA',
-    '#FF9D4D',
-    '#269A99',
-    '#FF99C3',
-];
-
 const data = [
     {
         "name": "Methane Emissions (CH4)",
