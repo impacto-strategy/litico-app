@@ -169,7 +169,7 @@ const Dashboard: FC = () => {
                     data={getYearlyEmissionData}
                     lineLabel="Greenhouse Gas Emissions (mt)"
                     title="Greenhouse Gas Emissions Mass & Intensity"
-                    width="94"
+                    width="100%"
                     y1Lablel="GHG Emissions (mt)"
                     y2Lablel="GHG Emission Intensity (mt/BoE)"
                     includeModal={false}
@@ -179,12 +179,12 @@ const Dashboard: FC = () => {
                     data={getYearlySpillsData}
                     lineLabel="Total Spills"
                     title="Spills with Intensity"
-                    width="62"
+                    width="49%"
                     y1Lablel="Spills"
                     y2Lablel="Spill Intensity"
                     includeModal={true}
                 />
-                <ColumnWidget data={getYearlyComplaintsData} title="Total Complaints" modalTitle="Complaints" includeModal={true} />
+                <ColumnWidget data={getYearlyComplaintsData} title="Total Complaints" modalTitle="Complaints" includeModal={true} width="49%"  />
                 { user.selectedCompany.name === 'Demo Energy' &&
                     <MethaneEmissions/>
                 }
@@ -200,9 +200,21 @@ const Dashboard: FC = () => {
                 <Emissions2020CO2 data={co2Emission} units="mt CO2" title="Carbon Dioxide Emissions for Production" />
                 <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" />
-                <Productions data={filter(production, { 'product': 'oil' })} productType="oil" title="Oil Production" />
-                <Productions data={filter(production, { 'product': 'gas' })}productType="gas" title="Gas Production" />
-                <LDAR/>
+                <Productions
+                    data={filter(production, { 'product': 'oil' })}
+                    productType="oil"
+                    title="Oil Production"
+                    y1Lablel="Oil Production (bbls)"
+                />
+                <Productions
+                    data={filter(production, { 'product': 'gas' })}
+                    productType="gas"
+                    title="Gas Production"
+                    y1Lablel="Natural Gas Production (mmscf)"
+                />
+                {user.selectedCompany.name === 'Demo Energy' &&
+                    <LDAR />
+                }
             </div>
             <div>
                 <Divider>
@@ -219,14 +231,15 @@ const Dashboard: FC = () => {
                 {/* <Staff/> */}
                 {/*<Donations/>*/}
                 {/* <DonationsDrilldown /> */}
-                {getDonationData.length > 0 &&
-                    <StackedBarWidget isGroup={false} isPercentage={false} data={getDonationData} label={'currency'} width={'62%'} title="Annual Charitable Contributions" subTitle="" />
-                }
+
                 {getGenderData.length > 0 &&
-                    <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} width={'32%'} title="Employees by Gender" subTitle="" />
+                    <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} width="47%" title="Employees by Gender" subTitle="" />
                 }
                 {getEthnicityData.length > 0 &&
-                    <PieWidget width={'32%'} data={getEthnicityData} label="ethnicity" title="Employee Diversity" subTitle="2021" />
+                    <PieWidget width="47%" data={getEthnicityData} label="ethnicity" title="Employee Diversity" subTitle="2021" />
+                }
+                {getDonationData.length > 0 &&
+                    <StackedBarWidget isGroup={false} isPercentage={false} data={getDonationData} label={'currency'} width="95%" title="Annual Charitable Contributions" subTitle="" />
                 }
             </div>
             <div style={{paddingBottom: 40}}/>

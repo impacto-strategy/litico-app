@@ -59,7 +59,7 @@ const DemoLine = () => {
                 autoRotate: false,
                 style: {
                     fill: '#aaa',
-                    fontSize: 12,
+                    fontSize: 14,
                 },
                 formatter: (v: any) => `${(v / 10e2).toFixed(1)} K`,
 

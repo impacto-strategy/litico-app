@@ -60,7 +60,7 @@ const LineWidget: FC<{ title: string, data: any, label: string }> = props => {
                 autoRotate: false,
                 style: {
                     fill: '#aaa',
-                    fontSize: 12,
+                    fontSize: 14,
                 },
             },
             title: {

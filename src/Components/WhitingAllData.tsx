@@ -91,7 +91,7 @@ const DemoLine = () => {
                 autoRotate: false,
                 style: {
                     fill: '#aaa',
-                    fontSize: 12,
+                    fontSize: 14,
                 },
                 formatter: (v: any) => `${(v / 10e5).toFixed(1)} M`,
 

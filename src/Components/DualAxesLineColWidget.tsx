@@ -8,7 +8,7 @@ const DualAxesLineColWidget: FC<{ data: any, lineLabel: string, title: string, w
   const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
-    width: ${props.width}%;
+    width: ${props.width};
   `
 
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -71,10 +71,20 @@ const DualAxesLineColWidget: FC<{ data: any, lineLabel: string, title: string, w
     yField: ['value', 'intensity'],
     yAxis: {
       value: {
-        title: { text: props.y1Lablel }
+        title: {
+          style: {
+            fontSize: 14,
+          },
+          text: props.y1Lablel
+        },
       },
       intensity: {
-        title: { text: props.y2Lablel }
+        title: {
+          style: {
+            fontSize: 14,
+          },
+          text: props.y2Lablel
+        },
       }
     },
     geometryOptions: [

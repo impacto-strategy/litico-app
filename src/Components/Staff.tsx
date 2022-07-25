@@ -51,6 +51,9 @@ const Staff = () => {
         yAxis: [{
             max: 900, min: 0,
             label: {
+                style: {
+                    fontSize: 14,
+                },
                 formatter: text => text
             },
             title: {

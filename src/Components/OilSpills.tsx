@@ -55,9 +55,8 @@ const OilSpills = () => {
                 text: 'Produced Liquids Spilled (Bbl)/\n' +
                     'Total Produced Liquids (MBbl)',
                 style: {
-                    fontSize: 16,
+                    fontSize: 14,
                     lineHeight: 20,
-
                 },
             },
             max:0.025,
