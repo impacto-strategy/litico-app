@@ -159,17 +159,16 @@ const Dashboard: FC = () => {
             </div>
 
             <div style={{
-                padding: '0 24p 90px 24px',
+                display: 'grid',
                 textAlign: 'center',
-                display: 'flex',
-                gap: '2rem',
-                flexWrap: 'wrap'
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '2em'
             }}>
                 <DualAxesLineColWidget
                     data={getYearlyEmissionData}
                     lineLabel="Greenhouse Gas Emissions (mt)"
                     title="Greenhouse Gas Emissions Mass & Intensity"
-                    width="100%"
+                    gridColumns="1 / 5"
                     y1Lablel="GHG Emissions (mt)"
                     y2Lablel="GHG Emission Intensity (mt/BoE)"
                     includeModal={false}
@@ -179,13 +178,13 @@ const Dashboard: FC = () => {
                     data={getYearlySpillsData}
                     lineLabel="Total Spills"
                     title="Spills with Intensity"
-                    width="49%"
+                    gridColumns="1 / 3"
                     y1Lablel="Spills"
                     y2Lablel="Spill Intensity"
                     includeModal={true}
                 />
-                <ColumnWidget data={getYearlyComplaintsData} title="Total Complaints" modalTitle="Complaints" includeModal={true} width="49%"  />
-                { user.selectedCompany.name === 'Demo Energy' &&
+                <ColumnWidget data={getYearlyComplaintsData} title="Total Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
+                {user.selectedCompany.name === 'Demo Energy' &&
                     <MethaneEmissions/>
                 }
                 { user.selectedCompany.name === 'Demo Energy' &&
@@ -197,20 +196,22 @@ const Dashboard: FC = () => {
                 { user.selectedCompany.name === 'Demo Energy' &&
                     <Emissions2020/>
                 }
-                <Emissions2020CO2 data={co2Emission} units="mt CO2" title="Carbon Dioxide Emissions for Production" />
+                {/* <Emissions2020CO2 data={co2Emission} units="mt CO2" title="Carbon Dioxide Emissions for Production" />
                 <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
-                <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" />
+                <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
                 <Productions
                     data={filter(production, { 'product': 'oil' })}
                     productType="oil"
                     title="Oil Production"
                     y1Lablel="Oil Production (bbls)"
+                    gridColumns ="1/5"
                 />
                 <Productions
                     data={filter(production, { 'product': 'gas' })}
                     productType="gas"
                     title="Gas Production"
                     y1Lablel="Natural Gas Production (mmscf)"
+                    gridColumns ="1/5"
                 />
                 {user.selectedCompany.name === 'Demo Energy' &&
                     <LDAR />
@@ -222,24 +223,23 @@ const Dashboard: FC = () => {
                 </Divider>
             </div>
             <div style={{
-                padding: '0 24p 90px 24px',
+                display: 'grid',
                 textAlign: 'center',
-                display: 'flex',
-                gap: '2rem',
-                flexWrap: 'wrap'
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '2em'
             }}>
                 {/* <Staff/> */}
                 {/*<Donations/>*/}
                 {/* <DonationsDrilldown /> */}
 
                 {getGenderData.length > 0 &&
-                    <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} width="47%" title="Employees by Gender" subTitle="" />
+                    <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} gridColumns="1/3" title="Employees by Gender" subTitle="" />
                 }
                 {getEthnicityData.length > 0 &&
-                    <PieWidget width="47%" data={getEthnicityData} label="ethnicity" title="Employee Diversity" subTitle="2021" />
+                    <PieWidget gridColumns="3/5" data={getEthnicityData} label="ethnicity" title="Employee Diversity" subTitle="2021" />
                 }
                 {getDonationData.length > 0 &&
-                    <StackedBarWidget isGroup={false} isPercentage={false} data={getDonationData} label={'currency'} width="95%" title="Annual Charitable Contributions" subTitle="" />
+                    <StackedBarWidget isGroup={false} isPercentage={false} data={getDonationData} label={'currency'} gridColumns="1/5" title="Annual Charitable Contributions" subTitle="" />
                 }
             </div>
             <div style={{paddingBottom: 40}}/>

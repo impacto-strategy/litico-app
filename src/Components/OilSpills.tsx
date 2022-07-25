@@ -24,7 +24,7 @@ const dataSource = [
 const Wrapper = styled.div`
   background: #fff;
   padding: 20px;
-  width: 30%;
+  grid-column: 1/3;
 `
 
 const OilSpills = () => {

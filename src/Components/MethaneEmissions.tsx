@@ -5,7 +5,7 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   background: #fff;
   padding: 20px;
-  width: 46%;
+  grid-column: 1/3;
 `
 
 const data = [

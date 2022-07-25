@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {Bar} from "@ant-design/plots";
 import { filter, sumBy } from "lodash";
 
-const StackedBarWidget: FC<{ isGroup: boolean, isPercentage: boolean, label: string, width: string, subTitle: string, title: string, data: any }> = props => {
+const StackedBarWidget: FC<{ isGroup: boolean, isPercentage: boolean, label: string, gridColumns: string, subTitle: string, title: string, data: any }> = props => {
   const config = {
     data: props.data,
     isStack: true,
@@ -61,7 +61,7 @@ const StackedBarWidget: FC<{ isGroup: boolean, isPercentage: boolean, label: str
   const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
-    width: ${props.width};
+    grid-column: ${props.gridColumns}
   `
 
   return (
