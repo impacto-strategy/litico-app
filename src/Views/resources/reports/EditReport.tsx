@@ -24,14 +24,9 @@ const EditReport = () => {
     const {id} = useParams()
 
     const [report, setReport] = useState<any>({ esg_metrics: [], year: '' })
-    const modReport = useMemo(() => {
-        let subMetrics = map(groupBy(report.esg_metrics, 'metric_subtype'), (metrics, key) => ({
-            category: metrics[0].category,
-            metric_name: metrics[0].metric_name,
-            metric_subtype: key,
-            metric_codes: metrics.map((m) => m.metric_code.split(';')),
-            metrics
-        }))
+    const [standards, setStandards] = useState<any>()
+
+    const groupByCat = (subMetrics:any) => {
         return sortBy(map(groupBy(subMetrics, 'category'), (subtype_metrics, category) => ({
             category: category,
             subtype_metrics
@@ -43,7 +38,22 @@ const EditReport = () => {
             }
             return order[item.category]
         })
+    }
+
+    const modReport = useMemo(() => {
+        let subMetrics = map(groupBy(report.esg_metrics, 'metric_subtype'), (metrics, key) => ({
+            category: metrics[0].category,
+            metric_name: metrics[0].metric_name,
+            metric_subtype: key,
+            metric_codes: metrics.map((m) => m.metric_code.split(';')),
+            metrics
+        }))
+        return groupByCat(subMetrics)
     }, [report])
+
+    const modStandards = useMemo(() => {
+        return groupByCat(standards)
+    }, [standards])
 
     const getReport = useCallback(() => {
         ResourceService.get({
@@ -54,9 +64,18 @@ const EditReport = () => {
 
     }, [id])
 
+    const getStandards = useCallback(() => {
+        ResourceService.index({
+            resourceName: 'standards'
+        }).then(({ data }) => {
+            setStandards(data)
+        })
+    }, [])
+
     useEffect(() => {
         getReport()
-    }, [getReport])
+        getStandards()
+    }, [getReport, getStandards])
 
     return (
         <Wrapper>
@@ -70,7 +89,7 @@ const EditReport = () => {
                 </PageHeader>
                 <ContentWrapper>
                     <Tabs defaultActiveKey={"0"}>
-                        {modReport.map(({ category, subtype_metrics }, idx) => (
+                        {modStandards.map(({ category , subtype_metrics }, idx) => (
                             <Tabs.TabPane tab={category} key={idx}>
                                 <Row gutter={40}>
                                     {subtype_metrics.map((item: any) => (
@@ -81,7 +100,7 @@ const EditReport = () => {
                                                 extra={<Link
                                                     to={`/reports/${report.id}/metrics?metric_name=${item.metric_name}&metric_subtype=${item.metric_subtype}`}>View</Link>}
                                                     actions={[
-                                                        <div>{item.metrics.length} Entr{item.metrics.length === 1 ? 'y' : 'ies'}</div>,
+                                                        <div>{item.metrics?.length} Entr{item.metrics?.length === 1 ? 'y' : 'ies'}</div>,
                                                         <div>0 Pending Approval</div>,
                                                     ]}
                                             >
