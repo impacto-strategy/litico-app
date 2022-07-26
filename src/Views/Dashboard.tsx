@@ -1,6 +1,6 @@
-import {FC, useCallback, useEffect, useMemo, useState} from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import Emissions2020 from "../Components/Emissions2020";
-import Emissions2020CO2 from "../Components/Emissions2020CO2";
+// import Emissions2020CO2 from "../Components/Emissions2020CO2";
 import ColumnWidget from "../Components/ColumnWidget";
 // import LineWidget from "../Components/LineWidget";
 import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
@@ -9,6 +9,7 @@ import PieWidget from "../Components/PieWidget";
 // import DonationsDrilldown from "../DonationsDrilldown";
 import LDAR from "../Components/LDAR";
 import Productions from "../Components/Productions";
+import GovernanceCheckList from "../Components/GovernanceCheckList";
 import {Divider} from "antd";
 import ResourceService from "../Services/ResourceService";
 import useAuth from "../Providers/Auth/useAuth";
@@ -241,6 +242,19 @@ const Dashboard: FC = () => {
                 {getDonationData.length > 0 &&
                     <StackedBarWidget isGroup={false} isPercentage={false} data={getDonationData} label={'currency'} gridColumns="1/5" title="Annual Charitable Contributions" subTitle="" />
                 }
+            </div>
+            <div>
+                <Divider>
+                    Governance
+                </Divider>
+            </div>
+            <div style={{
+                display: 'grid',
+                textAlign: 'center',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '2em'
+            }}>
+                <GovernanceCheckList esgMetrics={metrics.esg_metrics} />
             </div>
             <div style={{paddingBottom: 40}}/>
         </div>
