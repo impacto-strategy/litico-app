@@ -2,7 +2,7 @@ import {FC} from "react"
 import styled from "styled-components";
 import {Pie} from "@ant-design/plots";
 
-const PieWidget: FC<{ label: string, width: string, subTitle: string, title: string, data: any }> = props => {
+const PieWidget: FC<{ label: string, gridColumns: string, subTitle: string, title: string, data: any }> = props => {
   const config = {
     data: props.data,
     angleField: 'value',
@@ -26,7 +26,7 @@ const PieWidget: FC<{ label: string, width: string, subTitle: string, title: str
   const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
-    width: ${props.width};
+    grid-column: ${props.gridColumns}
   `
 
   return (

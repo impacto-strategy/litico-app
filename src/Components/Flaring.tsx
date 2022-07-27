@@ -5,7 +5,7 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   background: #fff;
   padding: 20px;
-  width: 62%;
+  grid-column: 3/5;
 `
 
 const data = [
@@ -44,7 +44,7 @@ const DemoLine = () => {
             title: {
                 text: 'Gross Annual Volume of Flared Gas (Mcf)',
                 style: {
-                    fontSize: 16,
+                    fontSize: 14,
                 },
             },
         }, {
@@ -56,7 +56,7 @@ const DemoLine = () => {
             title: {
                 text: '% of gas flared per Mcf of gas produced',
                 style: {
-                    fontSize: 16,
+                    fontSize: 14,
                 },
             },
         }],

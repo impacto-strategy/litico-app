@@ -4,11 +4,11 @@ import { DualAxes } from '@ant-design/plots';
 import { Modal, Table } from 'antd';
 import {sortBy} from 'lodash'
 
-const DualAxesLineColWidget: FC<{ data: any, lineLabel: string, title: string, width: string, y1Lablel: string, y2Lablel: string, includeModal: boolean }> = props => {
+const DualAxesLineColWidget: FC<{ data: any, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean }> = props => {
   const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
-    width: ${props.width}%;
+    grid-column: ${props.gridColumns}
   `
 
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -71,10 +71,20 @@ const DualAxesLineColWidget: FC<{ data: any, lineLabel: string, title: string, w
     yField: ['value', 'intensity'],
     yAxis: {
       value: {
-        title: { text: props.y1Lablel }
+        title: {
+          style: {
+            fontSize: 14,
+          },
+          text: props.y1Lablel
+        },
       },
       intensity: {
-        title: { text: props.y2Lablel }
+        title: {
+          style: {
+            fontSize: 14,
+          },
+          text: props.y2Lablel
+        },
       }
     },
     geometryOptions: [

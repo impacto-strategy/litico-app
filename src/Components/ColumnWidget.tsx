@@ -4,13 +4,13 @@ import styled from "styled-components";
 import { Modal, Table } from 'antd';
 import { sortBy } from 'lodash';
 
-const Wrapper = styled.div`
-  background: #fff;
-  padding: 20px;
-  width: 30%;
-`
+const ColumnWidget: FC<{ data: any, title: string, includeModal: boolean, modalTitle: string, gridColumns: string }> = props => {
+    const Wrapper = styled.div`
+        background: #fff;
+        padding: 20px;
+        grid-column: ${props.gridColumns}
+    `
 
-const ColumnWidget: FC<{ data: any, title: string, includeModal: boolean, modalTitle: string }> = props => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [drillDownData, setDrillDownData] = useState<any>([]);
 

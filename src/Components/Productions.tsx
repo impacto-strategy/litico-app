@@ -7,11 +7,10 @@ const Wrapper = styled.div`
   padding: 20px;
 `
 
-const Containter = styled.div`
-  width: 93%;
-`
-
-const Productions: FC<{ data: any, productType: string, title: string}> = props => {
+const Productions: FC<{ data: any, productType: string, title: string, y1Lablel: string, gridColumns: string }> = props => {
+    const Containter = styled.div`
+        grid-column: ${props.gridColumns}
+    `
     const config: LineConfig = {
         data: props.data,
         xField: 'date',
@@ -24,6 +23,14 @@ const Productions: FC<{ data: any, productType: string, title: string}> = props 
                 fill: 'white',
                 stroke: '#5B8FF9',
                 lineWidth: 2,
+            },
+        },
+        yAxis: {
+            title: {
+                style: {
+                    fontSize: 14,
+                },
+                text: props.y1Lablel
             },
         },
     };

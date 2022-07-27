@@ -5,7 +5,7 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   background: #fff;
   padding: 20px;
-  width: 46%;
+  grid-column: 1/3;
 `
 
 const data = [
@@ -59,7 +59,7 @@ const DemoLine = () => {
                 autoRotate: false,
                 style: {
                     fill: '#aaa',
-                    fontSize: 12,
+                    fontSize: 14,
                 },
                 formatter: (v: any) => `${(v / 10e2).toFixed(1)} K`,
 

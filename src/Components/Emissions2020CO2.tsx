@@ -19,6 +19,9 @@ const Emissions2020CO2: FC<{ units: string, title: string, data: any }> = props 
         yField: 'epa_requirement_description',
         yAxis: {
             label: {
+                style: {
+                    fontSize: 14,
+                },
                 formatter: (text) => `${text.substring(0, 20)}`
             },
         },

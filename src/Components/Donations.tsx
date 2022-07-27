@@ -34,8 +34,10 @@ const Donations = () => {
         yField: 'value',
         conversionTag: {},
         yAxis: {
-
             label: {
+                style: {
+                    fontSize: 14,
+                },
                 autoHide: false,
                 autoRotate: false,
                 formatter: (text) => `${Number(text).toLocaleString('en-US', {
