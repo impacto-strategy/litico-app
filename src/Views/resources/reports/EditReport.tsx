@@ -115,7 +115,7 @@ const EditReport = () => {
                                         // <p>{JSON.stringify(item)}</p>
                                         <Col span={8} key={item.name} style={{ marginBottom: 32 }}>
                                             <Card
-                                                title={itemq.name}
+                                                title={item.name}
                                                 type='inner'
                                                 extra={<Link
                                                     to={`/reports/${report.id}/metrics?metric_name=${item.metric_name}&metric_subtype=${item.metric_subtype}`}>View</Link>}
