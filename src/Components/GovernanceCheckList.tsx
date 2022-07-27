@@ -1,25 +1,25 @@
 import { FC } from 'react';
 import { List } from "antd";
 import styled from "styled-components";
-import { CheckCircleTwoTone, StopTwoTone } from '@ant-design/icons'
+import { BorderOutlined, CheckSquareOutlined } from '@ant-design/icons'
 import { find } from 'lodash'
 
 const governanceData = [
-  {
-    name: 'Discussion - Governance Structure',
-    hasPolicy: false
-  },
   {
     name: 'Discussion - Anti-Corruption and Bribery',
     hasPolicy: true
   },
   {
-    name: 'Discussion - Lobbying',
+    name: 'Discussion -  Anti-Corruption and Bribery',
+    hasPolicy: true
+  },
+  {
+    name: 'Discussion - Governance Structure',
     hasPolicy: false
   },
   {
-    name: 'Discussion -  Anti-Corruption and Bribery',
-    hasPolicy: true
+    name: 'Discussion - Lobbying',
+    hasPolicy: false
   },
   {
     name: 'Discussion - Regulatory Risk',
@@ -35,6 +35,7 @@ const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
     grid-column: 1 / 5
+
   `
 
 const GovernanceCheckList: FC<{ esgMetrics: any }> = props => {
@@ -45,14 +46,14 @@ const GovernanceCheckList: FC<{ esgMetrics: any }> = props => {
       <Wrapper>
         <h2>Key Governance Documents & Discussions</h2>
         <List
-          grid={{gutter: 16, column: 2}}
+          grid={{gutter: 16, column: 3}}
           dataSource={governanceData}
+          style={{fontSize: '16px'}}
           renderItem={(item: any, idx) => (
-            
-            <List.Item style={{ padding: '10px' }}>
+            <List.Item style={{ padding: '10px', float: 'left'}}>
               {hasPolicy(item) ?
-                <CheckCircleTwoTone style={{ paddingRight: '5px' }} twoToneColor="#52c41a" />
-                : <StopTwoTone style={{ paddingRight: '5px' }} twoToneColor="#c41a52" />}
+                <CheckSquareOutlined style={{ paddingRight: '5px'}} />
+                : <BorderOutlined style={{ paddingRight: '5px'}} />}
               {item.name}
             </List.Item>
           )}
