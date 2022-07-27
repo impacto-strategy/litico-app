@@ -40,16 +40,16 @@ const EditReport = () => {
         })
     }
 
-    const modReport = useMemo(() => {
-        let subMetrics = map(groupBy(report.esg_metrics, 'metric_subtype'), (metrics, key) => ({
-            category: metrics[0].category,
-            metric_name: metrics[0].metric_name,
-            metric_subtype: key,
-            metric_codes: metrics.map((m) => m.metric_code.split(';')),
-            metrics
-        }))
-        return groupByCat(subMetrics)
-    }, [report])
+    // const modReport = useMemo(() => {
+    //     let subMetrics = map(groupBy(report.esg_metrics, 'metric_subtype'), (metrics, key) => ({
+    //         category: metrics[0].category,
+    //         metric_name: metrics[0].metric_name,
+    //         metric_subtype: key,
+    //         metric_codes: metrics.map((m) => m.metric_code.split(';')),
+    //         metrics
+    //     }))
+    //     return groupByCat(subMetrics)
+    // }, [report])
 
     const modStandards = useMemo(() => {
         return groupByCat(standards)

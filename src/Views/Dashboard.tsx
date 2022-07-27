@@ -26,9 +26,9 @@ const Dashboard: FC = () => {
     const [emissions, setEmissions] = useState<any>([])
     const [spills, setSpills] = useState<any>([])
     const [complaints, setComplaints] = useState<any>([])
-    const [n20Emission, setN2oEmissions] = useState<any>([])
-    const [co2Emission, setC02Emissions] = useState<any>([])
-    const [ch4Emission, setCh4Emissions] = useState<any>([])
+    const [, setN2oEmissions] = useState<any>([])
+    const [, setC02Emissions] = useState<any>([])
+    const [, setCh4Emissions] = useState<any>([])
     const [production, setProductionData] = useState<any>([])
 
     const {user} = useAuth();
