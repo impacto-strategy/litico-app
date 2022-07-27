@@ -3,7 +3,8 @@ import {Link, useParams} from "react-router-dom";
 import styled from "styled-components";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import ResourceService from "../../../Services/ResourceService";
-import {flatten, groupBy, map, uniq, sortBy} from "lodash";
+import {flatten, groupBy, map, uniq, sortBy, filter} from "lodash";
+import Item from "antd/lib/list/Item";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -24,26 +25,43 @@ const EditReport = () => {
     const {id} = useParams()
 
     const [report, setReport] = useState<any>({ esg_metrics: [], year: '' })
-    const modReport = useMemo(() => {
-        let subMetrics = map(groupBy(report.esg_metrics, 'metric_subtype'), (metrics, key) => ({
-            category: metrics[0].category,
-            metric_name: metrics[0].metric_name,
-            metric_subtype: key,
-            metric_codes: metrics.map((m) => m.metric_code.split(';')),
-            metrics
-        }))
-        return sortBy(map(groupBy(subMetrics, 'category'), (subtype_metrics, category) => ({
+    const [standards, setStandards] = useState<any>()
+
+    const groupByCat = (subMetrics:any) => {
+        return sortBy(map(groupBy(subMetrics, 'category'), (metric_names, category) => ({
             category: category,
-            subtype_metrics
+            metric_names: map(groupBy(metric_names, 'metric_name'), (items,name) => ({items, name}))
         })), (item) => {
             const order: any = {
-                'Environmental': 0,
+                'Environment': 0,
                 "Social": 1,
                 "Governance": 2
             }
             return order[item.category]
         })
-    }, [report])
+    }
+
+    const codesByStandard = (items: any) => {
+        return map(groupBy(items, 'reporting_standard'), (data, name) => ({
+            data,
+            name
+        }))
+    }
+
+    // const modReport = useMemo(() => {
+    //     let subMetrics = map(groupBy(report.esg_metrics, 'metric_subtype'), (metrics, key) => ({
+    //         category: metrics[0].category,
+    //         metric_name: metrics[0].metric_name,
+    //         metric_subtype: key,
+    //         metric_codes: metrics.map((m) => m.metric_code.split(';')),
+    //         metrics
+    //     }))
+    //     return groupByCat(subMetrics)
+    // }, [report])
+
+    const modStandards = useMemo(() => {
+        return groupByCat(standards)
+    }, [standards])
 
     const getReport = useCallback(() => {
         ResourceService.get({
@@ -54,9 +72,28 @@ const EditReport = () => {
 
     }, [id])
 
+    const getStandards = useCallback(() => {
+        ResourceService.index({
+            resourceName: 'standards'
+        }).then(({ data }) => {
+            setStandards(data)
+        })
+    }, [])
+
+    const getReportEntries = (standards: any) => {
+        let codes = map(standards.items, 'metric_code')
+        let metrics = filter(report.esg_metrics, function (metric: any) {
+            let metricCodes = metric.metric_code.split(';').map((c:string) => c.trim())
+            return metricCodes.some((c:any) => codes.indexOf(c) >= 0)
+        });
+        let text = `${metrics.length} Entr${metrics?.length === 1 ? 'y' : 'ies'}`
+        return text
+    }
+
     useEffect(() => {
         getReport()
-    }, [getReport])
+        getStandards()
+    }, [getReport, getStandards])
 
     return (
         <Wrapper>
@@ -69,30 +106,36 @@ const EditReport = () => {
                 >
                 </PageHeader>
                 <ContentWrapper>
+                    <h2>Choose an ESG Pillar & Metric Category</h2>
                     <Tabs defaultActiveKey={"0"}>
-                        {modReport.map(({ category, subtype_metrics }, idx) => (
+                        {modStandards.map(({ category, metric_names }, idx) => (
                             <Tabs.TabPane tab={category} key={idx}>
                                 <Row gutter={40}>
-                                    {subtype_metrics.map((item: any) => (
-                                        <Col span={8} key={item.id} style={{ marginBottom: 32 }}>
+                                    {metric_names.map((item: any) => (
+                                        // <p>{JSON.stringify(item)}</p>
+                                        <Col span={8} key={item.name} style={{ marginBottom: 32 }}>
                                             <Card
-                                                title={item.metric_name}
+                                                title={itemq.name}
                                                 type='inner'
                                                 extra={<Link
                                                     to={`/reports/${report.id}/metrics?metric_name=${item.metric_name}&metric_subtype=${item.metric_subtype}`}>View</Link>}
                                                     actions={[
-                                                        <div>{item.metrics.length} Entr{item.metrics.length === 1 ? 'y' : 'ies'}</div>,
+                                                        <div>{getReportEntries(item)}</div>,
                                                         <div>0 Pending Approval</div>,
                                                     ]}
                                             >
                                                 <Space direction={'vertical'}>
                                                     <p>{item.metric_subtype}</p>
-                                                    <p><Tag
-                                                        color={['High', 'Very High'].includes(item.risk) ? 'red' : 'orange'}>Risk: {item.risk}</Tag>
-                                                        {map(uniq(flatten(map(item.metric_codes))), (met: any) => (
-                                                            <Tag>{met}</Tag>
-                                                        ))}
-                                                    </p>
+                                                    {codesByStandard(map(item.items)).map((standard: any, idx) => (
+                                                        <div key={idx} >
+                                                            <Space key={standard.id} style={{paddingRight: '20px'}}>{standard.name}</Space>
+                                                            {map(uniq(flatten(map(standard.data, s =>(s.metric_code)))), (met: any) => (
+                                                            <Tag key={met}>{met}</Tag>
+                                                            ))}
+
+                                                        </div>
+                                                        )
+                                                    )}
                                                 </Space>
                                             </Card>
                                         </Col>

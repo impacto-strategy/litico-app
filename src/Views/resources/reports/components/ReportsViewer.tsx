@@ -1,7 +1,6 @@
 import {FC} from "react";
 import {
     Col,
-    Divider,
     Row,
     Typography,
 } from "antd";
@@ -29,16 +28,6 @@ const ReportsViewer: FC<TReportYearViewer> = ({ report }) => {
 
     return (
         <div>
-            <Row
-              align={"middle"}
-              gutter={{xs: 8, sm: 16, md: 24, lg: 32}}>
-              <Col span={6}>
-                  <Title level={2}>{report.year} - ESG Report</Title>
-              </Col>
-          </Row>
-          <Divider>
-              Reports
-          </Divider>
           <Row
             align={"middle"}
             gutter={{xs: 8, sm: 16, md: 24, lg: 32}}>
