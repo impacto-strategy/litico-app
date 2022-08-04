@@ -36,7 +36,7 @@ const ReportsViewer: FC<TReportYearViewer> = ({ report }) => {
                     gutter={{xs: 8, sm: 16, md: 24, lg: 32}}>
                     {report.reports.map((rep: any) => (
                         <Col key={rep.year + '_col' + rep.period} span={4}>
-                            <Link to={`/reports/${rep.id}`}>
+                            <Link to={`/reports/${rep.id}/metric-names`}>
                                 <ReportCard>
                                     <Title level={4}>{isPeriodAnnual(rep.period) ? 'EOY' : rep.period}</Title>
                                 </ReportCard>

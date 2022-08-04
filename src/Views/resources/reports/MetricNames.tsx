@@ -4,7 +4,6 @@ import styled from "styled-components";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import ResourceService from "../../../Services/ResourceService";
 import {flatten, groupBy, map, uniq, sortBy, filter} from "lodash";
-import Item from "antd/lib/list/Item";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -20,7 +19,7 @@ const ContentWrapper = styled.div`
   margin-bottom: 32px;
 `
 
-const EditReport = () => {
+const MetricNames = () => {
 
     const {id} = useParams()
 
@@ -112,13 +111,12 @@ const EditReport = () => {
                             <Tabs.TabPane tab={category} key={idx}>
                                 <Row gutter={40}>
                                     {metric_names.map((item: any) => (
-                                        // <p>{JSON.stringify(item)}</p>
                                         <Col span={8} key={item.name} style={{ marginBottom: 32 }}>
                                             <Card
                                                 title={item.name}
                                                 type='inner'
                                                 extra={<Link
-                                                    to={`/reports/${report.id}/metrics?metric_name=${item.metric_name}&metric_subtype=${item.metric_subtype}`}>View</Link>}
+                                                    to={`/reports/${report.id}/metric-subtypes?metric_name=${item.name}`}>View</Link>}
                                                     actions={[
                                                         <div>{getReportEntries(item)}</div>,
                                                         <div>0 Pending Approval</div>,
@@ -151,4 +149,4 @@ const EditReport = () => {
     )
 }
 
-export default EditReport
+export default MetricNames
