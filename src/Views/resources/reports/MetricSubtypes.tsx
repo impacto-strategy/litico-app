@@ -1,9 +1,9 @@
-import {Card, Col, PageHeader, Row, Space, Tabs, Tag} from "antd";
+import {Card, Col, PageHeader, Row, Space, Tag} from "antd";
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import styled from "styled-components";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import ResourceService from "../../../Services/ResourceService";
-import {flatten, groupBy, map, uniq, sortBy, filter} from "lodash";
+import {filter} from "lodash";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -26,27 +26,6 @@ const MetricSubtypes = () => {
     const [report, setReport] = useState<any>({ esg_metrics: [], year: '' })
     const [standards, setStandards] = useState<any>()
 
-    const groupByCat = (subMetrics:any) => {
-        return sortBy(map(groupBy(subMetrics, 'category'), (metric_names, category) => ({
-            category: category,
-            metric_names: map(groupBy(metric_names, 'metric_name'), (items,name) => ({items, name}))
-        })), (item) => {
-            const order: any = {
-                'Environment': 0,
-                "Social": 1,
-                "Governance": 2
-            }
-            return order[item.category]
-        })
-    }
-
-    const codesByStandard = (items: any) => {
-        return map(groupBy(items, 'reporting_standard'), (data, name) => ({
-            data,
-            name
-        }))
-    }
-
     // const modReport = useMemo(() => {
     //     let subMetrics = map(groupBy(report.esg_metrics, 'metric_subtype'), (metrics, key) => ({
     //         category: metrics[0].category,
@@ -57,10 +36,6 @@ const MetricSubtypes = () => {
     //     }))
     //     return groupByCat(subMetrics)
     // }, [report])
-
-    const modStandards = useMemo(() => {
-        return groupByCat(standards)
-    }, [standards])
 
     const getReport = useCallback(() => {
         ResourceService.get({
