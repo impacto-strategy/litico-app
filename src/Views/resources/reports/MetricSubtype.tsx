@@ -3,7 +3,6 @@ import styled from "styled-components";
 import {Button, Card, Col, Descriptions, Divider, List, PageHeader, Row, Skeleton, Space, Table, Tag } from "antd";
 import {PlusOutlined} from '@ant-design/icons'
 import { useCallback, useEffect, useState } from "react";
-import AddMeasurement from "../../../Components/AddMeasurement";
 import ResourceService from "../../../Services/ResourceService";
 import { flatten, map, uniq } from "lodash";
 import moment from 'moment';
@@ -27,26 +26,26 @@ const ContentWrapper = styled.section`
 const MetricSubtype = () => {
     const {reportID} = useParams()
     const [searchParams] = useSearchParams();
-    const formFields = [
-        {
-            name: 'CO2 Emissions (mt CO2)',
-            field_name: 'co2_emissions',
-            field_type: 'number',
-            required: false,
-        },
-        {
-            name: 'CH4 Emissions (mt CH4)',
-            field_name: 'ch4_emissions',
-            field_type: 'number',
-            required: false,
-        },
-        {
-            name: 'N2O Emissions (mt N2O)',
-            field_name: 'n20_emissions',
-            field_type: 'number',
-            required: false,
-        }
-    ]
+    // const formFields = [
+    //     {
+    //         name: 'CO2 Emissions (mt CO2)',
+    //         field_name: 'co2_emissions',
+    //         field_type: 'number',
+    //         required: false,
+    //     },
+    //     {
+    //         name: 'CH4 Emissions (mt CH4)',
+    //         field_name: 'ch4_emissions',
+    //         field_type: 'number',
+    //         required: false,
+    //     },
+    //     {
+    //         name: 'N2O Emissions (mt N2O)',
+    //         field_name: 'n20_emissions',
+    //         field_type: 'number',
+    //         required: false,
+    //     }
+    // ]
     const columns = [
     {
         title: 'GHG Emissions',
@@ -160,7 +159,6 @@ const MetricSubtype = () => {
                             </Row>
                             <Row>
                             <Col span={24}>
-                                    <AddMeasurement fields={formFields}></AddMeasurement>
                                 </Col>
                                 <Col span={24}>
                                     <Space direction={'vertical'}>
