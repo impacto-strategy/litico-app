@@ -12,7 +12,9 @@ import EquipmentIndex from "./Views/resources/equipment/EquipmentIndex";
 import ReportsIndex from "./Views/resources/reports/ReportsIndex";
 import ReportsNew from "./Views/resources/reports/ReportsNew";
 import AddMetric from "./Views/AddMetric";
-import EditReport from "./Views/resources/reports/EditReport";
+import MetricNames from "./Views/resources/reports/MetricNames";
+import MetricSubtype from "./Views/resources/reports/MetricSubtype";
+import MetricSubtypes from "./Views/resources/reports/MetricSubtypes";
 import ReportMetricType from "./Views/resources/reports/ReportMetricType";
 import CompaniesNew from "./Views/resources/companies/CompaniesNew";
 import PerformanceDashboard from "./Views/PerformanceDashboard";
@@ -34,8 +36,10 @@ const App: FC = () => {
                 <Route path="reports" element={<ReportsIndex/>}/>
                 <Route path="reports/new" element={<ReportsNew/>}/>
                 <Route path="companies/new" element={<CompaniesNew/>}/>
-                <Route path="reports/:id" element={<EditReport/>}/>
-                <Route path="reports/:reportID/metrics" element={<ReportMetricType/>}/>
+                <Route path="reports/:id/metric-names" element={<MetricNames />} />
+                <Route path="reports/:id/metric-subtypes" element={<MetricSubtypes/>}/>
+                <Route path="reports/:reportID/metrics" element={<ReportMetricType />} />
+                <Route path="reports/:reportID/metric-subtype" element={<MetricSubtype/>}/>
                 <Route path="add-metric" element={<AddMetric/>}/>
                 <Route path="performance" element={<PerformanceDashboard/>}/>
             </Route>
