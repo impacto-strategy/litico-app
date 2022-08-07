@@ -1,7 +1,7 @@
-import {Card, Col, PageHeader, Row, Space, Tag} from "antd";
+import {Card, Col, PageHeader, Row, Space, Tag, Input} from "antd";
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import styled from "styled-components";
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import ResourceService from "../../../Services/ResourceService";
 import {filter} from "lodash";
 
@@ -20,22 +20,11 @@ const ContentWrapper = styled.div`
 `
 
 const MetricSubtypes = () => {
-
     const {id} = useParams()
     const [searchParams] = useSearchParams();
     const [report, setReport] = useState<any>({ esg_metrics: [], year: '' })
     const [standards, setStandards] = useState<any>()
-
-    // const modReport = useMemo(() => {
-    //     let subMetrics = map(groupBy(report.esg_metrics, 'metric_subtype'), (metrics, key) => ({
-    //         category: metrics[0].category,
-    //         metric_name: metrics[0].metric_name,
-    //         metric_subtype: key,
-    //         metric_codes: metrics.map((m) => m.metric_code.split(';')),
-    //         metrics
-    //     }))
-    //     return groupByCat(subMetrics)
-    // }, [report])
+    const [search, setSearch] = useState("");
 
     const getReport = useCallback(() => {
         ResourceService.get({
@@ -63,6 +52,11 @@ const MetricSubtypes = () => {
         return text
     }
 
+    const modStandards = useMemo(() => {
+        if (search === '') return standards;
+        return filter(standards, (standard) => { return standard.metric_subtype.toLowerCase().indexOf(search) !== -1; })
+    }, [standards, search])
+
     useEffect(() => {
         getReport()
         getStandards()
@@ -81,7 +75,16 @@ const MetricSubtypes = () => {
                 <ContentWrapper>
                     <h2>Choose a Metric Subtype to View</h2>
                     <Row gutter={40}>
-                        {standards?.map((item: any, idx:string) => (
+                        <Col span={8} style={{ marginBottom: 32 }}>
+                            <h3>Metric Search:</h3>
+                            <Input placeholder="Search for metric subytype" allowClear={true} onChange={(e) => setSearch(e.target.value.toLowerCase())} />
+                        </Col>
+                    </Row>
+                    <Row gutter={40}>
+                        {(modStandards && modStandards?.length < 1) &&
+                            <p>No results</p>
+                        }
+                        {modStandards?.map((item: any, idx:string) => (
                             <Col span={8} key={idx} style={{ marginBottom: 32 }}>
                                 <Card
                                     title={item.metric_subtype}
