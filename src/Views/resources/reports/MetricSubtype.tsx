@@ -1,12 +1,13 @@
 import {useParams, useSearchParams} from "react-router-dom";
 import styled from "styled-components";
-import {Button, Card, Col, Descriptions, Divider, List, PageHeader, Row, Skeleton, Space, Table, Tag } from "antd";
-import {PlusOutlined} from '@ant-design/icons'
-import { useCallback, useEffect, useState } from "react";
+import {Button, Card, Col, Descriptions, Divider, List, PageHeader, Row, Skeleton, Space, Table, Tag, Upload } from "antd";
+import {DownloadOutlined, UploadOutlined} from '@ant-design/icons'
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ResourceService from "../../../Services/ResourceService";
+import { CSVLink } from "react-csv";
 import { flatten, map, uniq } from "lodash";
 import moment from 'moment';
-
+import Cookies from 'js-cookie';
 
 const Wrapper = styled.section`
   margin: auto;
@@ -24,8 +25,13 @@ const ContentWrapper = styled.section`
 
 
 const MetricSubtype = () => {
-    const {reportID} = useParams()
+    const { reportID } = useParams()
     const [searchParams] = useSearchParams();
+    let token = Cookies.get('XSRF-TOKEN')
+    const headers = {
+        'X-XSRF-TOKEN': token || ''
+    }
+    const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app';
     // const formFields = [
     //     {
     //         name: 'CO2 Emissions (mt CO2)',
@@ -46,7 +52,90 @@ const MetricSubtype = () => {
     //         required: false,
     //     }
     // ]
-    const columns = [
+    const colHeaders = useMemo(() => {
+        return [
+            'ESG Pillar',
+            'Standard',
+            'Metric Code',
+            'Metric Subtype',
+            'Measurement Units',
+            'Numerator 1',
+            'Numerator 2',
+            'Numerator 3',
+            'Numerator 4',
+            'Numerator 5',
+            'Numerator 6',
+            'Numerator 7',
+            'Numerator 8',
+            'Denominator',
+            'Description',
+            'Narrative',
+            'Measurement',
+            'Date',
+            'Timeframe',
+            'Organization',
+            'Contact',
+            'Name',
+            'Address',
+            'City',
+            'State',
+            'Basin',
+            'Type A',
+            'Type B'
+        ]
+    }, [])
+
+    const columns = [{
+        title: 'Organization',
+        dataIndex: 'organization',
+        key: 'organization',
+    },
+    {
+        title: 'Value',
+        dataIndex: 'value',
+        key: 'value',
+    },
+    {
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date',
+    },
+    {
+        title: 'City',
+        dataIndex: 'city',
+        key: 'city',
+    },
+    {
+        title: 'State',
+        dataIndex: 'state',
+        key: 'state',
+    },
+    {
+        title: 'Type A',
+        dataIndex: 'type_a',
+        key: 'type_a',
+    },
+    {
+        title: 'Type B',
+        dataIndex: 'type_b',
+        key: 'type_b',
+    },
+    {
+        title: 'User',
+        dataIndex: 'user_name',
+        key: 'user_name',
+    },
+    {
+        title: 'Submitted on',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY h:mm')}
+            </span>
+        ),
+    }]
+    const customColumns = [
     {
         title: 'GHG Emissions',
         dataIndex: 'denominator',
@@ -96,7 +185,6 @@ const MetricSubtype = () => {
     const [reportData, setReportData] = useState<any>({year: '', period: '', esg_metrics: [], report: {}})
     const [metricStandards, setMetricStandards] = useState<any>()
 
-
     const getStandards = useCallback((metricCodes: any) =>{
         ResourceService.index({
             resourceName: 'standards',
@@ -109,6 +197,10 @@ const MetricSubtype = () => {
 
     }, [setMetricStandards])
 
+    const getColumns = () => {
+        return (searchParams.get("metric_name") === 'Greenhouse Gas Emissions') ? customColumns : columns
+    }
+
     const getMetric = useCallback(() => {
         ResourceService.index({
             resourceName: 'esg-metrics',
@@ -120,8 +212,8 @@ const MetricSubtype = () => {
         })
             .then(({ data }) => {
                 setReportData(data);
-                let codes = map(data.esg_metrics, 'metric_code').map((m) => m.split(';'));
-                getStandards(uniq(flatten(codes)).filter(c => c !== 'n/a'));
+                let codes = map(data.esg_metrics, 'metric_code').map((m) => m.split(';'))
+                getStandards(uniq(flatten(codes)).filter(c => c !== 'n/a'))
             })
             .finally(() => setInitLoading(false))
 
@@ -141,17 +233,22 @@ const MetricSubtype = () => {
                 ><Divider />
                     <ContentWrapper>
                         <Skeleton active loading={initLoading}>
+                            <Row>
+                                <Col span={12}>
+                                    <Button icon={<DownloadOutlined />}><CSVLink data={[colHeaders]}> Click to Download Form</CSVLink></Button>
+                                </Col>
+                                <Col span={12}>
+                                    <Upload name="files" action={`${baseUrl}/api/uploads?report_id=${reportID}`} withCredentials={true} headers={headers}>
+                                        <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                                    </Upload>
+                                </Col>
+                            </Row>
                             {reportData && <Row>
                                 <Col span={24}>
                                     <Table
                                         title={() => `${reportData?.esg_metrics[0]?.metric_name} - ${reportData?.esg_metrics[0]?.metric_subtype}`}
-                                        footer={() =>
-                                            <Button icon={<PlusOutlined/>}>
-                                                Add Metric
-                                            </Button>
-                                        }
                                         pagination={false}
-                                        columns={columns} dataSource={reportData?.esg_metrics} rowKey={'id'} />
+                                        columns={getColumns()} dataSource={reportData?.esg_metrics} rowKey={'id'} />
                                 </Col>
                             </Row>}
                             <Row>
