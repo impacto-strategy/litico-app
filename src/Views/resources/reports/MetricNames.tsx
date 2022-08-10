@@ -27,8 +27,8 @@ const MetricNames = () => {
     const [standards, setStandards] = useState<any>()
 
     const groupByCat = (subMetrics:any) => {
-        return sortBy(map(groupBy(subMetrics, 'category'), (metric_names, category) => ({
-            category: category,
+        return sortBy(map(groupBy(subMetrics, 'esg_pillar'), (metric_names, esg_pillar) => ({
+            esg_pillar: esg_pillar,
             metric_names: map(groupBy(metric_names, 'metric_name'), (items,name) => ({items, name}))
         })), (item) => {
             const order: any = {
@@ -36,7 +36,7 @@ const MetricNames = () => {
                 "Social": 1,
                 "Governance": 2
             }
-            return order[item.category]
+            return order[item.esg_pillar]
         })
     }
 
@@ -107,8 +107,8 @@ const MetricNames = () => {
                 <ContentWrapper>
                     <h2>Choose an ESG Pillar & Metric Category</h2>
                     <Tabs defaultActiveKey={"0"}>
-                        {modStandards.map(({ category, metric_names }, idx) => (
-                            <Tabs.TabPane tab={category} key={idx}>
+                        {modStandards.map(({ esg_pillar, metric_names }, idx) => (
+                            <Tabs.TabPane tab={esg_pillar} key={idx}>
                                 <Row gutter={40}>
                                     {metric_names.map((item: any) => (
                                         <Col span={8} key={item.name} style={{ marginBottom: 32 }}>
