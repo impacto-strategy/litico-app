@@ -45,9 +45,9 @@ const Dashboard: FC = () => {
     }, [setSpills])
 
     const getTotalEmissions = (data: any) => {
-        let co2 = sumBy(filter(data, { units: 'mt CO2' }), 'value')
-        let ch4 = sumBy(filter(data, { units: 'mt CH4' }), 'value')
-        let n20 = sumBy(filter(data, { units: 'mt N2O' }), 'value')
+        let co2 = sumBy(filter(data, { measurement_unit: 'mt CO2' }), 'value')
+        let ch4 = sumBy(filter(data, { measurement_unit: 'mt CH4' }), 'value')
+        let n20 = sumBy(filter(data, { measurement_unit: 'mt N2O' }), 'value')
         return co2 + (ch4 * 25) + (n20 * 298)
     }
 
@@ -84,8 +84,8 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getYearlyEmissionData = useMemo(() => {
-        return flatten(map(groupBy(filter(emissions, { period: 'yearly' }), 'date'), (e: any) => ([
-            { name: "GHG Emissions (CO2e)", type: e[0].date, value: getTotalEmissions(e), intensity: getTotalEmissions(e) / getTotalProduction(e[0].date) }
+        return flatten(map(groupBy(filter(emissions, { timeframe: 'yearly' }), 'date'), (e: any) => ([
+            { name: "GHG Emissions (CO2e)", type: parseInt(e[0].date), value: getTotalEmissions(e), intensity: getTotalEmissions(e) / getTotalProduction(e[0].date) }
         ])))
     }, [emissions, getTotalProduction])
 
@@ -103,7 +103,7 @@ const Dashboard: FC = () => {
         }).then(({ data }) => {
             setComplaints(data)
         })
-}, [])
+    }, [])
 
     const getYearlyComplaintsData = useMemo(() => {
         return flatten(map([2017, 2018, 2019, 2020, 2021], (e) => {
@@ -131,24 +131,26 @@ const Dashboard: FC = () => {
         ])))
     }, [spills, getSpillIntensity])
 
-    const getEmissions = useCallback(() => {
-            ResourceService.index({
-                resourceName: 'emissions'
-            }).then(({ data }) => {
-                setEmissions(data)
-                setC02Emissions(filter(data, (em) => { return em.units === 'mt CO2' && em.value > 0 }))
-                setCh4Emissions(filter(data, (em) => { return  em.units === 'mt CH4' && em.value > 0 }))
-                setN2oEmissions(filter(data, (em) => { return  em.units === 'mt N2O' && em.value > 0 }))
-            })
-    }, [setC02Emissions, setCh4Emissions, setN2oEmissions])
+    const getGhgEmissions = useCallback(async () => {
+        await Promise.all([
+            ResourceService.index({ resourceName: 'measurements', params: {esg_factor_name: 'CO2 Emissions'} }),
+            ResourceService.index({ resourceName: 'measurements', params: {esg_factor_name: 'CH4 Emissions'} }),
+            ResourceService.index({ resourceName: 'measurements', params: {esg_factor_name: 'N2O Emissions'} })
+        ]).then(results => {
+            setEmissions(flatten(results.map((res) => res.data)))
+            setC02Emissions(results[0].data)
+            setCh4Emissions(results[1].data)
+            setN2oEmissions(results[2].data)
+        })
+    }, [])
 
     useEffect(() => {
         getAllMetrics()
         getOilProduction()
-        getEmissions()
         getAllSpills()
         getComplaints()
-    }, [getAllMetrics, getOilProduction, getEmissions, getAllSpills, getComplaints])
+        getGhgEmissions()
+    }, [getAllMetrics, getOilProduction, getAllSpills, getComplaints, getGhgEmissions])
 
     return (
         <div className="site-layout-background"
