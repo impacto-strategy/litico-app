@@ -85,17 +85,17 @@ const Home: FC = () => {
                                 Reports
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="2" icon={<FundOutlined/>}>
+                        {/* <Menu.Item key="2" icon={<FundOutlined/>}>
                             <Link to={`/performance`}>
                                 Performance
                             </Link>
-                        </Menu.Item>
+                        </Menu.Item> */}
                         <Menu.Item key="3" icon={<DatabaseOutlined/>}>
                             <Link to={`/companies`}>
                                 Companies
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="4" icon={<DatabaseOutlined/>}>
+                        {/* <Menu.Item key="4" icon={<DatabaseOutlined/>}>
                             <Link to={`/locations`}>
                                 Locations
                             </Link>
@@ -109,15 +109,20 @@ const Home: FC = () => {
                             <Link to={`/facilities`}>
                                 Facilities
                             </Link>
-                        </Menu.Item>
-                        <Menu.Item key="8" icon={<SwitcherOutlined />}>
+                        </Menu.Item> */}
+                        {/* <Menu.Item key="6" icon={<SwitcherOutlined />}>
                             <Link to={`/standards`}>
                                 Standards
                             </Link>
-                        </Menu.Item>
-                        <Menu.Item key="7" icon={<WarningOutlined />}>
+                        </Menu.Item> */}
+                        {/* <Menu.Item key="7" icon={<WarningOutlined />}>
                             <Link to={`/complaints`}>
                                 Complaints
+                            </Link>
+                        </Menu.Item> */}
+                        <Menu.Item key="8" icon={<DatabaseOutlined />}>
+                            <Link to={`/metric-names`}>
+                                Add Data
                             </Link>
                         </Menu.Item>
                     </Menu>

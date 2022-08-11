@@ -12,6 +12,9 @@ import EquipmentIndex from "./Views/resources/equipment/EquipmentIndex";
 import ReportsIndex from "./Views/resources/reports/ReportsIndex";
 import ReportsNew from "./Views/resources/reports/ReportsNew";
 import AddMetric from "./Views/AddMetric";
+import DataMetricNames from "./Views/resources/DataMetricNames";
+import DataMetricSubtype from "./Views/resources/DataMetricSubtype";
+import DataMetricSubtypes from "./Views/resources/DataMetricSubtypes";
 import MetricNames from "./Views/resources/reports/MetricNames";
 import MetricSubtype from "./Views/resources/reports/MetricSubtype";
 import MetricSubtypes from "./Views/resources/reports/MetricSubtypes";
@@ -35,7 +38,10 @@ const App: FC = () => {
                 <Route path="metrics/:year" element={<Metrics/>}/>
                 <Route path="reports" element={<ReportsIndex/>}/>
                 <Route path="reports/new" element={<ReportsNew/>}/>
-                <Route path="companies/new" element={<CompaniesNew/>}/>
+                <Route path="companies/new" element={<CompaniesNew />} />
+                <Route path="metric-names" element={<DataMetricNames />} />
+                <Route path="metric-subtypes" element={<DataMetricSubtypes />} />
+                <Route path="metric-subtype" element={<DataMetricSubtype />} />
                 <Route path="reports/:id/metric-names" element={<MetricNames />} />
                 <Route path="reports/:id/metric-subtypes" element={<MetricSubtypes/>}/>
                 <Route path="reports/:reportID/metrics" element={<ReportMetricType />} />

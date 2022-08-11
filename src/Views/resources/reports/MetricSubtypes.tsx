@@ -1,9 +1,9 @@
-import {Card, Col, PageHeader, Row, Space, Tag, Input} from "antd";
-import {Link, useParams, useSearchParams} from "react-router-dom";
+import {PageHeader, Space} from "antd";
+import {useParams, useSearchParams} from "react-router-dom";
 import styled from "styled-components";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import { useCallback, useEffect, useState } from "react";
+import MetricSubtypeTabs from "../../../Components/MetricSubtypeTabs";
 import ResourceService from "../../../Services/ResourceService";
-import {filter} from "lodash";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -24,7 +24,6 @@ const MetricSubtypes = () => {
     const [searchParams] = useSearchParams();
     const [report, setReport] = useState<any>({ esg_metrics: [], year: '' })
     const [standards, setStandards] = useState<any>()
-    const [search, setSearch] = useState("");
 
     const getReport = useCallback(() => {
         ResourceService.get({
@@ -46,17 +45,6 @@ const MetricSubtypes = () => {
         })
     }, [searchParams])
 
-    const getReportEntries = (metricSubtype:string) => {
-        let metrics = filter(report.esg_metrics, {'metric_subtype': metricSubtype});
-        let text = `${metrics.length} Entr${metrics?.length === 1 ? 'y' : 'ies'}`
-        return text
-    }
-
-    const modStandards = useMemo(() => {
-        if (search === '') return standards;
-        return filter(standards, (standard) => { return standard.metric_subtype.toLowerCase().indexOf(search) !== -1; })
-    }, [standards, search])
-
     useEffect(() => {
         getReport()
         getStandards()
@@ -74,39 +62,7 @@ const MetricSubtypes = () => {
                 </PageHeader>
                 <ContentWrapper>
                     <h2>Choose a Metric Subtype to View</h2>
-                    <Row gutter={40}>
-                        <Col span={8} style={{ marginBottom: 32 }}>
-                            <h3>Metric Search:</h3>
-                            <Input placeholder="Search for metric subytype" allowClear={true} onChange={(e) => setSearch(e.target.value.toLowerCase())} />
-                        </Col>
-                    </Row>
-                    <Row gutter={40}>
-                        {(modStandards && modStandards?.length < 1) &&
-                            <p>No results</p>
-                        }
-                        {modStandards?.map((item: any, idx:string) => (
-                            <Col span={8} key={idx} style={{ marginBottom: 32 }}>
-                                <Card
-                                    title={item.metric_subtype}
-                                    key={idx} 
-                                    type='inner'
-                                    extra={<Link
-                                        to={`/reports/${report.id}/metric-subtype?metric_name=${item.metric_name}&metric_subtype=${item.metric_subtype}`}>View</Link>}
-                                        actions={[
-                                            <div>{getReportEntries(item.metric_subtype)}</div>,
-                                            <div>0 Pending Approval</div>,
-                                        ]}
-                                >
-                                    <Space direction={'vertical'}>
-                                        {item.metric_code.split(',').map((code: any, idx:string) => (
-                                            <Tag key={idx}>{code}</Tag>
-                                          )
-                                        )}
-                                    </Space>
-                                </Card>
-                            </Col>
-                        ))}
-                    </Row>
+                    <MetricSubtypeTabs standards={standards} report={report} showReport={true} />
                 </ContentWrapper>
             </Space>
         </Wrapper>
