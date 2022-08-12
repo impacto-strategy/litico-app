@@ -55,22 +55,42 @@ const DataMetricSubtype = () => {
 
     }, [searchParams, setMetricStandards])
 
+    const createMeasurementMetrics = (measurementIds: any[]) => {
+        ResourceService.store({
+            resourceName: 'measurement-esg-metrics',
+            fields: {
+                measurement_ids: measurementIds,
+                year: form.getFieldValue('date').year()
+            }
+        }).then((res) => {
+            console.log(res)
+            form.resetFields()
+        })
+    }
+
     const onFinish = (values: any) => {
-        Object.keys(values.factors).map((key) => {
+        let measurementIds: any[] = [];
+        let requests = Object.keys(values.factors).map(async (key) => {
             let formValues = Object.assign({}, values);
             let factor = find(fields, { 'col_label': key });
             formValues['value'] = values['factors'][key];
-            formValues['esg_factor_id'] = factor.id;
-            formValues['esg_factor_name'] = factor.name;
+            formValues['esg_metric_factor_id'] = factor.id;
+            formValues['esg_metric_factor_name'] = factor.name;
             formValues['measurement_unit'] = factor.measurement_units[0];
-            ResourceService.store({
+            let request  = ResourceService.store({
                 resourceName: 'measurements',
                 fields: {...formValues}
-            }).then(() => {
-                form.resetFields()
+            }).then((response) => {
+                measurementIds.push(response.data.id)
             })
+
+            return request;
         })
+        Promise.all(requests).then(() => {
+            return createMeasurementMetrics(measurementIds);
+        });
     };
+
 
     useEffect(() => {
         getFacilities()
