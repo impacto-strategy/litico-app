@@ -103,7 +103,7 @@ const DataMetricSubtype = () => {
                 <PageHeader
                     ghost={false}
                     onBack={() => window.history.back()}
-                    title={searchParams.get("metric_name")}
+                    title={searchParams.get("metric_subtype")}
                 />
                 <ContentWrapper>
                     <Card
@@ -201,7 +201,15 @@ const DataMetricSubtype = () => {
                             <Input.TextArea />
                         </Form.Item>
                         <Form.Item>
-                            <Button type="primary" htmlType="submit" >Submit</Button>
+                            {(fields?.length > 0) &&
+                                <Button type="primary" htmlType="submit">Submit</Button>
+                            }
+                            {(fields?.length < 1) &&
+                                <div>
+                                    <Button type="primary" disabled>Submit</Button>
+                                    <p>Form not available yet</p>
+                                </div>
+                            }
                         </Form.Item>
                     </Form>
                 </ContentWrapper>
