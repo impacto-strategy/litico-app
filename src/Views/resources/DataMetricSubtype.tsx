@@ -1,4 +1,4 @@
-import {Button, Card, Col, DatePicker, Divider, Form, Input, PageHeader, Row, Select, Space, Tag} from "antd";
+import {Button, Card, Col, DatePicker, Divider, Form, Input, message, PageHeader, Row, Select, Space, Tag} from "antd";
 import styled from "styled-components";
 import {useSearchParams} from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
@@ -63,7 +63,7 @@ const DataMetricSubtype = () => {
                 year: form.getFieldValue('date').year()
             }
         }).then((res) => {
-            console.log(res)
+            message.success('Data was added successfully');
             form.resetFields()
         })
     }
