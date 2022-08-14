@@ -162,6 +162,13 @@ const DataMetricSubtype = () => {
                         
                         <Row gutter={24}>
                             <Col span={12}>
+                                <Form.Item name="organization" label="Organization">
+                                    <Input/>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={24}>
+                            <Col span={12}>
                                 <Form.Item name="risk" label="Risk">
                                     <Select>
                                         {riskOptions.map((option: any) => (
@@ -182,16 +189,18 @@ const DataMetricSubtype = () => {
                                             noStyle
                                             >
                                             <Input style={{ width: '50%' }} />
-                                        </Form.Item>
-                                        <Form.Item
+                                            </Form.Item>
+                                        {field.measurement_units[0] &&
+                                            <Form.Item
                                             noStyle
                                             >
-                                            <Select placeholder={field.measurement_units[0]}>
+                                                <Select placeholder={field.measurement_units[0]}>
                                                 {field.measurement_units.map((option: string) => (
                                                     <Select.Option key={option} value={option} >{option}</Select.Option>
                                                 ))}
                                             </Select>
-                                        </Form.Item>
+                                            </Form.Item>
+                                        }
                                     </Input.Group>
                                 </Form.Item>
                             </Col>
