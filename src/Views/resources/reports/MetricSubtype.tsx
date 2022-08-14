@@ -5,7 +5,7 @@ import {DownloadOutlined, UploadOutlined} from '@ant-design/icons'
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ResourceService from "../../../Services/ResourceService";
 import { CSVLink } from "react-csv";
-import { find, flatten, map, uniq } from "lodash";
+import { flatten, map, uniq } from "lodash";
 import moment from 'moment';
 import Cookies from 'js-cookie';
 
