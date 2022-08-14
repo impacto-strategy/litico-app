@@ -9,6 +9,7 @@ import LaptopDemoImg from "./images/LITICOLaptop.jpg";
 const ESGSimplifiedSection = styled.section`
   height: 600px;
   padding: 1.5rem;
+  margin-top: 1rem;
 `
 
 const SimplifiedContentCard = styled.div`

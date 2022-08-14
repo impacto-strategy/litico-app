@@ -3,13 +3,30 @@ import { Row, Col } from "antd";
 
 import styled from "styled-components";
 
+// @ts-ignore
+import HeroImage from './images/_DSC9659.jpg'
+
 const LiticoBlueSection = styled.section`
   --text-white: #fff;
 
-  background-color: var(--litico-blue);
-  min-height: 50vh;
+  background-image: url(${HeroImage});
+  background-size: cover;
+  background-position: 50% 50%;
+  min-height: 60vh;
   padding: 3rem;
   text-align: center;
+  position: relative;
+
+  canvas.overlay {
+    background-color: rgba(46,67,117, 0.85);
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+  }
 
   display: flex;
   justify-content: center;
@@ -54,6 +71,7 @@ const HeroHeading3 = styled.h3`
 const Hero: FC = () => {
   return (
     <LiticoBlueSection>
+      <canvas className="overlay" />
       <Row justify="center" align="middle">
         <Col xs={18} md={16}>
           <div>
