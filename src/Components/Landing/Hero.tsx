@@ -1,5 +1,5 @@
 import { FC } from "react";
-import {Row, Col} from "antd";
+import { Row, Col } from "antd";
 
 import styled from "styled-components";
 
@@ -20,12 +20,21 @@ const LiticoBlueSection = styled.section`
   h3 {
     color: var(--text-white);
   }
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 600;
+  
+    margin-bottom: 0px;
+  }
+
+  @only media screen and (max-width: 640px) {
+    padding: 1.5rem;
+  }
 `;
 
-const HeadingsRow = styled(Row)`
-`
-
-const HeroHeading1 = styled.h1`
+// TODO: not working? see duped styles above
+const HeroHeading = styled.h1`
   font-size: 3rem;
   font-weight: 600;
 
@@ -45,17 +54,19 @@ const HeroHeading3 = styled.h3`
 const Hero: FC = () => {
   return (
     <LiticoBlueSection>
-      <HeadingsRow justify="center" align="middle">
+      <Row justify="center" align="middle">
         <Col xs={18} md={16}>
-          <HeroHeading1>ESG reporting shouldn't be so hard</HeroHeading1>
-          <HeroHeading2>It's time to simplify ESG for good.</HeroHeading2>
-          <HeroHeading3>
-            A purpose-built SaaS platform that simplifies how companies
-            integrate, manage, visualize, report, and amplify their
-            sustainability performance.
-          </HeroHeading3>
+          <div>
+            <HeroHeading>ESG reporting shouldn't be so hard</HeroHeading>
+            <HeroHeading2>It's time to simplify ESG for good.</HeroHeading2>
+            <HeroHeading3>
+              A purpose-built SaaS platform that simplifies how companies
+              integrate, manage, visualize, report, and amplify their
+              sustainability performance.
+            </HeroHeading3>
+          </div>
         </Col>
-      </HeadingsRow>
+      </Row>
     </LiticoBlueSection>
   );
 };

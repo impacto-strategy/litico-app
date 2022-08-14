@@ -17,13 +17,21 @@ const HeaderWrapper = styled.div`
   padding: 1em;
 `
 
+const Logo = styled.img`
+  height: 80px;
+
+  @media only screen and (max-width: 640px) {
+    height: 50px;
+  }
+`
+
 const Header: FC = () => {
   return (
     <header>
       <HeaderWrapper>
         <Row justify='space-between'>
           <Col>
-            <img src={logo} alt="Litico logo" height={80} />
+            <Logo src={logo} alt="Litico logo" />
           </Col>
           <Col>
             <Menu>

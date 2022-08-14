@@ -2,7 +2,8 @@ import { Layout } from "antd";
 import { FC } from "react";
 
 import styled from "styled-components";
-import ESG_Simplified from "../Components/Landing/ESG_Simplified";
+import BetaGroupCTA from "../Components/Landing/BetaGroupCTA";
+import ESGSimplified from "../Components/Landing/ESGSimplified";
 
 import Header from "../Components/Landing/Header";
 import Hero from "../Components/Landing/Hero";
@@ -44,7 +45,8 @@ const Landing: FC = () => {
       <Header />
       <main>
         <Hero />
-        <ESG_Simplified />
+        <ESGSimplified />
+        <BetaGroupCTA />
       </main>
     </LandingLayout>
   );

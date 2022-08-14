@@ -6,7 +6,7 @@ import styled from "styled-components";
 // @ts-ignore
 import LaptopDemoImg from "./images/LITICOLaptop.jpg";
 
-const ESG_SimplifiedSection = styled.section`
+const ESGSimplifiedSection = styled.section`
   height: 600px;
 `
 
@@ -16,7 +16,10 @@ const SimplifiedContentCard = styled.div`
   padding: 1rem;
   text-align: right;
   background-color: #fff;
-  transform: translateX(140px);
+
+  @media only screen and (min-width: 960px) {
+    transform: translateX(140px);
+  }
 
   h2 {
     color: var(--litico-blue);
@@ -71,7 +74,7 @@ const SimplifiedContentCard = styled.div`
 `
 
 const LaptopDemoImgSection = styled.div`
-  position: relative;
+  padding: 0.5rem;
 
   img {
     max-height: 100%;
@@ -79,11 +82,11 @@ const LaptopDemoImgSection = styled.div`
   }
 `
 
-const ESG_Simplified: FC = () => {
+const ESGSimplified: FC = () => {
   return (
-    <ESG_SimplifiedSection>
+    <ESGSimplifiedSection>
       <Row justify="end" align="middle">
-        <Col span={8} style={{zIndex: 1}}>
+        <Col span={24} order={1} sm={{span: 12, order: 0}} md={8} style={{zIndex: 1}}>
           <SimplifiedContentCard>
             <h2>ESG Simplified</h2>
             <div>
@@ -93,14 +96,14 @@ const ESG_Simplified: FC = () => {
             </div>
           </SimplifiedContentCard>
         </Col>
-        <Col span={14}>
+        <Col xs={24} sm={{span: 12, order: 0}} md={14} order={0}>
           <LaptopDemoImgSection>
             <img src={LaptopDemoImg} alt="Dashboard on a laptop screen" />
           </LaptopDemoImgSection>
         </Col>
       </Row>
-    </ESG_SimplifiedSection>
+    </ESGSimplifiedSection>
   );
 };
 
-export default ESG_Simplified
+export default ESGSimplified
