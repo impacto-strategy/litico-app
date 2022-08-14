@@ -6,7 +6,7 @@ import styled from "styled-components";
 const LiticoBlueSection = styled.section`
   --text-white: #fff;
 
-  background-color: var(--landing-primary);
+  background-color: var(--litico-blue);
   min-height: 50vh;
   padding: 3rem;
   text-align: center;

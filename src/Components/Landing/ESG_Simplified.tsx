@@ -19,7 +19,7 @@ const SimplifiedContentCard = styled.div`
   transform: translateX(140px);
 
   h2 {
-    color: var(--landing-primary);
+    color: var(--litico-blue);
     font-size: 3rem;
     line-height: 1.5;
     font-weight: 600;
@@ -34,19 +34,23 @@ const SimplifiedContentCard = styled.div`
     &:first-child {
       span {
         &:first-child {
-          color: var(--environmental-green-light);
+          color: var(--landing-primary-300);
         }
 
         &:last-child {
-          color: var(--environmental-green);
+          color: var(--landing-primary);
         }
       }
     }
 
     &:nth-child(2) {
       span {
+        &:first-child {
+          color: var(--landing-secondary-300);
+        }
+
         &:last-child {
-          // color: var(--social-teal);
+          color: var(--landing-secondary);
         }
       }
     }
@@ -54,11 +58,11 @@ const SimplifiedContentCard = styled.div`
     &:nth-child(3) {
       span {
         &:first-child {
-          color: var(--governance-blue-light);
+          color: var(--landing-accent-300);
         }
 
         &:last-child {
-          color: var(--governance-blue);
+          color: var(--landing-accent);
         }
       }
     }
