@@ -251,6 +251,98 @@ const MetricSubtype = () => {
             </span>
         ),
     }]
+    const genderColumns = [
+    {
+        title: 'Total Employees',
+        dataIndex: 'value',
+        key: 'value',
+    },
+    {
+        title: 'Male',
+        dataIndex: 'num_1',
+        key: 'num_2',
+    },
+    {
+        title: 'Female',
+        dataIndex: 'num_2',
+        key: 'num_2',
+    },
+    {
+        title: 'Non-Binary',
+        dataIndex: 'num_3',
+        key: 'num_3',
+    },
+    {
+        title: 'No Response',
+        dataIndex: 'num_4',
+        key: 'num_4',
+    },
+    {
+        title: 'User',
+        dataIndex: 'user_name',
+        key: 'user_name',
+    },
+    {
+        title: 'Submitted on',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY h:mm')}
+            </span>
+        ),
+    }]
+    const ethnicityColumns = [
+        {
+            title: 'Total Employees',
+            dataIndex: 'value',
+            key: 'value',
+        },
+        {
+            title: 'White/Caucasian',
+            dataIndex: 'num_1',
+            key: 'num_2',
+        },
+        {
+            title: 'Black/African American',
+            dataIndex: 'num_2',
+            key: 'num_2',
+        },
+        {
+            title: 'Asian/Pacific American',
+            dataIndex: 'num_3',
+            key: 'num_3',
+        },
+        {
+            title: 'Latino/Hispanics',
+            dataIndex: 'num_4',
+            key: 'num_4',
+        },
+        {
+            title: 'Native American',
+            dataIndex: 'num_5',
+            key: 'num_5',
+        },
+        {
+            title: 'Other',
+            dataIndex: 'num_6',
+            key: 'num_6',
+        },
+        {
+            title: 'User',
+            dataIndex: 'user_name',
+            key: 'user_name',
+        },
+        {
+            title: 'Submitted on',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            render: (value:any) => (
+                <span>
+                    {moment(value).format('MM/DD/YYYY h:mm')}
+                </span>
+            ),
+        }]
     const [initLoading, setInitLoading] = useState(true)
     const [reportData, setReportData] = useState<any>({year: '', period: '', esg_metrics: [], report: {}})
     const [metricStandards, setMetricStandards] = useState<any>()
@@ -271,6 +363,8 @@ const MetricSubtype = () => {
         if (searchParams.get("metric_name") === 'Greenhouse Gas Emissions') return ghgColumns
         if (searchParams.get("metric_subtype") === 'Volunteer Hours') return hoursColumns
         if (searchParams.get("metric_subtype") === 'Social investment') return donationColumns
+        if (searchParams.get("metric_subtype") === 'Workforce, by Gender') return genderColumns
+        if (searchParams.get("metric_subtype") === 'Workforce, by Ethnicity') return ethnicityColumns
         return columns
     }
 

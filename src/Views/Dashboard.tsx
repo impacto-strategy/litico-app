@@ -61,15 +61,22 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getGenderData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'type_a': 'Women Employees' }), (m: any) => ([
-            { label: m.date, type: 'Female', value: m.num_1 },
-            { label: m.date, type: 'Male', value: m.denominator - m.num_1 }
+        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce, by Gender' }), (m: any) => ([
+            { label: parseInt(m.date), type: 'Female', value: m.num_2 },
+            { label: parseInt(m.date), type: 'Male', value: m.num_1 },
+            { label: parseInt(m.date), type: 'Non-Binary', value: m.num_3 },
+            { label: parseInt(m.date), type: 'No Response', value: m.num_4 }
         ])))
     }, [metrics])
 
     const getEthnicityData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'type_a': 'Ethnicity', date: '2021' }), (m: any) => ([
-            { label: m.date, type: m.type_b, value: m.value }
+        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce, by Ethnicity' }), (m: any) => ([
+            { label: parseInt(m.date), type: 'White/Caucasian', value: m.num_1 },
+            { label: parseInt(m.date), type: 'Black/African American', value: m.num_2 },
+            { label: parseInt(m.date), type: 'Asian/Pacific American', value: m.num_3 },
+            { label: parseInt(m.date), type: 'Latino/Hispanics', value: m.num_4 },
+            { label: parseInt(m.date), type: 'Native American', value: m.num_5 },
+            { label: parseInt(m.date), type: 'Other', value: m.num_6 }
         ])))
     }, [metrics])
 
