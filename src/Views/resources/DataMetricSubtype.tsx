@@ -60,6 +60,7 @@ const DataMetricSubtype = () => {
             resourceName: 'measurement-esg-metrics',
             fields: {
                 measurement_ids: measurementIds,
+                metric_subtype: searchParams.get("metric_subtype"),
                 year: form.getFieldValue('date').year()
             }
         }).then((res) => {
