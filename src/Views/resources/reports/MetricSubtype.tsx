@@ -209,6 +209,48 @@ const MetricSubtype = () => {
             </span>
         ),
     }]
+
+    const donationColumns = [
+    {
+        title: 'Organization',
+        dataIndex: 'organization',
+        key: 'organization'
+    },
+    {
+        title: 'Amount Donated',
+        dataIndex: 'denominator',
+        key: 'denominator',
+        render: (value:any) => (
+            <span>
+                {value.toLocaleString('en-US', {style: 'currency',currency: 'USD'})}
+            </span>
+        ),
+    },
+    {
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY')}
+            </span>
+        ),
+    },
+    {
+        title: 'User',
+        dataIndex: 'user_name',
+        key: 'user_name',
+    },
+    {
+        title: 'Submitted on',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY h:mm')}
+            </span>
+        ),
+    }]
     const [initLoading, setInitLoading] = useState(true)
     const [reportData, setReportData] = useState<any>({year: '', period: '', esg_metrics: [], report: {}})
     const [metricStandards, setMetricStandards] = useState<any>()
@@ -228,6 +270,7 @@ const MetricSubtype = () => {
     const getColumns = () => {
         if (searchParams.get("metric_name") === 'Greenhouse Gas Emissions') return ghgColumns
         if (searchParams.get("metric_subtype") === 'Volunteer Hours') return hoursColumns
+        if (searchParams.get("metric_subtype") === 'Social investment') return donationColumns
         return columns
     }
 
