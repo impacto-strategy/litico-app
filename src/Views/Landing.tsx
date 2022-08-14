@@ -7,6 +7,7 @@ import ESGSimplified from "../Components/Landing/ESGSimplified";
 
 import Header from "../Components/Landing/Header";
 import Hero from "../Components/Landing/Hero";
+import SignupForm from "../Components/Landing/SignupForm";
 
 const LandingLayout = styled(Layout)`
   --landing-primary-300: #acdabb;
@@ -47,6 +48,7 @@ const Landing: FC = () => {
         <Hero />
         <ESGSimplified />
         <BetaGroupCTA />
+        <SignupForm />
       </main>
     </LandingLayout>
   );

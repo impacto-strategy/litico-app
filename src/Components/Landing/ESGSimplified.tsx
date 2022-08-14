@@ -8,6 +8,7 @@ import LaptopDemoImg from "./images/LITICOLaptop.jpg";
 
 const ESGSimplifiedSection = styled.section`
   height: 600px;
+  padding: 1.5rem;
 `
 
 const SimplifiedContentCard = styled.div`
@@ -18,7 +19,7 @@ const SimplifiedContentCard = styled.div`
   background-color: #fff;
 
   @media only screen and (min-width: 960px) {
-    transform: translateX(140px);
+    transform: translateX(130px);
   }
 
   h2 {
