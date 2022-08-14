@@ -5,12 +5,8 @@ import {
     BarChartOutlined,
     ContainerOutlined,
     DatabaseOutlined,
-    FundOutlined,
     MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    SwitcherOutlined,
-    ToolOutlined,
-    WarningOutlined
+    MenuUnfoldOutlined
 } from '@ant-design/icons';
 import {Col, Dropdown, Layout, Menu, Row} from 'antd';
 import ResourceService from "../Services/ResourceService";
