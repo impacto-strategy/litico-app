@@ -82,7 +82,7 @@ const Dashboard: FC = () => {
 
     const getYearlyEmissionData = useMemo(() => {
         return flatten(map(groupBy(emissions, 'date'), (e: any) => ([
-            { name: "GHG Emissions (CO2e)", type: parseInt(e[0].date), value: e[0].value, intensity: e[0].value / getTotalProduction(e[0].date) }
+            { name: "GHG Emissions (CO2e)", type: parseInt(e[0].date), line_value: e[0].value, value: e[0].value / getTotalProduction(e[0].date) }
         ])))
     }, [emissions, getTotalProduction])
 
@@ -124,7 +124,7 @@ const Dashboard: FC = () => {
             return year
         });
         return flatten(map(spillsCountByYear, (e, key) => ([
-            { name: "Spills Count", type: key, value: e.length, intensity: getSpillIntensity(e.length, key), items: e }
+            { name: "Spills Count", type: key, line_value: e.length, value: getSpillIntensity(e.length, key), items: e }
         ])))
     }, [spills, getSpillIntensity])
 
@@ -163,20 +163,22 @@ const Dashboard: FC = () => {
                 <DualAxesLineColWidget
                     data={getYearlyEmissionData}
                     lineLabel="Greenhouse Gas Emissions (mt)"
+                    colLabel="GHG Emission Intensity (mt/BoE)"
                     title="Greenhouse Gas Emissions Mass & Intensity"
                     gridColumns="1 / 5"
-                    y1Lablel="GHG Emissions (mt)"
-                    y2Lablel="GHG Emission Intensity (mt/BoE)"
+                    y1Lablel="GHG Emission Intensity (mt/BoE)"
+                    y2Lablel="GHG Emissions (mt)"
                     includeModal={false}
                 />
                 {/* <WhitingAllData /> */}
                 <DualAxesLineColWidget
                     data={getYearlySpillsData}
                     lineLabel="Total Spills"
+                    colLabel="Spills Intensity"
                     title="Spills with Intensity"
                     gridColumns="1 / 3"
-                    y1Lablel="Spills"
-                    y2Lablel="Spill Intensity"
+                    y1Lablel="Spill Intensity"
+                    y2Lablel="Spills"
                     includeModal={true}
                 />
                 <ColumnWidget data={getYearlyComplaintsData} title="Total Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
