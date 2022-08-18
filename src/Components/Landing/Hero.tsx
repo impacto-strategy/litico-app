@@ -4,7 +4,7 @@ import { Row, Col } from "antd";
 import styled from "styled-components";
 
 // @ts-ignore
-import HeroImage from './images/_DSC9659.jpg'
+import HeroImage from './images/_Broomfield_Set_02-8913.jpg'
 
 const LiticoBlueSection = styled.section`
   --text-white: #fff;
