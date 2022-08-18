@@ -16,7 +16,7 @@ const SimplifiedContentCard = styled.div`
   border-radius: 0.375rem;
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
   padding: 1rem;
-  text-align: right;
+  text-align: left;
   background-color: #fff;
 
   @media only screen and (min-width: 960px) {

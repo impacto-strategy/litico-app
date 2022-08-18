@@ -78,7 +78,7 @@ const Hero: FC = () => {
             <HeroHeading>ESG reporting shouldn't be so hard</HeroHeading>
             <HeroHeading2>It's time to simplify ESG for good.</HeroHeading2>
             <HeroHeading3>
-              A purpose-built SaaS platform that simplifies how companies
+              A purpose-built SaaS platform that simplifies how oil and gas companies
               integrate, manage, visualize, report, and amplify their
               sustainability performance.
             </HeroHeading3>
