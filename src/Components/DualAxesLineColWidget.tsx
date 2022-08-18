@@ -4,7 +4,7 @@ import { DualAxes } from '@ant-design/plots';
 import { Modal, Table } from 'antd';
 import {sortBy} from 'lodash'
 
-const DualAxesLineColWidget: FC<{ data: any, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean }> = props => {
+const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean }> = props => {
   const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
@@ -68,7 +68,7 @@ const DualAxesLineColWidget: FC<{ data: any, lineLabel: string, title: string, g
     animation: false,
     color: ['#477EB7', '#5AC5BF', '#46AD75'],
     xField: 'type',
-    yField: ['value', 'intensity'],
+    yField: ['value', 'line_value'],
     yAxis: {
       value: {
         title: {
@@ -78,41 +78,38 @@ const DualAxesLineColWidget: FC<{ data: any, lineLabel: string, title: string, g
           text: props.y1Lablel
         },
       },
-      intensity: {
+      line_value: {
         title: {
           style: {
             fontSize: 14,
           },
           text: props.y2Lablel
         },
-      }
+      },
     },
     geometryOptions: [
+      {
+        geometry: 'column',
+      },
       {
         geometry: 'line',
         lineStyle: {
           lineWidth: 2,
         },
       },
-      {
-        geometry: 'column',
-        pattern: {
-          type: 'line',
-        },
-      },
     ],
     tooltip: {
       formatter: (data: any) => {
-        let name = data.intensity ? 'Intensity' : props.lineLabel
-        return { name: name, value: (data.value || data.intensity).toLocaleString() };
+        let name = data.line_value ? props.lineLabel : props.colLabel
+        return { name: name, value: (data.value || data.line_value).toLocaleString() };
       },
     },
     meta: {
       value: {
-        alias: props.lineLabel,
+        alias: props.colLabel,
       },
-      intensity: {
-        alias: 'Intensity'
+      line_value: {
+        alias: props.lineLabel,
       },
     },
     onReady: (plot: any) => {

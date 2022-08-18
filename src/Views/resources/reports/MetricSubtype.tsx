@@ -146,6 +146,11 @@ const MetricSubtype = () => {
         title: 'Date',
         dataIndex: 'date',
         key: 'date',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY')}
+            </span>
+        ),
     },
     {
         title: 'User',
@@ -293,40 +298,81 @@ const MetricSubtype = () => {
         ),
     }]
     const ethnicityColumns = [
+    {
+        title: 'Total Employees',
+        dataIndex: 'value',
+        key: 'value',
+    },
+    {
+        title: 'White/Caucasian',
+        dataIndex: 'num_1',
+        key: 'num_2',
+    },
+    {
+        title: 'Black/African American',
+        dataIndex: 'num_2',
+        key: 'num_2',
+    },
+    {
+        title: 'Asian/Pacific American',
+        dataIndex: 'num_3',
+        key: 'num_3',
+    },
+    {
+        title: 'Latino/Hispanics',
+        dataIndex: 'num_4',
+        key: 'num_4',
+    },
+    {
+        title: 'Native American',
+        dataIndex: 'num_5',
+        key: 'num_5',
+    },
+    {
+        title: 'Other',
+        dataIndex: 'num_6',
+        key: 'num_6',
+    },
+    {
+        title: 'User',
+        dataIndex: 'user_name',
+        key: 'user_name',
+    },
+    {
+        title: 'Submitted on',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY h:mm')}
+            </span>
+        ),
+    }]
+    const trirColumns = [
         {
-            title: 'Total Employees',
+            title: 'TRIR Employees',
             dataIndex: 'value',
             key: 'value',
         },
         {
-            title: 'White/Caucasian',
+            title: 'Number of Employee Recordable Incidents',
             dataIndex: 'num_1',
             key: 'num_2',
         },
         {
-            title: 'Black/African American',
+            title: 'Number of Employee Fatalities',
             dataIndex: 'num_2',
             key: 'num_2',
         },
         {
-            title: 'Asian/Pacific American',
+            title: 'Number of Employee Lost Time Incidents',
             dataIndex: 'num_3',
             key: 'num_3',
         },
         {
-            title: 'Latino/Hispanics',
-            dataIndex: 'num_4',
-            key: 'num_4',
-        },
-        {
-            title: 'Native American',
-            dataIndex: 'num_5',
-            key: 'num_5',
-        },
-        {
-            title: 'Other',
-            dataIndex: 'num_6',
-            key: 'num_6',
+            title: 'Employee Hours Worked',
+            dataIndex: 'denominator',
+            key: 'denominator',
         },
         {
             title: 'User',
@@ -361,11 +407,21 @@ const MetricSubtype = () => {
 
     const getColumns = () => {
         if (searchParams.get("metric_name") === 'Greenhouse Gas Emissions') return ghgColumns
-        if (searchParams.get("metric_subtype") === 'Volunteer Hours') return hoursColumns
-        if (searchParams.get("metric_subtype") === 'Social investment') return donationColumns
-        if (searchParams.get("metric_subtype") === 'Workforce, by Gender') return genderColumns
-        if (searchParams.get("metric_subtype") === 'Workforce, by Ethnicity') return ethnicityColumns
-        return columns
+
+        switch (searchParams.get("metric_subtype")) {
+            case 'Volunteer Hours':
+                return hoursColumns
+            case 'Social investment':
+                return donationColumns
+            case 'Workforce, by Gender':
+                return genderColumns
+            case 'Workforce, by Ethnicity':
+                return ethnicityColumns
+            case 'Employee TRIR':
+                return trirColumns
+            default:
+                return columns
+        }
     }
 
     const getMetric = useCallback(() => {
