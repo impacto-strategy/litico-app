@@ -1,5 +1,5 @@
 // import {useForm, ValidationError} from '@formspree/react';
-import { Col, Row } from "antd";
+import { Modal, Col, Row } from "antd";
 import styled from "styled-components";
 
 const Section = styled.section`

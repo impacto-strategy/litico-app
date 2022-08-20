@@ -16,11 +16,11 @@ const SimplifiedContentCard = styled.div`
   border-radius: 0.375rem;
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
   padding: 1rem;
-  text-align: left;
+  text-align: right;
   background-color: #fff;
 
   @media only screen and (min-width: 960px) {
-    transform: translateX(130px);
+    transform: translateX(90px);
   }
 
   h2 {
@@ -88,6 +88,7 @@ const ESGSimplified: FC = () => {
   return (
     <ESGSimplifiedSection>
       <Row justify="end" align="middle">
+        {/* Initially 12 for span */}
         <Col span={24} order={1} sm={{span: 12, order: 0}} md={8} style={{zIndex: 1}}>
           <SimplifiedContentCard>
             <h2>ESG Simplified</h2>
