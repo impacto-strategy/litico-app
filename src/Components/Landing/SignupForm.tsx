@@ -1,5 +1,6 @@
 // import {useForm, ValidationError} from '@formspree/react';
 import { Modal, Col, Row } from "antd";
+import { FC, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 
 const Section = styled.section`
@@ -53,82 +54,92 @@ const SubmitButton = styled.button`
     background: ${(props) => `var(--landing-secondary-700)` || "inherit"};
   }
 `;
-const SignupForm = () => {
+const SignupForm: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>}> = (props: {visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>}) => {
   // const [state, handleSubmit] = useForm("xdobzqzp");
   // if (state.succeeded) {
   //     return <p>You message has been sent! One of of our team members will reach out to you shortly.</p>;
   // }
 
   return (
-    <Section>
-      <Form>
-        <Row>
-          <Col md={18} lg={10}>
-            <input
-              placeholder={"Name"}
-              id="fullname"
-              type="text"
-              name="fullname"
-              required
-            />
-            {/* <ValidationError
-                prefix="Name"
-                field="fullname"
-                errors={state.errors}
-            /> */}
-            <input
-              placeholder={"Email"}
-              id="email"
-              required
-              type="email"
-              name="email"
-            />
-            <input
-              placeholder={"Company Name"}
-              id="company"
-              type="text"
-              name="company"
-            />
+    <Modal 
+      title="Sign Up Today"
+      visible={props.visible}
+      onOk={() => {
+        props.setVisible(false);
+      }}
+      onCancel={() => {
+        props.setVisible(false);
+      }}>
+      <Section>
+        <Form>
+          <Row>
+            <Col md={18} lg={10}>
+              <input
+                placeholder={"Name"}
+                id="fullname"
+                type="text"
+                name="fullname"
+                required
+              />
+              {/* <ValidationError
+                  prefix="Name"
+                  field="fullname"
+                  errors={state.errors}
+              /> */}
+              <input
+                placeholder={"Email"}
+                id="email"
+                required
+                type="email"
+                name="email"
+              />
+              <input
+                placeholder={"Company Name"}
+                id="company"
+                type="text"
+                name="company"
+              />
 
-            {/* <ValidationError
-                prefix="Email"
-                field="email"
-                errors={state.errors}
-            /> */}
-          </Col>
-          <Col md={18} lg={{ span: 10, offset: 2 }}>
-            <input placeholder={"Title"} id="title" type="text" name="title" />
-            <input
-              placeholder={"Contact Number"}
-              id="phone"
-              type="tel"
-              name="phone"
-            />
-            <input
-              placeholder={"Company URL"}
-              id="domain"
-              type="url"
-              name="domain"
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={24} md={18} lg={10}>
-            <textarea
-              id="message"
-              name="message"
-              placeholder={"How did you hear about the LITICO platform?"}
-            />
-            {/* <ValidationError
-                prefix="Message"
-                field="message"
-                errors={state.errors}
-            /> */}
-          </Col>
-        </Row>
-        <SubmitButton type="submit">Submit</SubmitButton>
-      </Form>
-    </Section>
+              {/* <ValidationError
+                  prefix="Email"
+                  field="email"
+                  errors={state.errors}
+              /> */}
+            </Col>
+            <Col md={18} lg={{ span: 10, offset: 2 }}>
+              <input placeholder={"Title"} id="title" type="text" name="title" />
+              <input
+                placeholder={"Contact Number"}
+                id="phone"
+                type="tel"
+                name="phone"
+              />
+              <input
+                placeholder={"Company URL"}
+                id="domain"
+                type="url"
+                name="domain"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24} md={18} lg={10}>
+              <textarea
+                id="message"
+                name="message"
+                placeholder={"How did you hear about the LITICO platform?"}
+              />
+              {/* <ValidationError
+                  prefix="Message"
+                  field="message"
+                  errors={state.errors}
+              /> */}
+            </Col>
+          </Row>
+          <SubmitButton type="submit">Submit</SubmitButton>
+        </Form>
+      </Section>
+    </Modal>
   );
 };
 

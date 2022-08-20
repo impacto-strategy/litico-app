@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, Dispatch, SetStateAction } from "react";
 import { Row, Col } from "antd";
 import styled from "styled-components";
 
@@ -21,14 +21,21 @@ const LimitedSpotsDisclaimer = styled.p`
   font-weight: 600;
 `;
 
-const BetaGroupCTA: FC = () => {
+const BetaGroupCTA: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>}> = (props: {visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>}) => {
+  
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    props.setVisible(true);
+    return;
+  }
+  
   return (
     <Section>
       <Row justify="center">
         <Col>
           <p>
             {/* TODO: where does this need to link to? */}
-            <Button>Join our beta group today!</Button>
+            <Button onClick={(e) => handleClick(e)}>Join our beta group today!</Button>
           </p>
           <LimitedSpotsDisclaimer>
             Limited number of spots available.

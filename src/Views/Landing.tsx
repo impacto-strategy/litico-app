@@ -1,5 +1,5 @@
 import { Layout } from "antd";
-import { FC } from "react";
+import { FC, useState } from "react";
 
 import styled from "styled-components";
 import BetaGroupCTA from "../Components/Landing/BetaGroupCTA";
@@ -42,14 +42,16 @@ const LandingLayout = styled(Layout)`
 `;
 
 const Landing: FC = () => {
+  const [visible, setVisible] = useState<boolean>(false);
+
   return (
     <LandingLayout id={"components-landing-page-layout"}>
       <Header />
       <main>
         <Hero />
         <ESGSimplified />
-        <BetaGroupCTA />
-        <SignupForm />
+        <BetaGroupCTA visible={visible} setVisible={setVisible}/>
+        <SignupForm visible={visible} setVisible={setVisible}/>
       </main>
       <Footer />
     </LandingLayout>
