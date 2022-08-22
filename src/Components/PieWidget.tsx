@@ -34,7 +34,7 @@ const PieWidget: FC<{ label: string, gridColumns: string, subTitle: string, titl
 
   return (
       <Wrapper>
-          <h2>{props.title}</h2>
+          <h3>{props.title}</h3>
           <h4>{props.subTitle}</h4>
           <Pie {...config} />
       </Wrapper>

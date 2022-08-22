@@ -110,9 +110,9 @@ const DemoLine = () => {
 
     return (
         <Wrapper>
-            <h2>
+            <h3>
                 Methane Emissions
-            </h2><Line {...config} />
+            </h3><Line {...config} />
         </Wrapper>);
 };
 

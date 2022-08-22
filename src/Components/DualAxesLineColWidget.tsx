@@ -128,9 +128,9 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
   };
   return (
     <Wrapper>
-      <h2>
+      <h3>
         {props.title}
-      </h2>
+      </h3>
       <DualAxes {...config} />
       {props.includeModal &&
         <Modal title={props.y1Lablel} visible={isModalVisible} onOk={closeModal} onCancel={closeModal} width={1000}>

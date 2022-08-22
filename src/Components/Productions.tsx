@@ -41,9 +41,9 @@ const Productions: FC<{ data: any, productType: string, title: string, y1Lablel:
         <Containter>
             {props.data.length > 0 &&
             <Wrapper>
-                <h2>
+                <h3>
                     {props.title}
-                </h2>
+                </h3>
                 <Line {...config} />
             </Wrapper>
             }

@@ -69,7 +69,7 @@ const StackedBarWidget: FC<{ isGroup: boolean, isPercentage: boolean, label: str
 
   return (
       <Wrapper>
-          <h2>{props.title}</h2>
+          <h3>{props.title}</h3>
           <h4>{props.subTitle}</h4>
           <Bar {...config} />
       </Wrapper>

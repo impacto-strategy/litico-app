@@ -44,7 +44,7 @@ const GovernanceCheckList: FC<{ esgMetrics: any }> = props => {
   }
     return (
       <Wrapper>
-        <h2>Key Governance Documents & Discussions</h2>
+        <h3>Key Governance Documents & Discussions</h3>
         <List
           grid={{gutter: 16, column: 3}}
           dataSource={governanceData}

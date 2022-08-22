@@ -73,9 +73,9 @@ const OilSpills = () => {
     };
     return (
         <Wrapper>
-            <h2>
+            <h3>
                 Spills
-            </h2>
+            </h3>
             <Column style={{height: 500}} {...config} />
         </Wrapper>
     )

@@ -91,9 +91,9 @@ const DemoLine = () => {
 
     return (
         <Wrapper>
-            <h2>
+            <h3>
                 Flaring
-            </h2><DualAxes style={{height: 500}} {...config} />
+            </h3><DualAxes style={{height: 500}} {...config} />
         </Wrapper>);
 };
 

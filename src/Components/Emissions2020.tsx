@@ -71,9 +71,9 @@ const Emissions2020 = () => {
     };
     return (
         <Wrapper>
-            <h2>
+            <h3>
                 Methane Emissions for Production
-            </h2>
+            </h3>
 
             <Pie {...config} />
         </Wrapper>
