@@ -5,7 +5,10 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   background: #fff;
   padding: 20px;
-  grid-column: 1/3;
+  grid-column: 1/5;
+  @media (min-width: 767px) {
+    grid-column: 1/3;
+  }
 `
 
 const data = [

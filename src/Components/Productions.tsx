@@ -9,7 +9,10 @@ const Wrapper = styled.div`
 
 const Productions: FC<{ data: any, productType: string, title: string, y1Lablel: string, gridColumns: string }> = props => {
     const Containter = styled.div`
-        grid-column: ${props.gridColumns}
+        grid-column: 1 /5;
+        @media (min-width: 767px) {
+            grid-column: ${props.gridColumns}
+        }
     `
     const config: LineConfig = {
         data: props.data,

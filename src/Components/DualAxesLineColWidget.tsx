@@ -8,7 +8,10 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
   const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
-    grid-column: ${props.gridColumns}
+    grid-column: 1 /5;
+    @media (min-width: 767px) {
+      grid-column: ${props.gridColumns}
+    }
   `
 
   const [isModalVisible, setIsModalVisible] = useState(false);

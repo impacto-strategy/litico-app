@@ -59,8 +59,13 @@ const Home: FC = () => {
 
     return (
         <Layout id={"components-layout-demo-fixed-sider"}>
-
-            <Sider collapsible collapsed={collapsed} theme={"light"} style={{
+            <Sider
+                breakpoint="lg"
+                collapsible
+                onBreakpoint={(broken) => {
+                    setCollapsed(broken)
+                }}
+                collapsed={collapsed} theme={"light"} style={{
                 overflow: 'auto',
                 height: '100vh',
                 position: 'fixed',
@@ -122,8 +127,11 @@ const Home: FC = () => {
                             </Link>
                         </Menu.Item>
                     </Menu>
-                    <div style={{position: 'absolute', bottom: '50px', paddingLeft: '24px'}}>
+                    <div className="hidden-mobile" style={{position: 'absolute', bottom: '50px', paddingLeft: '24px'}}>
                         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhz31TSBov8mui_c617Nm7m0nyPPRkr-FqIoCnAEiiXPphTg/viewform" target="blank">Send Feedback</a>
+                    </div>
+                    <div className="hidden-desktop" style={{position: 'absolute', bottom: '50px', paddingLeft: '6px'}}>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhz31TSBov8mui_c617Nm7m0nyPPRkr-FqIoCnAEiiXPphTg/viewform" target="blank">Feedback</a>
                     </div>
                 </>
             </Sider>
@@ -131,11 +139,11 @@ const Home: FC = () => {
                 <Header className="site-layout-background" style={{padding: 0}}>
 
                     <Row>
-                        <Col span={8}>
+                        <Col span={8} className="hidden-mobile"  sm={4}>
                             <div onClick={() => setCollapsed(!collapsed)} className={"trigger"}>
                                 {collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}</div>
                         </Col>
-                        <Col span={8} offset={8}>
+                        <Col sm={24} lg={{ span: 8, offset: 8 }}>
                             <div className={"companySelector"}>
                                 <Dropdown overlay={<CompanyMenu onClick={handleCompanyChange} companies={companies}/>} trigger={['click']}>
                                     <div style={{
@@ -150,7 +158,7 @@ const Home: FC = () => {
                                         <div>{user.selectedCompany.name}</div>
                                     </div>
                                 </Dropdown>
-                                <span>{user.name}</span>
+                                <span >{user.name}</span>
                                 {user && (
                                     <span style={{cursor: 'pointer'}} onClick={handleLogout}>
                                         Logout

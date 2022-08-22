@@ -61,7 +61,10 @@ const StackedBarWidget: FC<{ isGroup: boolean, isPercentage: boolean, label: str
   const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
-    grid-column: ${props.gridColumns}
+    grid-column: 1 /5;
+    @media (min-width: 767px) {
+      grid-column: ${props.gridColumns}
+    }
   `
 
   return (

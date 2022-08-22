@@ -5,9 +5,11 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   background: #fff;
   padding: 20px;
-  grid-column: 3/5;
+  grid-column: 1/5;
+  @media (min-width: 767px) {
+    grid-column: 3/5;
+  }
 `
-
 const data = [
     {
         "name": "Gross Annual Volume of Flared Gas",

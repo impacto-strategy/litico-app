@@ -26,7 +26,10 @@ const PieWidget: FC<{ label: string, gridColumns: string, subTitle: string, titl
   const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
-    grid-column: ${props.gridColumns}
+    grid-column: 1 /5;
+    @media (min-width: 767px) {
+      grid-column: ${props.gridColumns}
+    }
   `
 
   return (
