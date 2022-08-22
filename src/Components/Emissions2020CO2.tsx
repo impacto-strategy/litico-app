@@ -32,9 +32,9 @@ const Emissions2020CO2: FC<{ units: string, title: string, data: any }> = props 
         <Containter>
             {props.data.length > 0 &&
                 <Wrapper>
-                    <h2>
+                    <h3>
                         {props.title}
-                    </h2>
+                    </h3>
 
                     <Bar {...config} />
                 </Wrapper>

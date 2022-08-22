@@ -9,7 +9,10 @@ const Wrapper = styled.div`
 
 const Productions: FC<{ data: any, productType: string, title: string, y1Lablel: string, gridColumns: string }> = props => {
     const Containter = styled.div`
-        grid-column: ${props.gridColumns}
+        grid-column: 1 /5;
+        @media (min-width: 767px) {
+            grid-column: ${props.gridColumns}
+        }
     `
     const config: LineConfig = {
         data: props.data,
@@ -28,7 +31,7 @@ const Productions: FC<{ data: any, productType: string, title: string, y1Lablel:
         yAxis: {
             title: {
                 style: {
-                    fontSize: 14,
+                    fontSize: 12,
                 },
                 text: props.y1Lablel
             },
@@ -38,9 +41,9 @@ const Productions: FC<{ data: any, productType: string, title: string, y1Lablel:
         <Containter>
             {props.data.length > 0 &&
             <Wrapper>
-                <h2>
+                <h3>
                     {props.title}
-                </h2>
+                </h3>
                 <Line {...config} />
             </Wrapper>
             }
