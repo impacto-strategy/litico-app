@@ -83,11 +83,8 @@ const Login = () => {
         <Wrapper>
             <Container>
                 <div>
-                    <Row gutter={16}>
-                        <Col span={12}>
-
-                        </Col>
-                        <Col span={8} offset={4}>
+                    <Row>
+                        <Col sm={{span: 24, offset: 8}} lg={{span: 12, offset: 6}}>
                             <FormWrap>
                                 <div><Title>
                                     <div className="logo">

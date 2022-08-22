@@ -50,7 +50,6 @@ const Wrapper = styled.div`
 
 const Emissions2020 = () => {
     const config: PieConfig = {
-        appendPadding: 10,
         data: dataSource,
         angleField: 'value',
         colorField: 'label',
@@ -63,10 +62,13 @@ const Emissions2020 = () => {
                 return ''.concat((percent * 100).toFixed(0), '%');
             },
             style: {
-                fontSize: 14,
+                fontSize: 12,
                 textAlign: 'center',
             },
         },
+        legend: {
+            position: 'left-top'
+          },
         interactions: [{type: 'element-active'}],
     };
     return (

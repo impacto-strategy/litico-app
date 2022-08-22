@@ -31,7 +31,7 @@ const Productions: FC<{ data: any, productType: string, title: string, y1Lablel:
         yAxis: {
             title: {
                 style: {
-                    fontSize: 14,
+                    fontSize: 12,
                 },
                 text: props.y1Lablel
             },

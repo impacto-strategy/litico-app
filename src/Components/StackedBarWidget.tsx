@@ -14,6 +14,11 @@ const StackedBarWidget: FC<{ isGroup: boolean, isPercentage: boolean, label: str
     yField: 'label',
     seriesField: 'type',
     isPercent: props.isPercentage,
+    yAxis: {
+      label: {
+        formatter: (val: any) => `${(val).substring(0,15)}`,
+      }
+    },
     legend: {
       itemValue: {
         formatter: (val: any) => {

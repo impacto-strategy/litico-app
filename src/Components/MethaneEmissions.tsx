@@ -41,7 +41,7 @@ const DemoLine = () => {
             title: {
                 text: 'Year',
                 style: {
-                    fontSize: 16,
+                    fontSize: 12,
                 },
             },
             line: {
@@ -62,7 +62,7 @@ const DemoLine = () => {
                 autoRotate: false,
                 style: {
                     fill: '#aaa',
-                    fontSize: 14,
+                    fontSize: 12,
                 },
                 formatter: (v: any) => `${(v / 10e2).toFixed(1)} K`,
 
@@ -70,7 +70,7 @@ const DemoLine = () => {
             title: {
                 text: 'Metric Tons (CH4)',
                 style: {
-                    fontSize: 16,
+                    fontSize: 12,
                 },
             },
             line: {

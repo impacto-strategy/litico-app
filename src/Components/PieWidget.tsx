@@ -1,9 +1,9 @@
 import {FC} from "react"
 import styled from "styled-components";
-import {Pie} from "@ant-design/plots";
+import {Pie, PieConfig} from "@ant-design/plots";
 
 const PieWidget: FC<{ label: string, gridColumns: string, subTitle: string, title: string, data: any }> = props => {
-  const config = {
+  const config: PieConfig = {
     data: props.data,
     angleField: 'value',
     colorField: 'type',
@@ -15,11 +15,13 @@ const PieWidget: FC<{ label: string, gridColumns: string, subTitle: string, titl
     },
     label: {
       type: 'inner',
-      offset: '-30%',
       content: (val: any) => `${(val.percent * 100).toFixed(0)}%`,
       style: {
         textAlign: 'center',
       },
+    },
+    legend: {
+      position: 'left-top'
     },
   }
 

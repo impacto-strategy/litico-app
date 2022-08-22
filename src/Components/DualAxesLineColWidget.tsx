@@ -71,20 +71,20 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
     animation: false,
     color: ['#477EB7', '#5AC5BF', '#46AD75'],
     xField: 'type',
-    yField: ['value', 'line_value'],
+    yField: ['value', 'intensity'],
     yAxis: {
       value: {
         title: {
           style: {
-            fontSize: 14,
+            fontSize: 12,
           },
           text: props.y1Lablel
         },
       },
-      line_value: {
+      intensity: {
         title: {
           style: {
-            fontSize: 14,
+            fontSize: 12,
           },
           text: props.y2Lablel
         },
@@ -97,21 +97,21 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
       {
         geometry: 'line',
         lineStyle: {
-          lineWidth: 2,
+          lineWidth: 1,
         },
       },
     ],
     tooltip: {
       formatter: (data: any) => {
-        let name = data.line_value ? props.lineLabel : props.colLabel
-        return { name: name, value: (data.value || data.line_value).toLocaleString() };
+        let name = data.intensity ? props.lineLabel : props.colLabel
+        return { name: name, value: (data.value || data.intensity).toLocaleString() };
       },
     },
     meta: {
       value: {
         alias: props.colLabel,
       },
-      line_value: {
+      intensity: {
         alias: props.lineLabel,
       },
     },

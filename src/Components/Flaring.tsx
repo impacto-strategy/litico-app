@@ -46,7 +46,7 @@ const DemoLine = () => {
             title: {
                 text: 'Gross Annual Volume of Flared Gas (Mcf)',
                 style: {
-                    fontSize: 14,
+                    fontSize: 12,
                 },
             },
         }, {
@@ -58,7 +58,7 @@ const DemoLine = () => {
             title: {
                 text: '% of gas flared per Mcf of gas produced',
                 style: {
-                    fontSize: 14,
+                    fontSize: 12,
                 },
             },
         }],
