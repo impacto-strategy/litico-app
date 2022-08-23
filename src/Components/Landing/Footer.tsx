@@ -10,7 +10,7 @@ const ContactText = styled.p`
 const FooterContainer = styled.div`
     --text-white: #fff;
 
-    background-color: #497cb6;
+    background-color: var(--litico-blue);
     color: var(--text-white);
     display: grid;
     grid-template-rows: 1fr 1fr;

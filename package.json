@@ -9,6 +9,8 @@
     "@antv/l7-maps": "^2.5.54",
     "@antv/l7-react": "^2.3.6",
     "@craco/craco": "^6.4.3",
+    "@formspree/core": "^2.7.1",
+    "@formspree/react": "^2.3.1",
     "@swc/helpers": "^0.3.2",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",

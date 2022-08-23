@@ -1,7 +1,8 @@
 // import {useForm, ValidationError} from '@formspree/react';
 import { Modal, Col, Row } from "antd";
-import { FC, Dispatch, SetStateAction } from "react";
+import React, { useState, FC, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
+import { useForm, ValidationError } from '@formspree/react';
 
 const Section = styled.section`
   padding: 2rem;
@@ -30,12 +31,12 @@ const Form = styled.form`
 `;
 
 const SubmitButton = styled.button`
-  border: none;
+  border: 0px solid transparent;
+  border-radius: 5px;
   overflow: visible;
   font: inherit;
   color: #fff;
   -webkit-appearance: none;
-  border-radius: 0;
   display: inline-block;
   box-sizing: border-box;
   vertical-align: middle;
@@ -48,31 +49,42 @@ const SubmitButton = styled.button`
   transition-property: color, background-color, border-color;
   font-weight: 800;
   font-size: 16px;
-  background: ${(props) => `var(--landing-secondary)` || "inherit"};
+  background-color: #497cb6;
   margin-top: 20px;
   &:hover {
-    background: ${(props) => `var(--landing-secondary-700)` || "inherit"};
+    background: #2a5b93;
   }
 `;
 const SignupForm: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>}> = (props: {visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>}) => {
-  // const [state, handleSubmit] = useForm("xdobzqzp");
-  // if (state.succeeded) {
-  //     return <p>You message has been sent! One of of our team members will reach out to you shortly.</p>;
-  // }
+  const [state, handleSubmit] = useForm("mpznzykz");
+  const [title, setTitle] = useState<String>('Sign Up Today');
+
+  const submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    handleSubmit(e);
+    setTitle('Thank You');
+    return;
+  }
 
   return (
     // Alterations to Modal style can be found in global.less
     <Modal 
-      title="Sign Up Today"
+      title={title}
       visible={props.visible}
-      onOk={() => {
+      onCancel={(e) => {
+        e.preventDefault();
         props.setVisible(false);
       }}
-      onCancel={() => {
-        props.setVisible(false);
-      }}>
-      <Section>
-        <Form>
+      footer={null}
+      keyboard={true}>
+      {state.succeeded&&
+        <Section>
+          <p>You message has been sent! One of of our team members will reach out to you shortly.</p>
+        </Section>
+      }
+      {!state.succeeded&& 
+        <Section>
+        <Form onSubmit={(e) => submitForm(e)}>
           <Row>
             <Col md={18} lg={10}>
               <input
@@ -82,11 +94,11 @@ const SignupForm: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<bool
                 name="fullname"
                 required
               />
-              {/* <ValidationError
+              <ValidationError
                   prefix="Name"
                   field="fullname"
                   errors={state.errors}
-              /> */}
+              />
               <input
                 placeholder={"Email"}
                 id="email"
@@ -100,12 +112,11 @@ const SignupForm: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<bool
                 type="text"
                 name="company"
               />
-
-              {/* <ValidationError
+              <ValidationError
                   prefix="Email"
                   field="email"
                   errors={state.errors}
-              /> */}
+              />
             </Col>
             <Col md={18} lg={{ span: 10, offset: 2 }}>
               <input placeholder={"Title"} id="title" type="text" name="title" />
@@ -115,11 +126,21 @@ const SignupForm: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<bool
                 type="tel"
                 name="phone"
               />
+              <ValidationError
+                  prefix="Phone"
+                  field="phone"
+                  errors={state.errors}
+              />
               <input
                 placeholder={"Company URL"}
                 id="domain"
                 type="url"
                 name="domain"
+              />
+              <ValidationError
+                  prefix="Domain"
+                  field="domain"
+                  errors={state.errors}
               />
             </Col>
           </Row>
@@ -130,16 +151,18 @@ const SignupForm: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<bool
                 name="message"
                 placeholder={"How did you hear about the LITICO platform?"}
               />
-              {/* <ValidationError
+              <ValidationError
                   prefix="Message"
                   field="message"
                   errors={state.errors}
-              /> */}
+              />
             </Col>
           </Row>
-          <SubmitButton type="submit">Submit</SubmitButton>
+          <SubmitButton type="submit" disabled={state.submitting}>Submit</SubmitButton>
         </Form>
       </Section>
+      }
+
     </Modal>
   );
 };
