@@ -14,11 +14,9 @@ const Button = styled.button`
   border-radius: 1.5rem;
   padding: 0.75rem 1.5rem;
   text-transform: uppercase;
-`;
-
-const LimitedSpotsDisclaimer = styled.p`
-  color: var(--litico-blue);
-  font-weight: 600;
+  &:hover {
+    background: rgb(26 43 83);
+  }
 `;
 
 const BetaGroupCTA: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>}> = (props: {visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>}) => {
@@ -37,9 +35,6 @@ const BetaGroupCTA: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<bo
             {/* TODO: where does this need to link to? */}
             <Button onClick={(e) => handleClick(e)}>LEARN MORE!</Button>
           </p>
-          <LimitedSpotsDisclaimer>
-            Limited number of spots available.
-          </LimitedSpotsDisclaimer>
         </Col>
       </Row>
     </Section>
