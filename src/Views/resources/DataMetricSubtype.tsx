@@ -128,7 +128,7 @@ const DataMetricSubtype = () => {
                         onFinish={onFinish}
                     >
                         <Row gutter={24}>
-                            <Col span={12}>
+                            <Col lg={{span: 12}} sm={{span: 24}}>
                                 <Form.Item name="timeframe" label="Timeframe" required tooltip="This is a required field">
                                     <Select>
                                         {timeframeOptions.map((option: any) => (
@@ -137,14 +137,14 @@ const DataMetricSubtype = () => {
                                     </Select>
                                 </Form.Item>
                                 </Col>
-                            <Col span={12}>
+                            <Col lg={{span: 12}} sm={{span: 24}}>
                                 <Form.Item name="date" label="Date">
                                     <DatePicker />
                                     </Form.Item>
                             </Col>
                         </Row>
                         <Row gutter={24}>
-                            <Col span={12}>
+                            <Col lg={{span: 12}} sm={{span: 24}}>
                                 <Form.Item name="facility_name" label="Facility">
                                     <Select>
                                         {facilities?.map((facility: any) => (
@@ -153,7 +153,7 @@ const DataMetricSubtype = () => {
                                     </Select>
                                 </Form.Item>
                             </Col>
-                            <Col span={12}>
+                            <Col lg={{span: 12}} sm={{span: 24}}>
                                 <Form.Item name="basin" label="Basin">
                                     <Input/>
                                 </Form.Item>
@@ -161,14 +161,14 @@ const DataMetricSubtype = () => {
                         </Row>
                         
                         <Row gutter={24}>
-                            <Col span={12}>
+                            <Col lg={{span: 12}} sm={{span: 24}}>
                                 <Form.Item name="organization" label="Organization">
                                     <Input/>
                                 </Form.Item>
                             </Col>
                         </Row>
                         <Row gutter={24}>
-                            <Col span={12}>
+                            <Col lg={{span: 12}} sm={{span: 24}}>
                                 <Form.Item name="risk" label="Risk">
                                     <Select>
                                         {riskOptions.map((option: any) => (
@@ -181,7 +181,7 @@ const DataMetricSubtype = () => {
                         <Divider />
                         <Row gutter={24}>
                             {fields?.map((field: any) => (
-                            <Col key={field.id} span={8}>
+                            <Col key={field.id} lg={{span: 8}} sm={{span: 24}}>
                                 <Form.Item label={field.name}>
                                     <Input.Group compact>
                                         <Form.Item
