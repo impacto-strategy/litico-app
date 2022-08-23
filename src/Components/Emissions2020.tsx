@@ -43,7 +43,7 @@ const Wrapper = styled.div`
   padding: 20px;
   grid-column: 1/5;
   @media (min-width: 767px) {
-    grid-column: 3/5;
+    grid-column: 1/5;
   }
 `
 

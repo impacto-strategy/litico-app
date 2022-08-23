@@ -30,7 +30,7 @@ const MetricSubtypeTabs = ({ standards, report, showReport }:any) => {
   return (
     <div>
       <Row gutter={40}>
-          <Col span={8} style={{ marginBottom: 32 }}>
+          <Col sm={{span: 24}} lg={{span: 8}} style={{ marginBottom: 32 }}>
               <h3>Metric Search:</h3>
               <Input placeholder="Search for metric subytype" allowClear={true} onChange={(e) => setSearch(e.target.value.toLowerCase())} />
           </Col>
@@ -40,7 +40,7 @@ const MetricSubtypeTabs = ({ standards, report, showReport }:any) => {
             <p>No results</p>
         }
         {modStandards?.map((item: any, idx:string) => (
-          <Col span={8} key={idx} style={{ marginBottom: 32 }}>
+          <Col sm={{span: 24}} lg={{span: 8}} key={idx} style={{ marginBottom: 32 }}>
             <Link to={getLink(item)}>
               <Card
                 title={item.metric_subtype}

@@ -6,29 +6,30 @@ import { find } from 'lodash'
 
 const governanceData = [
   {
-    name: 'Discussion - Anti-Corruption and Bribery',
+    metricName: 'Discussion - Anti-Corruption and Bribery',
+    displayName: 'Anti-Corruption and Bribery',
     hasPolicy: true
   },
   {
-    name: 'Discussion -  Anti-Corruption and Bribery',
-    hasPolicy: true
-  },
-  {
-    name: 'Discussion - Governance Structure',
+    metricName: 'Discussion - Tail Risks',
+    displayName: 'Catostrophic/Tail-End Risks',
     hasPolicy: false
   },
   {
-    name: 'Discussion - Lobbying',
+    metricName: 'Discussion - Governance Structure',
+    displayName: 'Governance Structure',
     hasPolicy: false
   },
   {
-    name: 'Discussion - Regulatory Risk',
+    metricName: 'Discussion - Lobbying',
+    displayName: 'Lobbying',
     hasPolicy: false
   },
   {
-    name: 'Discussion - Tail Risks',
+    metricName: 'Discussion - Regulatory Risk',
+    displayName: 'Regulatory Risk',
     hasPolicy: false
-  }
+  },
 ]
 
 const Wrapper = styled.div`
@@ -40,11 +41,11 @@ const Wrapper = styled.div`
 
 const GovernanceCheckList: FC<{ esgMetrics: any }> = props => {
   const hasPolicy = (item:any) => {
-    return !!find(props.esgMetrics, { metric_subtype: item.name })
+    return !!find(props.esgMetrics, { metric_subtype: item.metricName })
   }
     return (
       <Wrapper>
-        <h3>Key Governance Documents & Discussions</h3>
+        <h3>Key Governance Documents</h3>
         <List
           grid={{gutter: 16, column: 3}}
           dataSource={governanceData}
@@ -54,7 +55,7 @@ const GovernanceCheckList: FC<{ esgMetrics: any }> = props => {
               {hasPolicy(item) ?
                 <CheckSquareOutlined style={{ paddingRight: '5px'}} />
                 : <BorderOutlined style={{ paddingRight: '5px'}} />}
-              {item.name}
+              {item.displayName}
             </List.Item>
           )}
         />

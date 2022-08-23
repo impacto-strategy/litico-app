@@ -53,7 +53,7 @@ const MetricPillarTabs = ({ standards, report, showReport }:any) => {
           <Tabs.TabPane tab={esg_pillar} key={idx}>
               <Row gutter={40}>
                 {metric_names.map((item: any) => (
-                  <Col span={8} key={item.name} style={{ marginBottom: 32, display: 'block' }}>
+                  <Col lg={{span: 8}} sm={{span: 24}} key={item.name} style={{ marginBottom: 32, display: 'block' }}>
                     <Link to={getLink(item)}>
                       <Card
                         title={item.name}
