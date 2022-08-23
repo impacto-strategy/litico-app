@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { DualAxes } from '@ant-design/plots';
 import { Modal, Table } from 'antd';
 import {sortBy} from 'lodash'
+import Layout from 'antd/lib/layout/layout';
 
 const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean }> = props => {
   const Wrapper = styled.div`
@@ -91,6 +92,9 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
           text: props.y2Lablel
         },
       },
+    },
+    legend: {
+      flipPage: false,
     },
     geometryOptions: [
       {
