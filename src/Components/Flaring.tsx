@@ -56,7 +56,7 @@ const DemoLine = () => {
                 formatter: (v: any) => `${v}%`,
             },
             title: {
-                text: '% of gas flared per Mcf of gas produced',
+                text: 'Flaring Intensity (Mcf flared per Mcf prod)',
                 style: {
                     fontSize: 12,
                 },
@@ -92,7 +92,7 @@ const DemoLine = () => {
     return (
         <Wrapper>
             <h3>
-                Flaring
+                Flaring Volume & Intenisty
             </h3><DualAxes style={{height: 500}} {...config} />
         </Wrapper>);
 };

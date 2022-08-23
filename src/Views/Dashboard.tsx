@@ -17,7 +17,7 @@ import useAuth from "../Providers/Auth/useAuth";
 // import WhitingAllData from "../Components/WhitingAllData";
 import MethaneEmissions from "../Components/MethaneEmissions";
 import Flaring from "../Components/Flaring";
-import OilSpills from "../Components/OilSpills";
+// import OilSpills from "../Components/OilSpills";
 // import Staff from "../Components/Staff";
 import {filter, flatten, groupBy, map, sortBy, sumBy} from "lodash";
 
@@ -166,31 +166,31 @@ const Dashboard: FC = () => {
                     lineLabel="GHG Emission Intensity (mt/BoE)"
                     title="Greenhouse Gas Emissions Mass & Intensity"
                     gridColumns="1 / 5"
-                    y1Lablel="GHG Emission Intensity (mt/BoE)"
-                    y2Lablel="GHG Emissions (mt)"
+                    y1Lablel="GHG Emissions (mt)"
+                    y2Lablel="GHG Emission Intensity (mt/BoE)"
                     includeModal={false}
                 />
                 {/* <WhitingAllData /> */}
                 <DualAxesLineColWidget
                     data={getYearlySpillsData}
-                    colLabel="Total Spills"
-                    lineLabel="Spills Intensity"
-                    title="Spills with Intensity"
+                    colLabel="Spill Count"
+                    lineLabel="Spills Intensity (spills/bbls prod)"
+                    title="Spills Quantity & Intensity"
                     gridColumns="1 / 3"
-                    y1Lablel="Spill Intensity"
-                    y2Lablel="Spills"
+                    y1Lablel="Spill Count"
+                    y2Lablel="Spill Intensity (spills/bbls prod)"
                     includeModal={true}
                 />
-                <ColumnWidget data={getYearlyComplaintsData} title="Total Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
+                <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
                 {user.selectedCompany.name === 'Demo Energy' &&
                     <MethaneEmissions/>
                 }
                 { user.selectedCompany.name === 'Demo Energy' &&
                     <Flaring/>
                 }
-                { user.selectedCompany.name === 'Demo Energy' &&
+                {/* { user.selectedCompany.name === 'Demo Energy' &&
                     <OilSpills/>
-                }
+                } */}
                 { user.selectedCompany.name === 'Demo Energy' &&
                     <Emissions2020/>
                 }

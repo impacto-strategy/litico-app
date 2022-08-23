@@ -74,6 +74,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
     yField: ['value', 'intensity'],
     yAxis: {
       value: {
+        min: 0,
         title: {
           style: {
             fontSize: 12,
@@ -82,6 +83,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
         },
       },
       intensity: {
+        min: 0,
         title: {
           style: {
             fontSize: 12,
