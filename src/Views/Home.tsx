@@ -139,11 +139,11 @@ const Home: FC = () => {
                 <Header className="site-layout-background" style={{padding: 0}}>
 
                     <Row>
-                        <Col span={8} className="hidden-mobile"  sm={4}>
+                        <Col lg={{ span: 8 }} md={{ span: 4}} className="hidden-mobile"  sm={4}>
                             <div onClick={() => setCollapsed(!collapsed)} className={"trigger"}>
                                 {collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}</div>
                         </Col>
-                        <Col sm={24} lg={{ span: 8, offset: 8 }}>
+                        <Col sm={24} md={{ span: 16, offset: 4 }} lg={{ span: 8, offset: 8 }}>
                             <div className={"companySelector"}>
                                 <Dropdown overlay={<CompanyMenu onClick={handleCompanyChange} companies={companies}/>} trigger={['click']}>
                                     <div style={{
