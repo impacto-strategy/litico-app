@@ -47,9 +47,16 @@ const GovernanceCheckList: FC<{ esgMetrics: any }> = props => {
       <Wrapper>
         <h3>Key Governance Documents</h3>
         <List
-          grid={{gutter: 16, column: 3}}
+          grid={{
+            gutter: 16,
+            sm: 1,
+            md: 3,
+            lg: 3,
+            xl: 3,
+            xxl: 3
+          }}
           dataSource={governanceData}
-          style={{fontSize: '16px'}}
+          style={{fontSize: '14px'}}
           renderItem={(item: any, idx) => (
             <List.Item style={{ padding: '10px', float: 'left'}}>
               {hasPolicy(item) ?

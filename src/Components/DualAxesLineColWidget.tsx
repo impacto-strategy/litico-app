@@ -92,6 +92,9 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
         },
       },
     },
+    legend: {
+      flipPage: false,
+    },
     geometryOptions: [
       {
         geometry: 'column',
