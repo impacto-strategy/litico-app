@@ -20,7 +20,7 @@ const SimplifiedContentCard = styled.div`
   background-color: #fff;
 
   @media only screen and (min-width: 960px) {
-    transform: translateX(90px);
+    transform: translateX(-100px);
   }
 
   h2 {

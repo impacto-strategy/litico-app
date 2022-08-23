@@ -35,7 +35,7 @@ const BetaGroupCTA: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<bo
         <Col>
           <p>
             {/* TODO: where does this need to link to? */}
-            <Button onClick={(e) => handleClick(e)}>Join our beta group today!</Button>
+            <Button onClick={(e) => handleClick(e)}>LEARN MORE!</Button>
           </p>
           <LimitedSpotsDisclaimer>
             Limited number of spots available.

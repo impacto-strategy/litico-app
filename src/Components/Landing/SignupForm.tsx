@@ -61,6 +61,7 @@ const SignupForm: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<bool
   // }
 
   return (
+    // Alterations to Modal style can be found in global.less
     <Modal 
       title="Sign Up Today"
       visible={props.visible}
@@ -123,7 +124,7 @@ const SignupForm: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<bool
             </Col>
           </Row>
           <Row>
-            <Col span={24} md={18} lg={10}>
+            <Col span={48} xs={24} sm={24} md={38} lg={22}>
               <textarea
                 id="message"
                 name="message"

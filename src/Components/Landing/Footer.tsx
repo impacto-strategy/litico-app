@@ -27,13 +27,13 @@ const Footer: FC = () => {
                 <ContactText>Contact Us</ContactText>
             </Row>
             <Row justify="center" align="top">
-                <Col span={3}>
+                <Col xs={8} sm={7} md={6} lg={5} xl={4}>
                     <FooterColumn>410 17th Street, Suite 1600 Denver, CO 80202</FooterColumn>
                 </Col>
-                <Col span={3}>
+                <Col xs={8} sm={7} md={6} lg={5} xl={4}>
                     <FooterColumn>(720) 737-5626</FooterColumn>
                 </Col>
-                <Col span={3}>
+                <Col xs={8} sm={7} md={6} lg={5} xl={4}>
                     <FooterColumn>support@impactostrategy.com</FooterColumn>
                 </Col>
             </Row>
