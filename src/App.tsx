@@ -24,7 +24,7 @@ import Landing from "./Views/Landing";
 const App: FC = () => {
     return (
         <Routes>
-            <Route path="/app" element={<RequireAuth><Home/></RequireAuth>}>
+            <Route element={<RequireAuth><Home/></RequireAuth>}>
                 <Route path="dashboard" element={<Dashboard/>}/>
                 <Route path=":resourceName" element={<ResourceIndex/>}/>
                 <Route path="equipments" element={<EquipmentIndex/>}/>
