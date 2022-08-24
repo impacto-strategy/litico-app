@@ -21,15 +21,13 @@ import MetricSubtypes from "./Views/resources/reports/MetricSubtypes";
 import ReportMetricType from "./Views/resources/reports/ReportMetricType";
 import CompaniesNew from "./Views/resources/companies/CompaniesNew";
 import PerformanceDashboard from "./Views/PerformanceDashboard";
+import Landing from "./Views/Landing";
 
 
 const App: FC = () => {
-
-
     return (
         <Routes>
-
-            <Route path="/" element={<RequireAuth><Home/></RequireAuth>}>
+            <Route element={<RequireAuth><Home/></RequireAuth>}>
                 <Route path="dashboard" element={<Dashboard/>}/>
                 <Route path=":resourceName" element={<ResourceIndex/>}/>
                 <Route path="equipments" element={<EquipmentIndex/>}/>
@@ -49,6 +47,8 @@ const App: FC = () => {
                 <Route path="add-metric" element={<AddMetric/>}/>
                 <Route path="performance" element={<PerformanceDashboard/>}/>
             </Route>
+
+            <Route path={"/"} element={<Landing/>}/>
 
             <Route path={"/login"} element={<Login/>}/>
 
