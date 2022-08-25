@@ -14,15 +14,18 @@ const Form = styled.form`
     padding: 12px;
     width: 100%;
     height: 48px;
-    border: 1px solid var(--landing-primary);
+    border: 1px solid #b4b4b4;
     color: #434e46;
+    border-radius: 5px;
+    box-shadow: 0 0 4px 0 rgba(0,0,0,0.1);
   }
   textarea {
     padding: 12px;
     width: 100%;
     height: 240px;
-    border: 1px solid var(--landing-primary);
+    border: 1px solid #b4b4b4;
     color: #434e46;
+    border-radius: 5px;
   }
 
   [required]:before {

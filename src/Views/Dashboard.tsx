@@ -17,7 +17,7 @@ import useAuth from "../Providers/Auth/useAuth";
 // import WhitingAllData from "../Components/WhitingAllData";
 import MethaneEmissions from "../Components/MethaneEmissions";
 import Flaring from "../Components/Flaring";
-import OilSpills from "../Components/OilSpills";
+// import OilSpills from "../Components/OilSpills";
 // import Staff from "../Components/Staff";
 import {filter, flatten, groupBy, map, sortBy, sumBy} from "lodash";
 
@@ -26,9 +26,6 @@ const Dashboard: FC = () => {
     const [emissions, setEmissions] = useState<any>([])
     const [spills, setSpills] = useState<any>([])
     const [complaints, setComplaints] = useState<any>([])
-    const [, setN2oEmissions] = useState<any>([])
-    const [, setC02Emissions] = useState<any>([])
-    const [, setCh4Emissions] = useState<any>([])
     const [production, setProductionData] = useState<any>([])
 
     const {user} = useAuth();
@@ -44,13 +41,6 @@ const Dashboard: FC = () => {
         }).then(({ data }) => {setSpills(data)})
     }, [setSpills])
 
-    const getTotalEmissions = (data: any) => {
-        let co2 = sumBy(filter(data, { units: 'mt CO2' }), 'value')
-        let ch4 = sumBy(filter(data, { units: 'mt CH4' }), 'value')
-        let n20 = sumBy(filter(data, { units: 'mt N2O' }), 'value')
-        return co2 + (ch4 * 25) + (n20 * 298)
-    }
-
     const getTotalProduction = useCallback((year: string) => {
         return sumBy(filter(production, 'year'), 'amount')
     }, [production])
@@ -65,36 +55,43 @@ const Dashboard: FC = () => {
     }, [getTotalProduction])
 
     const getDonationData = useMemo(() => {
-        return sortBy(flatten(map(filter(metrics.esg_metrics, { 'type_a': 'Community Investment' }), (m: any) => ([
-            { label: m.organization, type: m.date, value: m.value }
+        return sortBy(flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Social investment' }), (m: any) => ([
+            { label: m.organization, type: parseInt(m.date), value: m.value }
         ]))), ['label'])
     }, [metrics])
 
     const getGenderData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'type_a': 'Women Employees' }), (m: any) => ([
-            { label: m.date, type: 'Female', value: m.num_1 },
-            { label: m.date, type: 'Male', value: m.denominator - m.num_1 }
+        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce, by Gender' }), (m: any) => ([
+            { label: parseInt(m.date), type: 'Female', value: m.num_2 },
+            { label: parseInt(m.date), type: 'Male', value: m.num_1 },
+            { label: parseInt(m.date), type: 'Non-Binary', value: m.num_3 },
+            { label: parseInt(m.date), type: 'No Response', value: m.num_4 }
         ])))
     }, [metrics])
 
     const getEthnicityData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'type_a': 'Ethnicity', date: '2021' }), (m: any) => ([
-            { label: m.date, type: m.type_b, value: m.value }
+        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce, by Ethnicity' }), (m: any) => ([
+            { label: parseInt(m.date), type: 'White/Caucasian', value: m.num_1 },
+            { label: parseInt(m.date), type: 'Black/African American', value: m.num_2 },
+            { label: parseInt(m.date), type: 'Asian/Pacific American', value: m.num_3 },
+            { label: parseInt(m.date), type: 'Latino/Hispanics', value: m.num_4 },
+            { label: parseInt(m.date), type: 'Native American', value: m.num_5 },
+            { label: parseInt(m.date), type: 'Other', value: m.num_6 }
         ])))
     }, [metrics])
 
     const getYearlyEmissionData = useMemo(() => {
-        return flatten(map(groupBy(filter(emissions, { period: 'yearly' }), 'date'), (e: any) => ([
-            { name: "GHG Emissions (CO2e)", type: e[0].date, value: getTotalEmissions(e), intensity: getTotalEmissions(e) / getTotalProduction(e[0].date) }
+        return flatten(map(groupBy(emissions, 'date'), (e: any) => ([
+            { name: "GHG Emissions (CO2e)", type: parseInt(e[0].date), value: e[0].value, intensity: e[0].value / getTotalProduction(e[0].date) }
         ])))
     }, [emissions, getTotalProduction])
 
     const getOilProduction = useCallback(() => {
-            ResourceService.index({
-                resourceName: 'productions'
-            }).then(({ data }) => {
-                setProductionData(data)
-            })
+        ResourceService.index({
+            resourceName: 'productions'
+        }).then(({ data }) => {
+            setProductionData(data)
+        })
     }, [])
 
     const getComplaints = useCallback(() => {
@@ -103,7 +100,7 @@ const Dashboard: FC = () => {
         }).then(({ data }) => {
             setComplaints(data)
         })
-}, [])
+    }, [])
 
     const getYearlyComplaintsData = useMemo(() => {
         return flatten(map([2017, 2018, 2019, 2020, 2021], (e) => {
@@ -131,24 +128,22 @@ const Dashboard: FC = () => {
         ])))
     }, [spills, getSpillIntensity])
 
-    const getEmissions = useCallback(() => {
-            ResourceService.index({
-                resourceName: 'emissions'
-            }).then(({ data }) => {
-                setEmissions(data)
-                setC02Emissions(filter(data, (em) => { return em.units === 'mt CO2' && em.value > 0 }))
-                setCh4Emissions(filter(data, (em) => { return  em.units === 'mt CH4' && em.value > 0 }))
-                setN2oEmissions(filter(data, (em) => { return  em.units === 'mt N2O' && em.value > 0 }))
-            })
-    }, [setC02Emissions, setCh4Emissions, setN2oEmissions])
+    const getGhgEmissions = useCallback(async () => {
+        ResourceService.index({
+            resourceName: 'esg-metrics',
+            params: {metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Emissions'}
+        }).then(res => {
+            setEmissions(sortBy(res.data.esg_metrics, 'date'))
+        })
+    }, [])
 
     useEffect(() => {
         getAllMetrics()
         getOilProduction()
-        getEmissions()
         getAllSpills()
         getComplaints()
-    }, [getAllMetrics, getOilProduction, getEmissions, getAllSpills, getComplaints])
+        getGhgEmissions()
+    }, [getAllMetrics, getOilProduction, getAllSpills, getComplaints, getGhgEmissions])
 
     return (
         <div className="site-layout-background"
@@ -167,7 +162,8 @@ const Dashboard: FC = () => {
             }}>
                 <DualAxesLineColWidget
                     data={getYearlyEmissionData}
-                    lineLabel="Greenhouse Gas Emissions (mt)"
+                    colLabel="Greenhouse Gas Emissions (mt)"
+                    lineLabel="GHG Emission Intensity (mt/BoE)"
                     title="Greenhouse Gas Emissions Mass & Intensity"
                     gridColumns="1 / 5"
                     y1Lablel="GHG Emissions (mt)"
@@ -177,23 +173,24 @@ const Dashboard: FC = () => {
                 {/* <WhitingAllData /> */}
                 <DualAxesLineColWidget
                     data={getYearlySpillsData}
-                    lineLabel="Total Spills"
-                    title="Spills with Intensity"
+                    colLabel="Spill Count"
+                    lineLabel="Spills Intensity (spills/bbls prod)"
+                    title="Spills Quantity & Intensity"
                     gridColumns="1 / 3"
-                    y1Lablel="Spills"
-                    y2Lablel="Spill Intensity"
+                    y1Lablel="Spill Count"
+                    y2Lablel="Spill Intensity (spills/bbls prod)"
                     includeModal={true}
                 />
-                <ColumnWidget data={getYearlyComplaintsData} title="Total Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
+                <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
                 {user.selectedCompany.name === 'Demo Energy' &&
                     <MethaneEmissions/>
                 }
                 { user.selectedCompany.name === 'Demo Energy' &&
                     <Flaring/>
                 }
-                { user.selectedCompany.name === 'Demo Energy' &&
+                {/* { user.selectedCompany.name === 'Demo Energy' &&
                     <OilSpills/>
-                }
+                } */}
                 { user.selectedCompany.name === 'Demo Energy' &&
                     <Emissions2020/>
                 }

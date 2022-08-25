@@ -14,6 +14,11 @@ const StackedBarWidget: FC<{ isGroup: boolean, isPercentage: boolean, label: str
     yField: 'label',
     seriesField: 'type',
     isPercent: props.isPercentage,
+    yAxis: {
+      label: {
+        formatter: (val: any) => `${(val).substring(0,15)}`,
+      }
+    },
     legend: {
       itemValue: {
         formatter: (val: any) => {
@@ -61,12 +66,15 @@ const StackedBarWidget: FC<{ isGroup: boolean, isPercentage: boolean, label: str
   const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
-    grid-column: ${props.gridColumns}
+    grid-column: 1 /5;
+    @media (min-width: 767px) {
+      grid-column: ${props.gridColumns}
+    }
   `
 
   return (
       <Wrapper>
-          <h2>{props.title}</h2>
+          <h3>{props.title}</h3>
           <h4>{props.subTitle}</h4>
           <Bar {...config} />
       </Wrapper>

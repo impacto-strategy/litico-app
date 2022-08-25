@@ -24,7 +24,10 @@ const dataSource = [
 const Wrapper = styled.div`
   background: #fff;
   padding: 20px;
-  grid-column: 1/3;
+  grid-column: 1/5;
+  @media (min-width: 767px) {
+    grid-column: 1/3;
+  }
 `
 
 const OilSpills = () => {
@@ -55,7 +58,7 @@ const OilSpills = () => {
                 text: 'Produced Liquids Spilled (Bbl)/\n' +
                     'Total Produced Liquids (MBbl)',
                 style: {
-                    fontSize: 14,
+                    fontSize: 12,
                     lineHeight: 20,
                 },
             },
@@ -70,9 +73,9 @@ const OilSpills = () => {
     };
     return (
         <Wrapper>
-            <h2>
+            <h3>
                 Spills
-            </h2>
+            </h3>
             <Column style={{height: 500}} {...config} />
         </Wrapper>
     )

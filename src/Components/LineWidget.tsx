@@ -127,9 +127,9 @@ const LineWidget: FC<{ title: string, data: any, label: string }> = props => {
 
     return (
         <Wrapper>
-            <h2>
+            <h3>
                 {props.title}
-            </h2><Line {...config} />
+            </h3><Line {...config} />
         </Wrapper>);
 };
 

@@ -49,7 +49,7 @@ const EmissionsDrillDown = () => {
 
     return (
         <Wrapper>
-            <h2>2020 Summary</h2>
+            <h3>2020 Summary</h3>
             {_data ? <Bar {...config}/> : <Spin size={'large'} style={{marginTop: 90}}/>}
             <div style={{marginTop: 20}}>
                 <Link to={'/metrics/2020'}>

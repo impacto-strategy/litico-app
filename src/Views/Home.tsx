@@ -5,12 +5,8 @@ import {
     BarChartOutlined,
     ContainerOutlined,
     DatabaseOutlined,
-    FundOutlined,
     MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    SwitcherOutlined,
-    ToolOutlined,
-    WarningOutlined
+    MenuUnfoldOutlined
 } from '@ant-design/icons';
 import {Col, Dropdown, Layout, Menu, Row} from 'antd';
 import ResourceService from "../Services/ResourceService";
@@ -63,8 +59,13 @@ const Home: FC = () => {
 
     return (
         <Layout id={"components-layout-demo-fixed-sider"}>
-
-            <Sider collapsible collapsed={collapsed} theme={"light"} style={{
+            <Sider
+                breakpoint="lg"
+                collapsible
+                onBreakpoint={(broken) => {
+                    setCollapsed(broken)
+                }}
+                collapsed={collapsed} theme={"light"} style={{
                 overflow: 'auto',
                 height: '100vh',
                 position: 'fixed',
@@ -85,17 +86,17 @@ const Home: FC = () => {
                                 Reports
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="2" icon={<FundOutlined/>}>
+                        {/* <Menu.Item key="2" icon={<FundOutlined/>}>
                             <Link to={`/performance`}>
                                 Performance
                             </Link>
-                        </Menu.Item>
+                        </Menu.Item> */}
                         <Menu.Item key="3" icon={<DatabaseOutlined/>}>
                             <Link to={`/companies`}>
                                 Companies
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="4" icon={<DatabaseOutlined/>}>
+                        {/* <Menu.Item key="4" icon={<DatabaseOutlined/>}>
                             <Link to={`/locations`}>
                                 Locations
                             </Link>
@@ -109,20 +110,28 @@ const Home: FC = () => {
                             <Link to={`/facilities`}>
                                 Facilities
                             </Link>
-                        </Menu.Item>
-                        <Menu.Item key="8" icon={<SwitcherOutlined />}>
+                        </Menu.Item> */}
+                        {/* <Menu.Item key="6" icon={<SwitcherOutlined />}>
                             <Link to={`/standards`}>
                                 Standards
                             </Link>
-                        </Menu.Item>
-                        <Menu.Item key="7" icon={<WarningOutlined />}>
+                        </Menu.Item> */}
+                        {/* <Menu.Item key="7" icon={<WarningOutlined />}>
                             <Link to={`/complaints`}>
                                 Complaints
                             </Link>
+                        </Menu.Item> */}
+                        <Menu.Item key="8" icon={<DatabaseOutlined />}>
+                            <Link to={`/metric-names`}>
+                                Add Data
+                            </Link>
                         </Menu.Item>
                     </Menu>
-                    <div style={{position: 'absolute', bottom: '50px', paddingLeft: '24px'}}>
+                    <div className="hidden-mobile" style={{position: 'absolute', bottom: '50px', paddingLeft: '24px'}}>
                         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhz31TSBov8mui_c617Nm7m0nyPPRkr-FqIoCnAEiiXPphTg/viewform" target="blank">Send Feedback</a>
+                    </div>
+                    <div className="hidden-desktop" style={{position: 'absolute', bottom: '50px', paddingLeft: '6px'}}>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhz31TSBov8mui_c617Nm7m0nyPPRkr-FqIoCnAEiiXPphTg/viewform" target="blank">Feedback</a>
                     </div>
                 </>
             </Sider>
@@ -130,11 +139,11 @@ const Home: FC = () => {
                 <Header className="site-layout-background" style={{padding: 0}}>
 
                     <Row>
-                        <Col span={8}>
+                        <Col lg={{ span: 8 }} md={{ span: 4}} className="hidden-mobile"  sm={4}>
                             <div onClick={() => setCollapsed(!collapsed)} className={"trigger"}>
                                 {collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}</div>
                         </Col>
-                        <Col span={8} offset={8}>
+                        <Col sm={24} md={{ span: 16, offset: 4 }} lg={{ span: 8, offset: 8 }}>
                             <div className={"companySelector"}>
                                 <Dropdown overlay={<CompanyMenu onClick={handleCompanyChange} companies={companies}/>} trigger={['click']}>
                                     <div style={{
@@ -149,7 +158,7 @@ const Home: FC = () => {
                                         <div>{user.selectedCompany.name}</div>
                                     </div>
                                 </Dropdown>
-                                <span>{user.name}</span>
+                                <span >{user.name}</span>
                                 {user && (
                                     <span style={{cursor: 'pointer'}} onClick={handleLogout}>
                                         Logout

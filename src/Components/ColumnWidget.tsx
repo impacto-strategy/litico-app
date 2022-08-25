@@ -8,7 +8,10 @@ const ColumnWidget: FC<{ data: any, title: string, includeModal: boolean, modalT
     const Wrapper = styled.div`
         background: #fff;
         padding: 20px;
-        grid-column: ${props.gridColumns}
+        grid-column: 1 /5;
+        @media (min-width: 767px) {
+            grid-column: ${props.gridColumns}
+        }
     `
 
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -79,9 +82,9 @@ const ColumnWidget: FC<{ data: any, title: string, includeModal: boolean, modalT
     };
     return (
         <Wrapper>
-            <h2>
+            <h3>
                 {props.title}
-            </h2>
+            </h3>
             <Column style={{ height: 500 }} {...config} />
             {props.includeModal &&
                 <Modal title={props.modalTitle} visible={isModalVisible} onOk={closeModal} onCancel={closeModal} width={1000}>

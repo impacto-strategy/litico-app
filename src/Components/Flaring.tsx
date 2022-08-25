@@ -5,9 +5,11 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   background: #fff;
   padding: 20px;
-  grid-column: 3/5;
+  grid-column: 1/5;
+  @media (min-width: 767px) {
+    grid-column: 3/5;
+  }
 `
-
 const data = [
     {
         "name": "Gross Annual Volume of Flared Gas",
@@ -44,7 +46,7 @@ const DemoLine = () => {
             title: {
                 text: 'Gross Annual Volume of Flared Gas (Mcf)',
                 style: {
-                    fontSize: 14,
+                    fontSize: 12,
                 },
             },
         }, {
@@ -54,9 +56,9 @@ const DemoLine = () => {
                 formatter: (v: any) => `${v}%`,
             },
             title: {
-                text: '% of gas flared per Mcf of gas produced',
+                text: 'Flaring Intensity (Mcf flared per Mcf prod)',
                 style: {
-                    fontSize: 14,
+                    fontSize: 12,
                 },
             },
         }],
@@ -89,9 +91,9 @@ const DemoLine = () => {
 
     return (
         <Wrapper>
-            <h2>
-                Flaring
-            </h2><DualAxes style={{height: 500}} {...config} />
+            <h3>
+                Flaring Volume & Intenisty
+            </h3><DualAxes style={{height: 500}} {...config} />
         </Wrapper>);
 };
 

@@ -1,9 +1,9 @@
 import {PageHeader, Space} from "antd";
-import {useParams, useSearchParams} from "react-router-dom";
 import styled from "styled-components";
 import { useCallback, useEffect, useState } from "react";
-import MetricSubtypeTabs from "../../../Components/MetricSubtypeTabs";
-import ResourceService from "../../../Services/ResourceService";
+import {useSearchParams} from "react-router-dom";
+import MetricSubtypeTabs from "../../Components/MetricSubtypeTabs";
+import ResourceService from "../../Services/ResourceService";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -19,20 +19,10 @@ const ContentWrapper = styled.div`
   margin-bottom: 32px;
 `
 
-const MetricSubtypes = () => {
-    const {id} = useParams()
-    const [searchParams] = useSearchParams();
-    const [report, setReport] = useState<any>({ esg_metrics: [], year: '' })
+const DataMetricSubtypes = () => {
+
     const [standards, setStandards] = useState<any>()
-
-    const getReport = useCallback(() => {
-        ResourceService.get({
-            resourceName: 'reports',
-            resourceID: Number(id) as number
-        })
-            .then(({ data }) => setReport(data[0]))
-
-    }, [id])
+    const [searchParams] = useSearchParams();
 
     const getStandards = useCallback(() => {
         ResourceService.index({
@@ -46,27 +36,24 @@ const MetricSubtypes = () => {
     }, [searchParams])
 
     useEffect(() => {
-        getReport()
         getStandards()
-    }, [getReport, getStandards])
+    }, [getStandards])
 
     return (
         <Wrapper>
             <Space direction="vertical" style={{ width: '100%' }} size={"large"}>
-
                 <PageHeader
                     ghost={false}
                     onBack={() => window.history.back()}
-                    title={`Edit Report | ${report.year}`}
-                >
-                </PageHeader>
+                    title={searchParams.get("metric_name")}
+                />
                 <ContentWrapper>
-                    <h2>Choose a Metric Subtype to View</h2>
-                    <MetricSubtypeTabs standards={standards} report={report} showReport={true} />
+                    <h2>Add Data to your LITICO Database</h2>
+                    <MetricSubtypeTabs standards={standards} report={null} showReport={false}/>
                 </ContentWrapper>
             </Space>
         </Wrapper>
     )
 }
 
-export default MetricSubtypes
+export default DataMetricSubtypes

@@ -32,26 +32,6 @@ const MetricSubtype = () => {
         'X-XSRF-TOKEN': token || ''
     }
     const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app';
-    // const formFields = [
-    //     {
-    //         name: 'CO2 Emissions (mt CO2)',
-    //         field_name: 'co2_emissions',
-    //         field_type: 'number',
-    //         required: false,
-    //     },
-    //     {
-    //         name: 'CH4 Emissions (mt CH4)',
-    //         field_name: 'ch4_emissions',
-    //         field_type: 'number',
-    //         required: false,
-    //     },
-    //     {
-    //         name: 'N2O Emissions (mt N2O)',
-    //         field_name: 'n20_emissions',
-    //         field_type: 'number',
-    //         required: false,
-    //     }
-    // ]
     const colHeaders = useMemo(() => {
         return [
             'ESG Pillar',
@@ -135,7 +115,8 @@ const MetricSubtype = () => {
             </span>
         ),
     }]
-    const customColumns = [
+
+    const ghgColumns = [
     {
         title: 'GHG Emissions',
         dataIndex: 'denominator',
@@ -165,6 +146,11 @@ const MetricSubtype = () => {
         title: 'Date',
         dataIndex: 'date',
         key: 'date',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY')}
+            </span>
+        ),
     },
     {
         title: 'User',
@@ -181,6 +167,228 @@ const MetricSubtype = () => {
             </span>
         ),
     }]
+
+    const hoursColumns = [
+    {
+        title: 'Organization',
+        dataIndex: 'organization',
+        key: 'organization'
+    },
+    {
+        title: 'Hours',
+        dataIndex: 'num_1',
+        key: 'num_1',
+    },
+    {
+        title: 'Employee ID',
+        dataIndex: 'num_2',
+        key: 'num_2',
+    },
+    {
+        title: 'Tax ID',
+        dataIndex: 'num_3',
+        key: 'num_3',
+    },
+    {
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY')}
+            </span>
+        ),
+    },
+    {
+        title: 'User',
+        dataIndex: 'user_name',
+        key: 'user_name',
+    },
+    {
+        title: 'Submitted on',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY h:mm')}
+            </span>
+        ),
+    }]
+
+    const donationColumns = [
+    {
+        title: 'Organization',
+        dataIndex: 'organization',
+        key: 'organization'
+    },
+    {
+        title: 'Amount Donated',
+        dataIndex: 'denominator',
+        key: 'denominator',
+        render: (value:any) => (
+            <span>
+                {value.toLocaleString('en-US', {style: 'currency',currency: 'USD'})}
+            </span>
+        ),
+    },
+    {
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY')}
+            </span>
+        ),
+    },
+    {
+        title: 'User',
+        dataIndex: 'user_name',
+        key: 'user_name',
+    },
+    {
+        title: 'Submitted on',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY h:mm')}
+            </span>
+        ),
+    }]
+    const genderColumns = [
+    {
+        title: 'Total Employees',
+        dataIndex: 'value',
+        key: 'value',
+    },
+    {
+        title: 'Male',
+        dataIndex: 'num_1',
+        key: 'num_2',
+    },
+    {
+        title: 'Female',
+        dataIndex: 'num_2',
+        key: 'num_2',
+    },
+    {
+        title: 'Non-Binary',
+        dataIndex: 'num_3',
+        key: 'num_3',
+    },
+    {
+        title: 'No Response',
+        dataIndex: 'num_4',
+        key: 'num_4',
+    },
+    {
+        title: 'User',
+        dataIndex: 'user_name',
+        key: 'user_name',
+    },
+    {
+        title: 'Submitted on',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY h:mm')}
+            </span>
+        ),
+    }]
+    const ethnicityColumns = [
+    {
+        title: 'Total Employees',
+        dataIndex: 'value',
+        key: 'value',
+    },
+    {
+        title: 'White/Caucasian',
+        dataIndex: 'num_1',
+        key: 'num_2',
+    },
+    {
+        title: 'Black/African American',
+        dataIndex: 'num_2',
+        key: 'num_2',
+    },
+    {
+        title: 'Asian/Pacific American',
+        dataIndex: 'num_3',
+        key: 'num_3',
+    },
+    {
+        title: 'Latino/Hispanics',
+        dataIndex: 'num_4',
+        key: 'num_4',
+    },
+    {
+        title: 'Native American',
+        dataIndex: 'num_5',
+        key: 'num_5',
+    },
+    {
+        title: 'Other',
+        dataIndex: 'num_6',
+        key: 'num_6',
+    },
+    {
+        title: 'User',
+        dataIndex: 'user_name',
+        key: 'user_name',
+    },
+    {
+        title: 'Submitted on',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY h:mm')}
+            </span>
+        ),
+    }]
+    const trirColumns = [
+        {
+            title: 'TRIR Employees',
+            dataIndex: 'value',
+            key: 'value',
+        },
+        {
+            title: 'Number of Employee Recordable Incidents',
+            dataIndex: 'num_1',
+            key: 'num_2',
+        },
+        {
+            title: 'Number of Employee Fatalities',
+            dataIndex: 'num_2',
+            key: 'num_2',
+        },
+        {
+            title: 'Number of Employee Lost Time Incidents',
+            dataIndex: 'num_3',
+            key: 'num_3',
+        },
+        {
+            title: 'Employee Hours Worked',
+            dataIndex: 'denominator',
+            key: 'denominator',
+        },
+        {
+            title: 'User',
+            dataIndex: 'user_name',
+            key: 'user_name',
+        },
+        {
+            title: 'Submitted on',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            render: (value:any) => (
+                <span>
+                    {moment(value).format('MM/DD/YYYY h:mm')}
+                </span>
+            ),
+        }]
     const [initLoading, setInitLoading] = useState(true)
     const [reportData, setReportData] = useState<any>({year: '', period: '', esg_metrics: [], report: {}})
     const [metricStandards, setMetricStandards] = useState<any>()
@@ -198,7 +406,22 @@ const MetricSubtype = () => {
     }, [setMetricStandards])
 
     const getColumns = () => {
-        return (searchParams.get("metric_name") === 'Greenhouse Gas Emissions') ? customColumns : columns
+        if (searchParams.get("metric_name") === 'Greenhouse Gas Emissions') return ghgColumns
+
+        switch (searchParams.get("metric_subtype")) {
+            case 'Volunteer Hours':
+                return hoursColumns
+            case 'Social investment':
+                return donationColumns
+            case 'Workforce, by Gender':
+                return genderColumns
+            case 'Workforce, by Ethnicity':
+                return ethnicityColumns
+            case 'Employee TRIR':
+                return trirColumns
+            default:
+                return columns
+        }
     }
 
     const getMetric = useCallback(() => {

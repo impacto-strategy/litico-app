@@ -33,7 +33,7 @@ const GenderWidget = () => {
 
     return (
         <Wrapper>
-            <h2>Gender in the workplace - 2020</h2>
+            <h3>Gender in the workplace - 2020</h3>
             <h4>% Female Directors that make
                 up Independent Board of
                 Directors</h4>

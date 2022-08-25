@@ -5,7 +5,10 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   background: #fff;
   padding: 20px;
-  grid-column: 1/3;
+  grid-column: 1/5;
+  @media (min-width: 767px) {
+    grid-column: 1/3;
+  }
 `
 
 const data = [
@@ -38,7 +41,7 @@ const DemoLine = () => {
             title: {
                 text: 'Year',
                 style: {
-                    fontSize: 16,
+                    fontSize: 12,
                 },
             },
             line: {
@@ -59,7 +62,7 @@ const DemoLine = () => {
                 autoRotate: false,
                 style: {
                     fill: '#aaa',
-                    fontSize: 14,
+                    fontSize: 12,
                 },
                 formatter: (v: any) => `${(v / 10e2).toFixed(1)} K`,
 
@@ -67,7 +70,7 @@ const DemoLine = () => {
             title: {
                 text: 'Metric Tons (CH4)',
                 style: {
-                    fontSize: 16,
+                    fontSize: 12,
                 },
             },
             line: {
@@ -107,9 +110,9 @@ const DemoLine = () => {
 
     return (
         <Wrapper>
-            <h2>
+            <h3>
                 Methane Emissions
-            </h2><Line {...config} />
+            </h3><Line {...config} />
         </Wrapper>);
 };
 

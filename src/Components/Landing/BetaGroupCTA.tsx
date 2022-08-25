@@ -16,6 +16,9 @@ const Button = styled.button`
   text-transform: uppercase;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
+  &:hover {
+    background: rgb(26 43 83);
+  }
 `;
 
 const BetaGroupCTA: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>}> = (props: {visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>}) => {

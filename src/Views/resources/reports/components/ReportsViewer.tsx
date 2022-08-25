@@ -31,11 +31,11 @@ const ReportsViewer: FC<TReportYearViewer> = ({ report }) => {
           <Row
             align={"middle"}
             gutter={{xs: 8, sm: 16, md: 24, lg: 32}}>
-            <Col span={18}>
+                <Col lg={{span: 18}} sm={{span: 24}}>
                 <Row
                     gutter={{xs: 8, sm: 16, md: 24, lg: 32}}>
                     {report.reports.map((rep: any) => (
-                        <Col key={rep.year + '_col' + rep.period} span={4}>
+                        <Col key={rep.year + '_col' + rep.period} lg={{span: 4}} sm={{span: 24}}>
                             <Link to={`/reports/${rep.id}/metric-names`}>
                                 <ReportCard>
                                     <Title level={4}>{isPeriodAnnual(rep.period) ? 'EOY' : rep.period}</Title>

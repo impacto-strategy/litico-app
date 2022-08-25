@@ -4,11 +4,14 @@ import { DualAxes } from '@ant-design/plots';
 import { Modal, Table } from 'antd';
 import {sortBy} from 'lodash'
 
-const DualAxesLineColWidget: FC<{ data: any, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean }> = props => {
+const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean }> = props => {
   const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
-    grid-column: ${props.gridColumns}
+    grid-column: 1 /5;
+    @media (min-width: 767px) {
+      grid-column: ${props.gridColumns}
+    }
   `
 
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -71,48 +74,50 @@ const DualAxesLineColWidget: FC<{ data: any, lineLabel: string, title: string, g
     yField: ['value', 'intensity'],
     yAxis: {
       value: {
+        min: 0,
         title: {
           style: {
-            fontSize: 14,
+            fontSize: 12,
           },
           text: props.y1Lablel
         },
       },
       intensity: {
+        min: 0,
         title: {
           style: {
-            fontSize: 14,
+            fontSize: 12,
           },
           text: props.y2Lablel
         },
-      }
+      },
+    },
+    legend: {
+      flipPage: false,
     },
     geometryOptions: [
       {
-        geometry: 'line',
-        lineStyle: {
-          lineWidth: 2,
-        },
+        geometry: 'column',
       },
       {
-        geometry: 'column',
-        pattern: {
-          type: 'line',
+        geometry: 'line',
+        lineStyle: {
+          lineWidth: 1,
         },
       },
     ],
     tooltip: {
       formatter: (data: any) => {
-        let name = data.intensity ? 'Intensity' : props.lineLabel
+        let name = data.intensity ? props.lineLabel : props.colLabel
         return { name: name, value: (data.value || data.intensity).toLocaleString() };
       },
     },
     meta: {
       value: {
-        alias: props.lineLabel,
+        alias: props.colLabel,
       },
       intensity: {
-        alias: 'Intensity'
+        alias: props.lineLabel,
       },
     },
     onReady: (plot: any) => {
@@ -128,9 +133,9 @@ const DualAxesLineColWidget: FC<{ data: any, lineLabel: string, title: string, g
   };
   return (
     <Wrapper>
-      <h2>
+      <h3>
         {props.title}
-      </h2>
+      </h3>
       <DualAxes {...config} />
       {props.includeModal &&
         <Modal title={props.y1Lablel} visible={isModalVisible} onOk={closeModal} onCancel={closeModal} width={1000}>
