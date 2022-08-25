@@ -27,13 +27,13 @@ const SimplifiedContentCard = styled.div`
     color: var(--litico-blue);
     font-size: 3rem;
     line-height: 1.5;
-    font-weight: 600;
+    font-weight: 800;
     margin-bottom: 0.4rem;
   }
 
   h3 {
     font-size: 2rem;
-    font-weight: 600;
+    font-weight: 800;
     margin-bottom: 0;
 
     &:first-child {

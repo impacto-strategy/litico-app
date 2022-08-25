@@ -17,6 +17,9 @@ const LiticoBlueSection = styled.section`
   text-align: center;
   position: relative;
 
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+
   canvas.overlay {
     background-color: rgba(46,67,117, 0.85);
     position: absolute;
@@ -40,7 +43,7 @@ const LiticoBlueSection = styled.section`
 
   h1 {
     font-size: 3rem;
-    font-weight: 600;
+    font-weight: 700;
   
     margin-bottom: 0px;
   }
