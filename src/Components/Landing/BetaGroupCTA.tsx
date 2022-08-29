@@ -14,6 +14,8 @@ const Button = styled.button`
   border-radius: 1.5rem;
   padding: 0.75rem 1.5rem;
   text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
   &:hover {
     background: rgb(26 43 83);
   }
