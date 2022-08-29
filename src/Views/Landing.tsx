@@ -32,6 +32,8 @@ const LandingLayout = styled(Layout)`
   --governance-blue: rgb(77, 153, 255);
   --governance-blue-light: rgb(166, 204, 255);
 
+  font-family: 'Montserrat', sans-serif;
+
   header > *,
   main > * {
     margin-left: auto;
