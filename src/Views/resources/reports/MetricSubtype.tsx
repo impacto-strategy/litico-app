@@ -406,7 +406,7 @@ const MetricSubtype = () => {
     }, [setMetricStandards])
 
     const getColumns = () => {
-        if (searchParams.get("metric_name") === 'Greenhouse Gas Emissions') return ghgColumns
+        if (searchParams.get("metric_subtype") === 'GHG Emissions') return ghgColumns
 
         switch (searchParams.get("metric_subtype")) {
             case 'Volunteer Hours':
@@ -417,7 +417,7 @@ const MetricSubtype = () => {
                 return genderColumns
             case 'Workforce, by Ethnicity':
                 return ethnicityColumns
-            case 'Employee TRIR':
+            case 'TRIR - Employees':
                 return trirColumns
             default:
                 return columns
