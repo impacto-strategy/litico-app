@@ -161,25 +161,32 @@ const DataMetricSubtype = () => {
                             </Col>
                         </Row>
                         <Row gutter={24}>
-                            <Col lg={{span: 12}} sm={{span: 24}}>
-                                <Form.Item name="facility_name" label="Facility">
-                                    <Select>
-                                        {facilities?.map((facility: any) => (
-                                            <Select.Option key={facility.id} value={facility.name} >{facility.name}</Select.Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
-                            </Col>
+                            { standards?.[0].location_type && standards?.[0].location_type === 'facility' &&
+                                <Col lg={{span: 12}} sm={{span: 24}}>
+                                    <Form.Item name="organization" label="Facility">
+                                        <Select>
+                                            {facilities?.map((facility: any) => (
+                                                <Select.Option key={facility.id} value={facility.name} >{facility.name}</Select.Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                            }
+
+                            { standards?.[0].location_type && standards?.[0].location_type === 'organization' &&
+                                <Col lg={{span: 12}} sm={{span: 24}}>
+                                    <Form.Item name="organization" label="Organization">
+                                        <Input/>
+                                    </Form.Item>
+                                </Col>
+                            }
                             <Col lg={{span: 12}} sm={{span: 24}}>
                                 <Form.Item name="basin" label="Basin">
                                     <Input/>
                                 </Form.Item>
                             </Col>
-                        </Row>
-                        
-                        <Row gutter={24}>
                             <Col lg={{span: 12}} sm={{span: 24}}>
-                                <Form.Item name="organization" label="Organization">
+                                <Form.Item name="state" label="State">
                                     <Input/>
                                 </Form.Item>
                             </Col>
@@ -226,7 +233,7 @@ const DataMetricSubtype = () => {
                         <Divider />
                         <Form.Item label="Upload">
                             <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-                                <Upload.Dragger name="file" action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers}>
+                                <Upload.Dragger disabled={ true } name="file" action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers}>
                                     <p className="ant-upload-drag-icon">
                                         <InboxOutlined/>
                                     </p>
@@ -236,7 +243,7 @@ const DataMetricSubtype = () => {
                             </Form.Item>
                         </Form.Item>
                         <Divider />
-                        <Form.Item name="comments" label="Comments">
+                        <Form.Item name="comments" label="Discussion and Analysis">
                             <Input.TextArea />
                         </Form.Item>
                         <Form.Item>
