@@ -57,6 +57,8 @@ const Home: FC = () => {
       })
     }, [switchCompany])
 
+    console.log("THIS IS THE USER: ", user);
+
     return (
         <Layout id={"components-layout-demo-fixed-sider"}>
             <Sider

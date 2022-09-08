@@ -71,6 +71,7 @@ const Login = () => {
         login({...values}).then(() => {
             navigate((state as any).from.pathname || "/dashboard");
         }).catch((e: AxiosResponse) => {
+            console.log(e)
             if (e.data.errors.email) {
                 setErrors(e.data.errors.email)
             }

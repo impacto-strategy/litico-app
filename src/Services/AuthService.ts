@@ -2,9 +2,7 @@ import APIClient from "./ApiService";
 
 const AuthService = {
     async login(payload: { [key: string]: any }) {
-        console.log('testing');
         await APIClient.get("/sanctum/csrf-cookie",);
-        console.log('login initiated');
         return APIClient.post("/login", payload);
     },
     logout() {

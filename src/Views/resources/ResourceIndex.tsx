@@ -1,11 +1,12 @@
-import React, {FC, SyntheticEvent, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {FC, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import styled from "styled-components";
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import ResourceService from "../../Services/ResourceService";
-import {Button, Input, Space, Table, Drawer} from "antd";
+import {Button, Input, Space, Table, Drawer, Popconfirm, message} from "antd";
 import {SearchOutlined} from "@ant-design/icons";
 import Highlighter from 'react-highlight-words';
-import { nodeService } from "@antv/xflow-extension/es/flowchart-node-panel";
+import formFields from "./FormFields";
+import ResourceForm from "./ResourceForm";
 
 import { DrawerProps } from "antd";
 
@@ -13,7 +14,7 @@ const Wrapper = styled.div`
   padding: 30px;
 `
 
-// INTERFACES
+// INTERFACES AND TYPES
 interface drawerState {
     title: string,
     placement: DrawerProps["placement"],
@@ -24,6 +25,10 @@ interface visibleState {
     popConfirm: boolean,
     drawer: boolean
 }
+
+type ReactButton = React.MouseEvent<HTMLButtonElement>;
+
+let formMessage: JSX.Element;
 
 const ResourceIndex: FC = () => {
     const {resourceName} = useParams()
@@ -44,7 +49,7 @@ const ResourceIndex: FC = () => {
 
     const searchInput = useRef<any>(null)
 
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>, type: string) => {
+    const handleClick = (e: ReactButton, type: string, id?: number) => {
         if (resourceName){
             const text = resourceName[0].toUpperCase() + resourceName.substring(1)
 
@@ -87,29 +92,57 @@ const ResourceIndex: FC = () => {
                         formSubmitted: false
                     }))
                     break
-                case "Delete":
-                    break
             }
         }
     }
 
-    const handleChange = (e: React.FormEvent<HTMLInputElement>): void => {
-        const name = e.currentTarget.name;
-        const value = e.currentTarget.value;
-        setData((current) => {
-            let temp = {...current}
-            temp[name] = value
-            return temp
-        })
+    const handleSubmit = async (e: ReactButton) => {
+        e.preventDefault();
+
+        if (resourceName) {
+            const payload = {
+                resourceName,
+                fields: data
+            }
+
+            console.log(payload);
+            try {
+                const res = await ResourceService.store(payload);
+                if (res.data) {
+                    formMessage = <div>Form Submitted</div>
+                } else {
+                    formMessage = <div>Form Submission Unsuccessful</div>
+                }
+            } catch (err) {
+                console.log(err);
+                formMessage = <div>Server Error, Try again later</div>
+            }
+        }
+
+        setDrawer(current => ({
+            ...current,
+            formSubmitted: true
+        }))
     }
 
-    const clearForm = () => {
-
-    }
-
-    const handleSubmit = () => {
-        console.log("Submitting data now")
-    }
+    const handleDelete = useCallback( async (e: React.MouseEvent<HTMLElement, MouseEvent> | undefined, id: number) => {
+        if (e) {
+            e.preventDefault()
+        }
+        if (resourceName) {
+            const payload = {
+                resourceID: id,
+                resourceName
+            }
+            try {
+                ResourceService.delete(payload)
+                message.success("Successfully Deleted")
+            } catch (err) {
+                console.log(err)
+                message.error("Unable to delete")
+            }
+        }
+    }, [resourceName])
 
     const handleSearch = useCallback((selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -186,7 +219,6 @@ const ResourceIndex: FC = () => {
             ),
     }), [facility_name, handleReset, handleSearch, searchText, searchedColumn]);
 
-
     const columns = useMemo(() => {
 
         let filteredFields = fields.filter(({index}) => index).map((field: any) => {
@@ -237,12 +269,23 @@ const ResourceIndex: FC = () => {
             render: (record: {[key: string]: any}) => {
                 return (
                     <>
-                        <Button type="primary" style={{marginRight: 10}} onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleClick(e, "Edit")}>
+                        <Button type="primary" style={{marginRight: 10}} onClick={(e: ReactButton) => handleClick(e, "Edit")}>
                             Edit
                         </Button>
-                        <Button type="primary" style={{background: "red", border: 'red'}} onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleClick(e, "Delete")}>
-                            Delete
-                        </Button>
+
+                        <Popconfirm
+                            title="Delete This Row?"
+                            okText="Delete"
+                            onConfirm={(e: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => handleDelete(e, record.id)}
+                            onCancel={() => setData({})}
+                        >
+                            <Button 
+                                type="primary" 
+                                style={{background: "red", border: 'red'}} 
+                            >
+                                Delete
+                            </Button>
+                        </Popconfirm>
                     </>
                 ); 
             }, 
@@ -252,6 +295,7 @@ const ResourceIndex: FC = () => {
 
     }, [fields, getColumnSearchProps])
 
+    // https://daveceddia.com/useeffect-hook-examples/
     useEffect(() => {
         setDataSource([])
         setFields([])
@@ -269,12 +313,11 @@ const ResourceIndex: FC = () => {
             }
         })
 
-
-    }, [facility_name, resourceName])
+    }, [facility_name, resourceName, handleDelete])
 
     return (
         <Wrapper>
-            <Button type="primary" style={{marginBottom: 16}} id={'id'} onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleClick(e, "Add")}>
+            <Button type="primary" style={{marginBottom: 16}} id={'id'} onClick={(e: ReactButton) => handleClick(e, "Add")}>
                 Add
             </Button>
             <Table
@@ -288,31 +331,29 @@ const ResourceIndex: FC = () => {
                 closable={false}
                 visible={visible.drawer}
                 onClose={() => {
-                    clearForm()
+                    setData({})
                     setVisible(visibleObj => ({
                         ...visibleObj,
                         ...{drawer: false}
                     }))
                 }}
             >
-                {!drawer.formSubmitted
-                    ? fields.map((field: {[key: string]: any}, key: number) => {
-                        return (
-                            <div key={key}>
-                                <label>{field.title}</label>
-                                <br></br>
-                                <input 
-                                    type={field.type + "area"} 
-                                    id={field.dataIndex} 
-                                    name={field.dataIndex} 
-                                    value={data[field.dataIndex]}
-                                    onChange={(e) => handleChange(e)}/>
-                                <br></br>
-                            </div>
-                        )
-                    })
-                    : <div>Form Submitted</div>
-                }
+                <div>
+                    {!drawer.formSubmitted && resourceName
+                        ? <ResourceForm fields={formFields[resourceName]} data={data} setData={setData}/>
+                        : formMessage
+                    }
+                    {!drawer.formSubmitted &&
+                        <Button 
+                            type="primary" 
+                            style={{marginBottom: 16}} 
+                            id={'id'} 
+                            onClick={(e: ReactButton) => handleSubmit(e)}
+                        >
+                            Submit
+                        </Button>
+                    }
+                </div>
             </Drawer>
         </Wrapper>
     )
