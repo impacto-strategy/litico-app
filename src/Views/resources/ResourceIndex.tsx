@@ -1,6 +1,6 @@
 import React, {FC, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import styled from "styled-components";
-import {Link, useParams, useSearchParams} from "react-router-dom";
+import {Link, useParams, useSearchParams, useNavigate } from "react-router-dom";
 import ResourceService from "../../Services/ResourceService";
 import {Button, Input, Space, Table, Drawer, Popconfirm, message} from "antd";
 import {SearchOutlined} from "@ant-design/icons";
@@ -39,6 +39,7 @@ let formMessage: JSX.Element;
 
 const ResourceIndex: FC = () => {
     const {resourceName} = useParams()
+    const navigate = useNavigate()
 
     const [searchParam] = useSearchParams()
     const facility_name = searchParam.get('facility_name')
@@ -342,6 +343,13 @@ const ResourceIndex: FC = () => {
     // https://daveceddia.com/useeffect-hook-examples/
     useEffect(() => {
         getFieldsAndData()
+        const user = localStorage.getItem('_U')
+        if (user){
+            const admin: boolean = user.includes('@impactostrategy.com')
+            if (!admin) {
+                navigate('/dashboard')
+            }
+        }
     }, [facility_name, resourceName, handleDelete])
 
     return (
