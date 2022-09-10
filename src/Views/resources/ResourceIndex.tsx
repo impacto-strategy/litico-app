@@ -5,7 +5,6 @@ import ResourceService from "../../Services/ResourceService";
 import {Button, Input, Space, Table, Drawer, Popconfirm, message} from "antd";
 import {SearchOutlined} from "@ant-design/icons";
 import Highlighter from 'react-highlight-words';
-import formFields from "./FormFields";
 import ResourceForm from "./ResourceForm";
 
 import { DrawerProps } from "antd";
@@ -26,6 +25,14 @@ interface visibleState {
     drawer: boolean
 }
 
+interface individualField {
+    title: string,
+    dataIndex: string,
+    index: boolean,
+    type: string,
+    searchable: boolean
+}
+
 type ReactButton = React.MouseEvent<HTMLButtonElement>;
 
 let formMessage: JSX.Element;
@@ -43,35 +50,45 @@ const ResourceIndex: FC = () => {
     const [searchedColumn, setSearchedColumn] = useState(facility_name ? 'facility_name' : '')
 
     const [visible, setVisible] = useState<visibleState>({popConfirm: false, drawer: false})
-    const [drawer, setDrawer] = useState<drawerState>({title: "Default", placement: "right", formSubmitted: false})
+    const [drawer, setDrawer] = useState<drawerState>({title: "Default", placement: undefined, formSubmitted: false})
 
     const [data, setData] = useState<{[key: string]: any}>({})
 
     const searchInput = useRef<any>(null)
 
-    const handleClick = (e: ReactButton, type: string, id?: number) => {
+    const handleClick = async (e: ReactButton, type: string, id?: number) => {
         if (resourceName){
             const text = resourceName[0].toUpperCase() + resourceName.substring(1)
 
             switch(type) {
                 case "Edit":
-                    setData(() => {
-                        const formData: {[key: string]: any} = {}
-                        for (let i = 0; i < fields.length; i++){
-                            formData[fields[i]["dataIndex"]] = ""
+                    if (id) {
+                        const payload = {resourceName, resourceID: id}
+                        const res = await ResourceService.get(payload)
+                        if (res.data) {
+                            let temp: {[key: string]: any} = {};
+                            fields.forEach((item: individualField) => {
+                                const name = item['dataIndex']
+                                temp[name] = res.data.Data[name]
+                            })
+                            temp['id'] = res.data.Data['id']
+                            setData(temp)
+                            setVisible(visible => ({
+                                ...visible,
+                                drawer: true
+                            }))
+                            setDrawer(drawer => ({
+                                ...drawer,
+                                title: `Edit ${text}`,
+                                placement: "right",
+                                formSubmitted: false
+                            }))
+                        } else {
+                            message.error("Couldn't Load Data")
                         }
-                        return formData
-                    })
-                    setVisible(visible => ({
-                        ...visible,
-                        drawer: true
-                    }))
-                    setDrawer(drawer => ({
-                        ...drawer,
-                        title: `Edit ${text}`,
-                        placement: "right",
-                        formSubmitted: false
-                    }))
+                    } else {
+                        message.error("ID Missing in Call")
+                    }
                     break
                 case "Add":
                     setData(() => {
@@ -100,21 +117,29 @@ const ResourceIndex: FC = () => {
         e.preventDefault();
 
         if (resourceName) {
-            const payload = {
+            let payload: any = {
                 resourceName,
                 fields: data
             }
 
-            console.log(payload);
             try {
-                const res = await ResourceService.store(payload);
+                let res;
+                // How we determine if Edit or Add action.
+                if (payload.fields.id) {
+                    payload['resourceID'] = payload.fields.id
+                    delete payload.fields.id
+                    res = await ResourceService.update(payload)
+                } else {
+                    res = await ResourceService.store(payload)
+                }
                 if (res.data) {
                     formMessage = <div>Form Submitted</div>
+                    getFieldsAndData()
                 } else {
                     formMessage = <div>Form Submission Unsuccessful</div>
                 }
             } catch (err) {
-                console.log(err);
+                console.log(err)
                 formMessage = <div>Server Error, Try again later</div>
             }
         }
@@ -137,6 +162,7 @@ const ResourceIndex: FC = () => {
             try {
                 ResourceService.delete(payload)
                 message.success("Successfully Deleted")
+                getFieldsAndData()
             } catch (err) {
                 console.log(err)
                 message.error("Unable to delete")
@@ -269,7 +295,7 @@ const ResourceIndex: FC = () => {
             render: (record: {[key: string]: any}) => {
                 return (
                     <>
-                        <Button type="primary" style={{marginRight: 10}} onClick={(e: ReactButton) => handleClick(e, "Edit")}>
+                        <Button type="primary" style={{marginRight: 10}} onClick={(e: ReactButton) => handleClick(e, "Edit", record.id)}>
                             Edit
                         </Button>
 
@@ -295,8 +321,7 @@ const ResourceIndex: FC = () => {
 
     }, [fields, getColumnSearchProps])
 
-    // https://daveceddia.com/useeffect-hook-examples/
-    useEffect(() => {
+    const getFieldsAndData = () => {
         setDataSource([])
         setFields([])
         if (!resourceName) {
@@ -312,7 +337,11 @@ const ResourceIndex: FC = () => {
                 searchInput.current && (searchInput.current.value = facility_name)
             }
         })
+    }
 
+    // https://daveceddia.com/useeffect-hook-examples/
+    useEffect(() => {
+        getFieldsAndData()
     }, [facility_name, resourceName, handleDelete])
 
     return (
@@ -340,7 +369,7 @@ const ResourceIndex: FC = () => {
             >
                 <div>
                     {!drawer.formSubmitted && resourceName
-                        ? <ResourceForm fields={formFields[resourceName]} data={data} setData={setData}/>
+                        ? <ResourceForm fields={fields} data={data} setData={setData}/>
                         : formMessage
                     }
                     {!drawer.formSubmitted &&
@@ -363,6 +392,5 @@ export default ResourceIndex
 
 // To DO
 /*
-    Add, Edit, Delete, and Admin authorization only
-    - Look to making visible object more efficient
+    Edit, and Admin authorization only
 */

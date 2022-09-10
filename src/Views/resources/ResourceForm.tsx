@@ -1,6 +1,11 @@
 import React from "react";
-import { Form, Input } from "antd";
-import { IResourceFields } from "./FormFields";
+
+interface IResourceFields {
+    title: string,
+    dataIndex: string,
+    type: string,
+    required: boolean
+}
 
 interface IResourceFormProps {
     fields: IResourceFields[],
@@ -9,7 +14,8 @@ interface IResourceFormProps {
 }
 
 const ResourceForm: React.FC<IResourceFormProps> = ({fields, data, setData}): JSX.Element => {
-    const handleChange = (e: React.FormEvent<HTMLInputElement>): void => {
+
+    const handleChange = (e: React.FormEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>): void => {
         const name = e.currentTarget.name;
         const value = e.currentTarget.value;
         setData((current) => {
@@ -21,27 +27,25 @@ const ResourceForm: React.FC<IResourceFormProps> = ({fields, data, setData}): JS
 
     const generateInput = (field: IResourceFields) => {
         if (field.type === "textarea") {
-            return <Input.TextArea rows={3}/>
+            return <textarea rows={5} cols={22} name={field.dataIndex} value={data[field.dataIndex] ? data[field.dataIndex] : ''} onChange={(e) => handleChange(e)} style={{width: 300}}/>
         } else if (field.type === "text") {
-            return <Input value={data[field.dataIndex]} onChange={(e) => handleChange(e)} name={field.dataIndex} type={field.type}/>
+            return <input type={field.type} value={data[field.dataIndex] ? data[field.dataIndex] : ''} onChange={(e) => handleChange(e)} name={field.dataIndex}/>
         }
     }
 
     return (
-        <Form>
+        <form>
             {fields.map((field, key: number) => {
                 return (
-                    <Form.Item
-                        key={key}
-                        label={field.title}
-                        name={field.dataIndex}
-                        required={field.required}
-                    >
+                    <div key={key}>
+                        <label>{field['title']}:</label>
+                        <br />
                         {generateInput(field)}
-                    </Form.Item>
+                        <br />
+                    </div>
                 )
             })}
-        </Form>
+        </form>
     )
 }
 
