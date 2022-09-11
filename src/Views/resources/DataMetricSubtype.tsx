@@ -234,7 +234,7 @@ const DataMetricSubtype = () => {
                         <Divider />
                         <Form.Item label="Upload">
                             <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile}  noStyle>
-                                <Upload.Dragger name="file" action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers}>
+                                <Upload.Dragger name="file" action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers} accept=".csv,.pdf,.doc,.docx,.jpeg,.png,.jpg,.svg">
                                     <p className="ant-upload-drag-icon">
                                         <InboxOutlined/>
                                     </p>
