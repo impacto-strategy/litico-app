@@ -78,7 +78,7 @@ const MetricSubtype = () => {
     },
     {
         title: 'Resources',
-        dataIndex: 'resourcs',
+        dataIndex: 'resources',
         key: 'resources',
         render: (value: any) => (
             <>
@@ -124,7 +124,7 @@ const MetricSubtype = () => {
     },
     {
         title: 'Resources',
-        dataIndex: 'resourcs',
+        dataIndex: 'resources',
         key: 'resources',
         render: (value: any) => (
             <>
@@ -482,7 +482,7 @@ const MetricSubtype = () => {
         },
         {
             title: 'Resources',
-            dataIndex: 'resourcs',
+            dataIndex: 'resources',
             key: 'resources',
             render: (value: any) => (
                 <>
