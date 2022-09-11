@@ -77,6 +77,20 @@ const MetricSubtype = () => {
         key: 'date',
     },
     {
+        title: 'Resources',
+        dataIndex: 'resourcs',
+        key: 'resources',
+        render: (value: any) => (
+            <>
+            {value?.map((link:string, idx:number) => {
+              return (
+                  <a key={link} href={link}>Resource {idx +1}</a>
+              );
+            })}
+          </>
+        ),
+    },
+    {
         title: 'User',
         dataIndex: 'user_name',
         key: 'user_name',
@@ -107,6 +121,20 @@ const MetricSubtype = () => {
         title: 'Date',
         dataIndex: 'date',
         key: 'date',
+    },
+    {
+        title: 'Resources',
+        dataIndex: 'resourcs',
+        key: 'resources',
+        render: (value: any) => (
+            <>
+            {value?.map((link:string, idx:number) => {
+              return (
+                  <a key={link} href={link}>Resource {idx +1}</a>
+              );
+            })}
+          </>
+        ),
     },
     {
         title: 'User',
@@ -161,6 +189,20 @@ const MetricSubtype = () => {
         ),
     },
     {
+        title: 'Resources',
+        dataIndex: 'resources',
+        key: 'resources',
+        render: (value: any) => (
+            <>
+            {value?.map((link:string, idx:number) => {
+              return (
+                  <a key={link} href={link}>Resource {idx +1}</a>
+              );
+            })}
+          </>
+        ),
+    },
+    {
         title: 'User',
         dataIndex: 'user_name',
         key: 'user_name',
@@ -208,6 +250,20 @@ const MetricSubtype = () => {
         ),
     },
     {
+        title: 'Resources',
+        dataIndex: 'resources',
+        key: 'resources',
+        render: (value: any) => (
+            <>
+            {value?.map((link:string, idx:number) => {
+              return (
+                  <a key={link} href={link}>Resource {idx +1}</a>
+              );
+            })}
+          </>
+        ),
+    },
+    {
         title: 'User',
         dataIndex: 'user_name',
         key: 'user_name',
@@ -250,6 +306,20 @@ const MetricSubtype = () => {
         ),
     },
     {
+        title: 'Resources',
+        dataIndex: 'resources',
+        key: 'resources',
+        render: (value: any) => (
+            <>
+            {value?.map((link:string, idx:number) => {
+              return (
+                  <a key={link} href={link}>Resource {idx +1}</a>
+              );
+            })}
+          </>
+        ),
+    },
+    {
         title: 'User',
         dataIndex: 'user_name',
         key: 'user_name',
@@ -289,6 +359,20 @@ const MetricSubtype = () => {
         title: 'No Response',
         dataIndex: 'num_4',
         key: 'num_4',
+    },
+    {
+        title: 'Resources',
+        dataIndex: 'resources',
+        key: 'resources',
+        render: (value: any) => (
+            <>
+            {value?.map((link:string, idx:number) => {
+              return (
+                  <a key={link} href={link}>Resource {idx +1}</a>
+              );
+            })}
+          </>
+        ),
     },
     {
         title: 'User',
@@ -342,6 +426,20 @@ const MetricSubtype = () => {
         key: 'num_6',
     },
     {
+        title: 'Resources',
+        dataIndex: 'resources',
+        key: 'resources',
+        render: (value: any) => (
+            <>
+            {value?.map((link:string, idx:number) => {
+              return (
+                  <a key={link} href={link}>Resource {idx +1}</a>
+              );
+            })}
+          </>
+        ),
+    },
+    {
         title: 'User',
         dataIndex: 'user_name',
         key: 'user_name',
@@ -381,6 +479,20 @@ const MetricSubtype = () => {
             title: 'Employee Hours Worked',
             dataIndex: 'denominator',
             key: 'denominator',
+        },
+        {
+            title: 'Resources',
+            dataIndex: 'resourcs',
+            key: 'resources',
+            render: (value: any) => (
+                <>
+                {value?.map((link:string, idx:number) => {
+                  return (
+                      <a key={link} href={link}>Resource {idx +1}</a>
+                  );
+                })}
+              </>
+            ),
         },
         {
             title: 'User',
