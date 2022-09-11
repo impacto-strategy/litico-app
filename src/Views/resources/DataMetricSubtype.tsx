@@ -25,6 +25,7 @@ const DataMetricSubtype = () => {
     const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app'
     const [searchParams] = useSearchParams();
     const [form] = Form.useForm();
+    let resources: any[] = [];
     const [facilities, setFacilities] = useState<any>()
     const [standards, setMetricStandards] = useState<any>()
     const [fields, setFields] = useState<any>()
@@ -48,9 +49,9 @@ const DataMetricSubtype = () => {
     }, [])
 
     const normFile = (e: any) => {
-        console.log('Upload event:', e);
-        if (Array.isArray(e)) {
-            return e;
+        console.log('Upload event:', e)
+        if (e?.file?.status === 'done') {
+            resources.push(e.file.response)
         }
         return e && e.fileList;
     };
@@ -95,6 +96,7 @@ const DataMetricSubtype = () => {
             formValues['esg_metric_factor_id'] = factor.id;
             formValues['esg_metric_factor_name'] = factor.name;
             formValues['measurement_unit'] = factor.measurement_units[0];
+            formValues['resources'] = resources;
             let request  = ResourceService.store({
                 resourceName: 'measurements',
                 fields: {...formValues}
@@ -108,7 +110,6 @@ const DataMetricSubtype = () => {
             return createMeasurementMetrics(measurementIds);
         });
     };
-
 
     useEffect(() => {
         getFacilities()
@@ -232,8 +233,8 @@ const DataMetricSubtype = () => {
                         </Row>
                         <Divider />
                         <Form.Item label="Upload">
-                            <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-                                <Upload.Dragger disabled={ true } name="file" action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers}>
+                            <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile}  noStyle>
+                                <Upload.Dragger name="file" action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers}>
                                     <p className="ant-upload-drag-icon">
                                         <InboxOutlined/>
                                     </p>
