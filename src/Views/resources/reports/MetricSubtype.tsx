@@ -84,7 +84,7 @@ const MetricSubtype = () => {
             <>
             {value?.map((link:string, idx:number) => {
               return (
-                  <a key={link} href={link}>Resource {idx +1}</a>
+                  <a key={link} href={link}>Resource {idx +1} </a>
               );
             })}
           </>
@@ -130,7 +130,7 @@ const MetricSubtype = () => {
             <>
             {value?.map((link:string, idx:number) => {
               return (
-                  <a key={link} href={link}>Resource {idx +1}</a>
+                  <a key={link} href={link}>Resource {idx +1} </a>
               );
             })}
           </>
@@ -196,7 +196,7 @@ const MetricSubtype = () => {
             <>
             {value?.map((link:string, idx:number) => {
               return (
-                  <a key={link} href={link}>Resource {idx +1}</a>
+                  <a key={link} href={link}>Resource {idx +1} </a>
               );
             })}
           </>
@@ -257,7 +257,7 @@ const MetricSubtype = () => {
             <>
             {value?.map((link:string, idx:number) => {
               return (
-                  <a key={link} href={link}>Resource {idx +1}</a>
+                  <a key={link} href={link}>Resource {idx +1} </a>
               );
             })}
           </>
@@ -313,7 +313,7 @@ const MetricSubtype = () => {
             <>
             {value?.map((link:string, idx:number) => {
               return (
-                  <a key={link} href={link}>Resource {idx +1}</a>
+                  <a key={link} href={link}>Resource {idx +1} </a>
               );
             })}
           </>
@@ -368,7 +368,7 @@ const MetricSubtype = () => {
             <>
             {value?.map((link:string, idx:number) => {
               return (
-                  <a key={link} href={link}>Resource {idx +1}</a>
+                  <a key={link} href={link}>Resource {idx +1} </a>
               );
             })}
           </>
@@ -433,7 +433,7 @@ const MetricSubtype = () => {
             <>
             {value?.map((link:string, idx:number) => {
               return (
-                  <a key={link} href={link}>Resource {idx +1}</a>
+                  <a key={link} href={link}>Resource {idx +1} </a>
               );
             })}
           </>
@@ -488,7 +488,7 @@ const MetricSubtype = () => {
                 <>
                 {value?.map((link:string, idx:number) => {
                   return (
-                      <a key={link} href={link}>Resource {idx +1}</a>
+                      <a key={link} href={link}>Resource {idx +1} </a>
                   );
                 })}
               </>
