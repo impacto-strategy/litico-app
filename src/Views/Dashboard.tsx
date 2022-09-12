@@ -160,17 +160,23 @@ const Dashboard: FC = () => {
                 gridTemplateColumns: 'repeat(4, 1fr)',
                 gap: '2em'
             }}>
-                <DualAxesLineColWidget
-                    data={getYearlyEmissionData}
-                    colLabel="Greenhouse Gas Emissions (mt)"
-                    lineLabel="GHG Emission Intensity (mt/BoE)"
-                    title="Greenhouse Gas Emissions Mass & Intensity"
-                    gridColumns="1 / 5"
-                    y1Lablel="GHG Emissions (mt)"
-                    y2Lablel="GHG Emission Intensity (mt/BoE)"
-                    includeModal={false}
-                />
+
+                {emissions.length > 0 &&
+                    <DualAxesLineColWidget
+                        data={getYearlyEmissionData}
+                        colLabel="Greenhouse Gas Emissions (mt)"
+                        lineLabel="GHG Emission Intensity (mt/BoE)"
+                        title="Greenhouse Gas Emissions Mass & Intensity"
+                        gridColumns="1 / 5"
+                        y1Lablel="GHG Emissions (mt)"
+                        y2Lablel="GHG Emission Intensity (mt/BoE)"
+                        includeModal={false}
+                    />
+                }
+
                 {/* <WhitingAllData /> */}
+
+                {spills.length > 0 &&
                 <DualAxesLineColWidget
                     data={getYearlySpillsData}
                     colLabel="Spill Count"
@@ -181,7 +187,10 @@ const Dashboard: FC = () => {
                     y2Lablel="Spill Intensity (spills/bbls prod)"
                     includeModal={true}
                 />
-                <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
+                }
+                {complaints.length > 0 &&
+                    <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
+                }
                 {user.selectedCompany.name === 'Demo Energy' &&
                     <MethaneEmissions/>
                 }
@@ -197,20 +206,25 @@ const Dashboard: FC = () => {
                 {/* <Emissions2020CO2 data={co2Emission} units="mt CO2" title="Carbon Dioxide Emissions for Production" />
                 <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
-                <Productions
-                    data={filter(production, { 'product': 'oil' })}
-                    productType="oil"
-                    title="Oil Production"
-                    y1Lablel="Oil Production (bbls)"
-                    gridColumns ="1/5"
-                />
-                <Productions
-                    data={filter(production, { 'product': 'gas' })}
-                    productType="gas"
-                    title="Gas Production"
-                    y1Lablel="Natural Gas Production (mmscf)"
-                    gridColumns ="1/5"
-                />
+                {production &&
+                    <Productions
+                        data={filter(production, { 'product': 'oil' })}
+                        productType="oil"
+                        title="Oil Production"
+                        y1Lablel="Oil Production (bbls)"
+                        gridColumns="1/5"
+                    />
+                }
+                {production &&
+                    <Productions
+                        data={filter(production, { 'product': 'gas' })}
+                        productType="gas"
+                        title="Gas Production"
+                        y1Lablel="Natural Gas Production (mmscf)"
+                        gridColumns ="1/5"
+                    />
+                }
+
                 {user.selectedCompany.name === 'Demo Energy' &&
                     <LDAR />
                 }
@@ -251,7 +265,9 @@ const Dashboard: FC = () => {
                 gridTemplateColumns: 'repeat(4, 1fr)',
                 gap: '2em'
             }}>
-                <GovernanceCheckList esgMetrics={metrics.esg_metrics} />
+                {metrics &&
+                    <GovernanceCheckList esgMetrics={metrics.esg_metrics} />
+                }
             </div>
             <div style={{paddingBottom: 40}}/>
         </div>
