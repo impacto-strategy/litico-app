@@ -1,9 +1,11 @@
-import {Button, Card, Col, DatePicker, Divider, Form, Input, message, PageHeader, Row, Select, Space, Tag} from "antd";
+import { Button, Card, Col, DatePicker, Divider, Form, Input, message, PageHeader, Row, Select, Space, Tag, Upload } from "antd";
+import { InboxOutlined } from '@ant-design/icons';
 import styled from "styled-components";
 import {useSearchParams} from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import ResourceService from "../../Services/ResourceService";
 import { find, orderBy } from 'lodash';
+import Cookies from 'js-cookie';
 
 const Wrapper = styled.section`
   margin: auto;
@@ -20,6 +22,7 @@ const ContentWrapper = styled.div`
 `
 
 const DataMetricSubtype = () => {
+    const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app'
     const [searchParams] = useSearchParams();
     const [form] = Form.useForm();
     const [facilities, setFacilities] = useState<any>()
@@ -44,7 +47,21 @@ const DataMetricSubtype = () => {
         })
     }, [])
 
-    const getStandards = useCallback(() =>{
+    const normFile = (e: any) => {
+        console.log('Upload event:', e);
+        if (Array.isArray(e)) {
+            return e;
+        }
+        return e && e.fileList;
+    };
+
+    let token = Cookies.get('XSRF-TOKEN')
+    const headers = {
+        'X-XSRF-TOKEN': token || ''
+    }
+    
+
+    const getStandards = useCallback(() => {
         ResourceService.index({
             resourceName: 'standards',
             params: {metric_subtype: searchParams.get("metric_subtype")}
@@ -144,25 +161,32 @@ const DataMetricSubtype = () => {
                             </Col>
                         </Row>
                         <Row gutter={24}>
-                            <Col lg={{span: 12}} sm={{span: 24}}>
-                                <Form.Item name="facility_name" label="Facility">
-                                    <Select>
-                                        {facilities?.map((facility: any) => (
-                                            <Select.Option key={facility.id} value={facility.name} >{facility.name}</Select.Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
-                            </Col>
+                            { standards?.[0].location_type && standards?.[0].location_type === 'facility' &&
+                                <Col lg={{span: 12}} sm={{span: 24}}>
+                                    <Form.Item name="organization" label="Facility">
+                                        <Select>
+                                            {facilities?.map((facility: any) => (
+                                                <Select.Option key={facility.id} value={facility.name} >{facility.name}</Select.Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                            }
+
+                            { standards?.[0].location_type && standards?.[0].location_type === 'organization' &&
+                                <Col lg={{span: 12}} sm={{span: 24}}>
+                                    <Form.Item name="organization" label="Organization">
+                                        <Input/>
+                                    </Form.Item>
+                                </Col>
+                            }
                             <Col lg={{span: 12}} sm={{span: 24}}>
                                 <Form.Item name="basin" label="Basin">
                                     <Input/>
                                 </Form.Item>
                             </Col>
-                        </Row>
-                        
-                        <Row gutter={24}>
                             <Col lg={{span: 12}} sm={{span: 24}}>
-                                <Form.Item name="organization" label="Organization">
+                                <Form.Item name="state" label="State">
                                     <Input/>
                                 </Form.Item>
                             </Col>
@@ -207,7 +231,19 @@ const DataMetricSubtype = () => {
                             ))}
                         </Row>
                         <Divider />
-                        <Form.Item name="comments" label="Comments">
+                        <Form.Item label="Upload">
+                            <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
+                                <Upload.Dragger disabled={ true } name="file" action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers}>
+                                    <p className="ant-upload-drag-icon">
+                                        <InboxOutlined/>
+                                    </p>
+                                    <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                                    <p className="ant-upload-hint">Support for a single or bulk upload.</p>
+                                </Upload.Dragger>
+                            </Form.Item>
+                        </Form.Item>
+                        <Divider />
+                        <Form.Item name="comments" label="Discussion and Analysis">
                             <Input.TextArea />
                         </Form.Item>
                         <Form.Item>

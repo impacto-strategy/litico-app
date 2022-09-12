@@ -39,7 +39,6 @@ let formMessage: JSX.Element;
 
 const ResourceIndex: FC = () => {
     const {resourceName} = useParams()
-
     const navigate = useNavigate()
 
     const [searchParam] = useSearchParams()
@@ -340,7 +339,6 @@ const ResourceIndex: FC = () => {
         })
     }
 
-    // https://daveceddia.com/useeffect-hook-examples/
     useEffect(() => {
         getFieldsAndData()
 

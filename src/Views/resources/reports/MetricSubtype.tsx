@@ -65,15 +65,11 @@ const MetricSubtype = () => {
         ]
     }, [])
 
-    const columns = [{
-        title: 'Organization',
-        dataIndex: 'organization',
-        key: 'organization',
-    },
+    const columns = [
     {
-        title: 'Value',
+        title: searchParams.get("metric_subtype") || '',
         dataIndex: 'value',
-        key: 'value',
+        key: 'value'
     },
     {
         title: 'Date',
@@ -81,24 +77,36 @@ const MetricSubtype = () => {
         key: 'date',
     },
     {
-        title: 'City',
-        dataIndex: 'city',
-        key: 'city',
+        title: 'User',
+        dataIndex: 'user_name',
+        key: 'user_name',
     },
     {
-        title: 'State',
-        dataIndex: 'state',
-        key: 'state',
+        title: 'Submitted on',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY h:mm')}
+            </span>
+        ),
+    }]
+
+    const discussionColumns = [
+    {
+        title: searchParams.get("metric_subtype") || '',
+        dataIndex: 'value',
+        key: 'value',
+        render: (value:any) => (
+            <span>
+                {value > 0 ? 'Policy in place' : 'No policy'}
+            </span>
+        ),
     },
     {
-        title: 'Type A',
-        dataIndex: 'type_a',
-        key: 'type_a',
-    },
-    {
-        title: 'Type B',
-        dataIndex: 'type_b',
-        key: 'type_b',
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date',
     },
     {
         title: 'User',
@@ -406,7 +414,8 @@ const MetricSubtype = () => {
     }, [setMetricStandards])
 
     const getColumns = () => {
-        if (searchParams.get("metric_name") === 'Greenhouse Gas Emissions') return ghgColumns
+        if (searchParams.get("metric_subtype") === 'GHG Emissions') return ghgColumns
+        if (searchParams.get("metric_subtype")?.includes('Discussion')) return discussionColumns
 
         switch (searchParams.get("metric_subtype")) {
             case 'Volunteer Hours':
@@ -417,7 +426,7 @@ const MetricSubtype = () => {
                 return genderColumns
             case 'Workforce, by Ethnicity':
                 return ethnicityColumns
-            case 'Employee TRIR':
+            case 'TRIR - Employees':
                 return trirColumns
             default:
                 return columns
