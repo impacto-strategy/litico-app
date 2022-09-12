@@ -61,23 +61,32 @@ const ResourceIndex: FC = () => {
         if (resourceName){
             const text = resourceName[0].toUpperCase() + resourceName.substring(1)
 
+            setVisible(visible => ({
+                ...visible,
+                drawer: true
+            }))
+
             switch(type) {
+
                 case "Edit":
                     if (id) {
+
                         const payload = {resourceName, resourceID: id}
                         const res = await ResourceService.get(payload)
+
                         if (res.data) {
-                            let temp: {[key: string]: any} = {};
+
+                            let temp: {[key: string]: any} = {}
+
                             fields.forEach((item: individualField) => {
                                 const name = item['dataIndex']
                                 temp[name] = res.data.Data[name]
                             })
+
                             temp['id'] = res.data.Data['id']
+
                             setData(temp)
-                            setVisible(visible => ({
-                                ...visible,
-                                drawer: true
-                            }))
+
                             setDrawer(drawer => ({
                                 ...drawer,
                                 title: `Edit ${text}`,
@@ -99,10 +108,7 @@ const ResourceIndex: FC = () => {
                         }
                         return formData
                     })
-                    setVisible(visible => ({
-                        ...visible,
-                        drawer: true
-                    }))
+
                     setDrawer(drawer => ({
                         ...drawer,
                         title: `Add ${text}`,
@@ -125,7 +131,7 @@ const ResourceIndex: FC = () => {
 
             try {
                 let res;
-                // How we determine if Edit or Add action.
+
                 if (payload.fields.id) {
                     payload['resourceID'] = payload.fields.id
                     delete payload.fields.id
@@ -133,12 +139,14 @@ const ResourceIndex: FC = () => {
                 } else {
                     res = await ResourceService.store(payload)
                 }
+
                 if (res.data) {
                     formMessage = <div>Form Submitted</div>
                     getFieldsAndData()
                 } else {
                     formMessage = <div>Form Submission Unsuccessful</div>
                 }
+                
             } catch (err) {
                 console.log(err)
                 formMessage = <div>Server Error, Try again later</div>
