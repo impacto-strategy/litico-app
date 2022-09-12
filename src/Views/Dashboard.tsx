@@ -206,7 +206,7 @@ const Dashboard: FC = () => {
                 {/* <Emissions2020CO2 data={co2Emission} units="mt CO2" title="Carbon Dioxide Emissions for Production" />
                 <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
-                {production &&
+                {production.length > 0 &&
                     <Productions
                         data={filter(production, { 'product': 'oil' })}
                         productType="oil"
@@ -215,7 +215,7 @@ const Dashboard: FC = () => {
                         gridColumns="1/5"
                     />
                 }
-                {production &&
+                {production.length > 0 &&
                     <Productions
                         data={filter(production, { 'product': 'gas' })}
                         productType="gas"
@@ -265,7 +265,7 @@ const Dashboard: FC = () => {
                 gridTemplateColumns: 'repeat(4, 1fr)',
                 gap: '2em'
             }}>
-                {metrics &&
+                {metrics?.esg_metrics && metrics?.esg_metrics.length > 0 &&
                     <GovernanceCheckList esgMetrics={metrics.esg_metrics} />
                 }
             </div>
