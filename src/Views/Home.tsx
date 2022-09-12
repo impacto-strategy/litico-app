@@ -6,7 +6,8 @@ import {
     ContainerOutlined,
     DatabaseOutlined,
     MenuFoldOutlined,
-    MenuUnfoldOutlined
+    MenuUnfoldOutlined,
+    SwitcherOutlined
 } from '@ant-design/icons';
 import {Col, Dropdown, Layout, Menu, Row} from 'antd';
 import ResourceService from "../Services/ResourceService";
@@ -14,7 +15,6 @@ import ResourceService from "../Services/ResourceService";
 const {Header, Content, Sider} = Layout;
 
 const CompanyMenu = ({companies, onClick} : {companies: any[], onClick: (ev: any) => void}) => {
-
 
     return (
         <Menu onClick={onClick}>
@@ -32,11 +32,10 @@ const Home: FC = () => {
     const [collapsed, setCollapsed] = useState(false)
     const [companies, setCompanies] = useState<any[]>([])
 
-
+    const [admin, setAdmin] = useState(false)
 
     const {user, logout, switchCompany} = useAuth();
     const navigate = useNavigate();
-
 
     const handleLogout = () => {
         logout();
@@ -49,6 +48,11 @@ const Home: FC = () => {
         }).then(({data}) => {
             setCompanies(data)
         })
+
+        const regex = new RegExp('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@impactostrategy.com');
+        if (regex.test(user.email)) {
+            setAdmin(true)
+        }
     }, [])
 
     const handleCompanyChange = useCallback((ev) => {
@@ -56,8 +60,6 @@ const Home: FC = () => {
           window.location.reload()
       })
     }, [switchCompany])
-
-    console.log("THIS IS THE USER: ", user);
 
     return (
         <Layout id={"components-layout-demo-fixed-sider"}>
@@ -113,11 +115,13 @@ const Home: FC = () => {
                                 Facilities
                             </Link>
                         </Menu.Item> */}
-                        {/* <Menu.Item key="6" icon={<SwitcherOutlined />}>
-                            <Link to={`/standards`}>
-                                Standards
-                            </Link>
-                        </Menu.Item> */}
+                        {admin && 
+                            <Menu.Item key="6" icon={<SwitcherOutlined />}>
+                                <Link to={`/standards`}>
+                                    Standards
+                                </Link>
+                            </Menu.Item>
+                        }
                         {/* <Menu.Item key="7" icon={<WarningOutlined />}>
                             <Link to={`/complaints`}>
                                 Complaints

@@ -1,6 +1,6 @@
 import React, {FC, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import styled from "styled-components";
-import {Link, useParams, useSearchParams} from "react-router-dom";
+import {Link, useParams, useSearchParams, useNavigate} from "react-router-dom";
 import ResourceService from "../../Services/ResourceService";
 import {Button, Input, Space, Table, Drawer, Popconfirm, message} from "antd";
 import {SearchOutlined} from "@ant-design/icons";
@@ -39,6 +39,8 @@ let formMessage: JSX.Element;
 
 const ResourceIndex: FC = () => {
     const {resourceName} = useParams()
+
+    const navigate = useNavigate()
 
     const [searchParam] = useSearchParams()
     const facility_name = searchParam.get('facility_name')
@@ -288,7 +290,6 @@ const ResourceIndex: FC = () => {
             return _field
         })
 
-        // We'll need to add ability to determine if admin user or not.
         filteredFields.push({
             key: "action", 
             title: "Actions", 
@@ -342,6 +343,11 @@ const ResourceIndex: FC = () => {
     // https://daveceddia.com/useeffect-hook-examples/
     useEffect(() => {
         getFieldsAndData()
+
+        const user = localStorage.getItem("_U")
+        if (!user || !user.includes("@impactostrategy.com")) {
+            navigate('/dashboard')
+        }
     }, [facility_name, resourceName, handleDelete])
 
     return (
@@ -389,8 +395,3 @@ const ResourceIndex: FC = () => {
 }
 
 export default ResourceIndex
-
-// To DO
-/*
-    Edit, and Admin authorization only
-*/
