@@ -534,9 +534,9 @@ const MetricSubtype = () => {
                 return hoursColumns
             case 'Social investment':
                 return donationColumns
-            case 'Workforce, by Gender':
+            case 'Workforce Demographics - Gender':
                 return genderColumns
-            case 'Workforce, by Ethnicity':
+            case 'Workforce Demographics - Ethnicity':
                 return ethnicityColumns
             case 'TRIR - Employees':
                 return trirColumns
