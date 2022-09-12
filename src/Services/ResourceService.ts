@@ -17,7 +17,6 @@ const ResourceService = {
         return await APIClient.post(`/api/${payload.resourceName}`, {fields: payload.fields})
     },
     async update(payload: { resourceName: string, resourceID: number, fields: any }) {
-        console.log(payload.fields);
         return await APIClient.put(`/api/${payload.resourceName}/${payload.resourceID}`, {fields: payload.fields})
     },
     async delete(payload: { resourceName: string, resourceID: number}) {
