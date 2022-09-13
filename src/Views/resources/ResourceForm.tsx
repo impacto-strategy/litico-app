@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 
 interface IResourceFields {
     title: string,
@@ -12,6 +13,10 @@ interface IResourceFormProps {
     data: any,
     setData: React.Dispatch<React.SetStateAction<{[key: string]: any}>>
 }
+
+const InputWrapper = styled.div`
+    padding: 8px 8px 2px 0;
+`
 
 const ResourceForm: React.FC<IResourceFormProps> = ({fields, data, setData}): JSX.Element => {
 
@@ -40,7 +45,9 @@ const ResourceForm: React.FC<IResourceFormProps> = ({fields, data, setData}): JS
                     <div key={key}>
                         <label>{field['title']}:</label>
                         <br />
-                        {generateInput(field)}
+                        <InputWrapper>
+                            {generateInput(field)}
+                        </InputWrapper>
                         <br />
                     </div>
                 )

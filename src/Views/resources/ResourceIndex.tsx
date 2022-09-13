@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {Link, useParams, useSearchParams, useNavigate} from "react-router-dom";
 import ResourceService from "../../Services/ResourceService";
 import {Button, Input, Space, Table, Drawer, Popconfirm, message} from "antd";
-import {SearchOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, SearchOutlined} from "@ant-design/icons";
 import Highlighter from 'react-highlight-words';
 import ResourceForm from "./ResourceForm";
 
@@ -303,7 +303,12 @@ const ResourceIndex: FC = () => {
             render: (record: {[key: string]: any}) => {
                 return (
                     <>
-                        <Button type="primary" style={{marginRight: 10}} onClick={(e: ReactButton) => handleClick(e, "Edit", record.id)}>
+                        <Button 
+                            type="primary" 
+                            style={{marginRight: 10}}
+                            icon={<EditOutlined />}
+                            onClick={(e: ReactButton) => handleClick(e, "Edit", record.id)}
+                        >
                             Edit
                         </Button>
 
@@ -316,6 +321,7 @@ const ResourceIndex: FC = () => {
                             <Button 
                                 type="primary" 
                                 style={{background: "red", border: 'red'}} 
+                                icon={<DeleteOutlined />}
                             >
                                 Delete
                             </Button>
