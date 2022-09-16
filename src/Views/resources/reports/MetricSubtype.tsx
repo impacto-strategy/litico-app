@@ -8,6 +8,7 @@ import { CSVLink } from "react-csv";
 import { flatten, map, uniq } from "lodash";
 import moment from 'moment';
 import Cookies from 'js-cookie';
+import { report } from "process";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -36,8 +37,11 @@ const MetricSubtype = () => {
         return [
             'ESG Pillar',
             'Standard',
-            'Metric Code',
+            'Metric Name',
             'Metric Subtype',
+            'Metric Code',
+            'Risk',
+            'Value',
             'Measurement Units',
             'Numerator 1',
             'Numerator 2',
@@ -50,9 +54,7 @@ const MetricSubtype = () => {
             'Denominator',
             'Description',
             'Narrative',
-            'Measurement',
             'Date',
-            'Timeframe',
             'Organization',
             'Contact',
             'Name',
@@ -70,6 +72,14 @@ const MetricSubtype = () => {
         title: searchParams.get("metric_subtype") || '',
         dataIndex: 'value',
         key: 'value'
+    },
+    {
+        title: 'Timeframe',
+        dataIndex: '',
+        key: '',
+        render: (value: any) => (
+            <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+        )
     },
     {
         title: 'Date',
@@ -118,6 +128,14 @@ const MetricSubtype = () => {
         ),
     },
     {
+        title: 'Timeframe',
+        dataIndex: '',
+        key: '',
+        render: (value: any) => (
+            <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+        )
+    },
+    {
         title: 'Date',
         dataIndex: 'date',
         key: 'date',
@@ -155,8 +173,8 @@ const MetricSubtype = () => {
     const ghgColumns = [
     {
         title: 'GHG Emissions',
-        dataIndex: 'denominator',
-        key: 'denominator',
+        dataIndex: 'value',
+        key: 'value',
         render: (value:any) => (
             <span>
                 {value.toLocaleString()}
@@ -177,6 +195,14 @@ const MetricSubtype = () => {
         title: 'N2O Emissions (mt N2O)',
         dataIndex: 'num_3',
         key: 'num_3',
+    },
+    {
+        title: 'Timeframe',
+        dataIndex: '',
+        key: '',
+        render: (value: any) => (
+            <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+        )
     },
     {
         title: 'Date',
@@ -240,6 +266,14 @@ const MetricSubtype = () => {
         key: 'num_3',
     },
     {
+        title: 'Timeframe',
+        dataIndex: '',
+        key: '',
+        render: (value: any) => (
+            <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+        )
+    },
+    {
         title: 'Date',
         dataIndex: 'date',
         key: 'date',
@@ -294,6 +328,14 @@ const MetricSubtype = () => {
                 {value.toLocaleString('en-US', {style: 'currency',currency: 'USD'})}
             </span>
         ),
+    },
+    {
+        title: 'Timeframe',
+        dataIndex: '',
+        key: '',
+        render: (value: any) => (
+            <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+        )
     },
     {
         title: 'Date',
@@ -361,6 +403,24 @@ const MetricSubtype = () => {
         key: 'num_4',
     },
     {
+        title: 'Timeframe',
+        dataIndex: '',
+        key: '',
+        render: (value: any) => (
+            <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+        )
+    },
+    {
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY')}
+            </span>
+        ),
+    },
+    {
         title: 'Resources',
         dataIndex: 'resources',
         key: 'resources',
@@ -426,6 +486,24 @@ const MetricSubtype = () => {
         key: 'num_6',
     },
     {
+        title: 'Timeframe',
+        dataIndex: '',
+        key: '',
+        render: (value: any) => (
+            <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+        )
+    },
+    {
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date',
+        render: (value:any) => (
+            <span>
+                {moment(value).format('MM/DD/YYYY')}
+            </span>
+        ),
+    },
+    {
         title: 'Resources',
         dataIndex: 'resources',
         key: 'resources',
@@ -479,6 +557,24 @@ const MetricSubtype = () => {
             title: 'Employee Hours Worked',
             dataIndex: 'denominator',
             key: 'denominator',
+        },
+        {
+            title: 'Timeframe',
+            dataIndex: '',
+            key: '',
+            render: (value: any) => (
+                <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+            )
+        },
+        {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+            render: (value:any) => (
+                <span>
+                    {moment(value).format('MM/DD/YYYY')}
+                </span>
+            ),
         },
         {
             title: 'Resources',
@@ -563,6 +659,12 @@ const MetricSubtype = () => {
 
     }, [reportID, searchParams, getStandards])
 
+    const getMetrics = (e: any) => {
+        if (e?.file?.status === 'done') {
+            getMetric()
+        }
+    }
+
     useEffect(() => {
         getMetric()
     }, [getMetric])
@@ -579,11 +681,11 @@ const MetricSubtype = () => {
                         <Skeleton active loading={initLoading}>
                             <Row>
                                 <Col span={12}>
-                                    <Button icon={<DownloadOutlined />}><CSVLink data={[colHeaders]}> Click to Download Form</CSVLink></Button>
+                                    <Button icon={<DownloadOutlined />}><CSVLink data={[colHeaders]}> Download Blank Form</CSVLink></Button>
                                 </Col>
                                 <Col span={12}>
-                                    <Upload name="files" action={`${baseUrl}/api/uploads?report_id=${reportID}`} withCredentials={true} headers={headers}>
-                                        <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                                    <Upload name="files" onChange={getMetrics} action={`${baseUrl}/api/uploads?report_id=${reportID}`} withCredentials={true} headers={headers}>
+                                        <Button icon={<UploadOutlined />}>Upload Completed Form</Button>
                                     </Upload>
                                 </Col>
                             </Row>
