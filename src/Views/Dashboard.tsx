@@ -164,11 +164,11 @@ const Dashboard: FC = () => {
                 {emissions.length > 0 &&
                     <DualAxesLineColWidget
                         data={getYearlyEmissionData}
-                        colLabel="Greenhouse Gas Emissions (mt)"
+                        colLabel="Greenhouse Gas Emissions (mt CO₂-e)"
                         lineLabel="GHG Emission Intensity (mt/BoE)"
-                        title="Greenhouse Gas Emissions Mass & Intensity"
+                        title="Greenhouse Gas Emissions Volume & Intensity"
                         gridColumns="1 / 5"
-                        y1Lablel="GHG Emissions (mt)"
+                        y1Lablel="GHG Emissions (mt CO₂-e)"
                         y2Lablel="GHG Emission Intensity (mt/BoE)"
                         includeModal={false}
                     />
@@ -179,8 +179,8 @@ const Dashboard: FC = () => {
                 {spills.length > 0 &&
                 <DualAxesLineColWidget
                     data={getYearlySpillsData}
-                    colLabel="Spill Count"
-                    lineLabel="Spills Intensity (spills/bbls prod)"
+                    colLabel="Spill bbl"
+                    lineLabel="Spills Intensity (bbl spill/kbll produced)"
                     title="Spills Quantity & Intensity"
                     gridColumns="1 / 3"
                     y1Lablel="Spill Count"

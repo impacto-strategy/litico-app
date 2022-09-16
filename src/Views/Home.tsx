@@ -91,11 +91,7 @@ const Home: FC = () => {
                                 Performance
                             </Link>
                         </Menu.Item> */}
-                        <Menu.Item key="3" icon={<DatabaseOutlined/>}>
-                            <Link to={`/companies`}>
-                                Companies
-                            </Link>
-                        </Menu.Item>
+
                         {/* <Menu.Item key="4" icon={<DatabaseOutlined/>}>
                             <Link to={`/locations`}>
                                 Locations
