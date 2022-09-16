@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
-import Emissions2020 from "../Components/Emissions2020";
+// import Emissions2020 from "../Components/Emissions2020";
 // import Emissions2020CO2 from "../Components/Emissions2020CO2";
 import ColumnWidget from "../Components/ColumnWidget";
 // import LineWidget from "../Components/LineWidget";
@@ -15,8 +15,8 @@ import ResourceService from "../Services/ResourceService";
 import useAuth from "../Providers/Auth/useAuth";
 
 // import WhitingAllData from "../Components/WhitingAllData";
-import MethaneEmissions from "../Components/MethaneEmissions";
-import Flaring from "../Components/Flaring";
+// import MethaneEmissions from "../Components/MethaneEmissions";
+// import Flaring from "../Components/Flaring";
 // import OilSpills from "../Components/OilSpills";
 // import Staff from "../Components/Staff";
 import {filter, flatten, groupBy, map, sortBy, sumBy} from "lodash";
@@ -191,18 +191,19 @@ const Dashboard: FC = () => {
                 {complaints.length > 0 &&
                     <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
                 }
-                {user.selectedCompany.name === 'Demo Energy' &&
+                {/* Charts/Graphs that are currently beyond MVP. */}
+                {/* {user.selectedCompany.name === 'Demo Energy' &&
                     <MethaneEmissions/>
                 }
                 { user.selectedCompany.name === 'Demo Energy' &&
                     <Flaring/>
-                }
+                } */}
                 {/* { user.selectedCompany.name === 'Demo Energy' &&
                     <OilSpills/>
                 } */}
-                { user.selectedCompany.name === 'Demo Energy' &&
+                {/* { user.selectedCompany.name === 'Demo Energy' &&
                     <Emissions2020/>
-                }
+                } */}
                 {/* <Emissions2020CO2 data={co2Emission} units="mt CO2" title="Carbon Dioxide Emissions for Production" />
                 <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
