@@ -53,7 +53,7 @@ const Home: FC = () => {
         if (regex.test(user.email)) {
             setAdmin(true)
         }
-    }, [])
+    }, [user.email])
 
     const handleCompanyChange = useCallback((ev) => {
       switchCompany(ev.key).finally(() => {

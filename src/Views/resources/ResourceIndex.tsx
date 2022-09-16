@@ -57,128 +57,6 @@ const ResourceIndex: FC = () => {
 
     const searchInput = useRef<any>(null)
 
-    const handleClick = async (e: ReactButton, type: string, id?: number) => {
-        if (resourceName){
-            const text = resourceName[0].toUpperCase() + resourceName.substring(1)
-
-            setVisible(visible => ({
-                ...visible,
-                drawer: true
-            }))
-
-            switch(type) {
-
-                case "Edit":
-                    if (id) {
-
-                        const payload = {resourceName, resourceID: id}
-                        const res = await ResourceService.get(payload)
-
-                        if (res.data) {
-
-                            let temp: {[key: string]: any} = {}
-
-                            fields.forEach((item: individualField) => {
-                                const name = item['dataIndex']
-                                temp[name] = res.data.Data[name]
-                            })
-
-                            temp['id'] = res.data.Data['id']
-
-                            setData(temp)
-
-                            setDrawer(drawer => ({
-                                ...drawer,
-                                title: `Edit ${text}`,
-                                placement: "right",
-                                formSubmitted: false
-                            }))
-                        } else {
-                            message.error("Couldn't Load Data")
-                        }
-                    } else {
-                        message.error("ID Missing in Call")
-                    }
-                    break
-                case "Add":
-                    setData(() => {
-                        const formData: {[key: string]: any} = {}
-                        for (let i = 0; i < fields.length; i++){
-                            formData[fields[i]["dataIndex"]] = ""
-                        }
-                        return formData
-                    })
-
-                    setDrawer(drawer => ({
-                        ...drawer,
-                        title: `Add ${text}`,
-                        placement: "left",
-                        formSubmitted: false
-                    }))
-                    break
-            }
-        }
-    }
-
-    const handleSubmit = async (e: ReactButton) => {
-        e.preventDefault();
-
-        if (resourceName) {
-            let payload: any = {
-                resourceName,
-                fields: data
-            }
-
-            try {
-                let res;
-
-                if (payload.fields.id) {
-                    payload['resourceID'] = payload.fields.id
-                    delete payload.fields.id
-                    res = await ResourceService.update(payload)
-                } else {
-                    res = await ResourceService.store(payload)
-                }
-
-                if (res.data) {
-                    formMessage = <div>Form Submitted</div>
-                    getFieldsAndData()
-                } else {
-                    formMessage = <div>Form Submission Unsuccessful</div>
-                }
-                
-            } catch (err) {
-                console.log(err)
-                formMessage = <div>Server Error, Try again later</div>
-            }
-        }
-
-        setDrawer(current => ({
-            ...current,
-            formSubmitted: true
-        }))
-    }
-
-    const handleDelete = useCallback( async (e: React.MouseEvent<HTMLElement, MouseEvent> | undefined, id: number) => {
-        if (e) {
-            e.preventDefault()
-        }
-        if (resourceName) {
-            const payload = {
-                resourceID: id,
-                resourceName
-            }
-            try {
-                ResourceService.delete(payload)
-                message.success("Successfully Deleted")
-                getFieldsAndData()
-            } catch (err) {
-                console.log(err)
-                message.error("Unable to delete")
-            }
-        }
-    }, [resourceName])
-
     const handleSearch = useCallback((selectedKeys, confirm, dataIndex) => {
         confirm();
 
@@ -253,6 +131,146 @@ const ResourceIndex: FC = () => {
                 text
             ),
     }), [facility_name, handleReset, handleSearch, searchText, searchedColumn]);
+
+    const getFieldsAndData = useCallback(() => {
+        setDataSource([])
+        setFields([])
+        if (!resourceName) {
+            return
+        }
+
+        ResourceService.fields({resourceName}).then(({data}) => setFields(data))
+        ResourceService.index({resourceName}).then(({data}) => setDataSource(data)).then(() => {
+
+            if (facility_name) {
+                setSearchedColumn('facility_name')
+                setSearchText(facility_name)
+                searchInput.current && (searchInput.current.value = facility_name)
+            }
+        })
+    }, [facility_name, resourceName])
+
+    const handleClick = useCallback( async (e: ReactButton, type: string, id?: number) => {
+        if (resourceName){
+            const text = resourceName[0].toUpperCase() + resourceName.substring(1)
+
+            setVisible(visible => ({
+                ...visible,
+                drawer: true
+            }))
+
+            switch(type) {
+
+                case "Edit":
+                    if (id) {
+
+                        const payload = {resourceName, resourceID: id}
+                        const res = await ResourceService.get(payload)
+
+                        if (res.data) {
+
+                            let temp: {[key: string]: any} = {}
+
+                            fields.forEach((item: individualField) => {
+                                const name = item['dataIndex']
+                                temp[name] = res.data.Data[name]
+                            })
+
+                            temp['id'] = res.data.Data['id']
+
+                            setData(temp)
+
+                            setDrawer(drawer => ({
+                                ...drawer,
+                                title: `Edit ${text}`,
+                                placement: "right",
+                                formSubmitted: false
+                            }))
+                        } else {
+                            message.error("Couldn't Load Data")
+                        }
+                    } else {
+                        message.error("ID Missing in Call")
+                    }
+                    break
+                case "Add":
+                    setData(() => {
+                        const formData: {[key: string]: any} = {}
+                        for (let i = 0; i < fields.length; i++){
+                            formData[fields[i]["dataIndex"]] = ""
+                        }
+                        return formData
+                    })
+
+                    setDrawer(drawer => ({
+                        ...drawer,
+                        title: `Add ${text}`,
+                        placement: "left",
+                        formSubmitted: false
+                    }))
+                    break
+            }
+        }
+    }, [fields, resourceName])
+
+    const handleSubmit = async (e: ReactButton) => {
+        e.preventDefault();
+
+        if (resourceName) {
+            let payload: any = {
+                resourceName,
+                fields: data
+            }
+
+            try {
+                let res;
+
+                if (payload.fields.id) {
+                    payload['resourceID'] = payload.fields.id
+                    delete payload.fields.id
+                    res = await ResourceService.update(payload)
+                } else {
+                    res = await ResourceService.store(payload)
+                }
+
+                if (res.data) {
+                    formMessage = <div>Form Submitted</div>
+                    getFieldsAndData()
+                } else {
+                    formMessage = <div>Form Submission Unsuccessful</div>
+                }
+                
+            } catch (err) {
+                console.log(err)
+                formMessage = <div>Server Error, Try again later</div>
+            }
+        }
+
+        setDrawer(current => ({
+            ...current,
+            formSubmitted: true
+        }))
+    }
+
+    const handleDelete = useCallback( async (e: React.MouseEvent<HTMLElement, MouseEvent> | undefined, id: number) => {
+        if (e) {
+            e.preventDefault()
+        }
+        if (resourceName) {
+            const payload = {
+                resourceID: id,
+                resourceName
+            }
+            try {
+                ResourceService.delete(payload)
+                message.success("Successfully Deleted")
+                getFieldsAndData()
+            } catch (err) {
+                console.log(err)
+                message.error("Unable to delete")
+            }
+        }
+    }, [resourceName, getFieldsAndData])
 
     const columns = useMemo(() => {
 
@@ -333,25 +351,7 @@ const ResourceIndex: FC = () => {
 
         return filteredFields;
 
-    }, [fields, getColumnSearchProps])
-
-    const getFieldsAndData = () => {
-        setDataSource([])
-        setFields([])
-        if (!resourceName) {
-            return
-        }
-
-        ResourceService.fields({resourceName}).then(({data}) => setFields(data))
-        ResourceService.index({resourceName}).then(({data}) => setDataSource(data)).then(() => {
-
-            if (facility_name) {
-                setSearchedColumn('facility_name')
-                setSearchText(facility_name)
-                searchInput.current && (searchInput.current.value = facility_name)
-            }
-        })
-    }
+    }, [fields, getColumnSearchProps, handleClick, handleDelete])
 
     useEffect(() => {
         getFieldsAndData()
@@ -360,7 +360,7 @@ const ResourceIndex: FC = () => {
         if (!user || !user.includes("@impactostrategy.com")) {
             navigate('/dashboard')
         }
-    }, [facility_name, resourceName, handleDelete])
+    }, [facility_name, handleDelete, getFieldsAndData, navigate, resourceName])
 
     return (
         <Wrapper>
