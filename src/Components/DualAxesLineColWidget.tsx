@@ -4,6 +4,16 @@ import { DualAxes } from '@ant-design/plots';
 import { Modal, Table } from 'antd';
 import {sortBy} from 'lodash'
 
+/*
+    Notes on this component. This seems to process the actual chart.
+    - Wrapper is a styled component.
+    - Table is simply a.....popup table that shows more detail about the data.
+    - Dual Axes is the item in question.
+  
+    Ant Design Documentation on Dual Axes:
+    - https://g2plot.antv.vision/en/docs/api/plots/dual-axes
+*/
+
 const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean }> = props => {
   const Wrapper = styled.div`
     background: #fff;
