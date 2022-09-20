@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { DualAxes } from '@ant-design/plots';
 
-// STEP ONE: REVAMP FOR DUAL AXES
 const dataSource = [
     {
         period: '2017',
