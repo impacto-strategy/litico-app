@@ -35,7 +35,7 @@ const Productions: FC<{ data: any }> = props => {
             }
         },
         // This will be how we customize the line color.
-        // color: [],
+        color: ['#48ac76', '#f05b72'],
         point: {
             size: 5,
             shape: 'diamond',
@@ -43,7 +43,7 @@ const Productions: FC<{ data: any }> = props => {
                 let config = {
                     fill: 'white',
                     lineWidth: 2,
-                    stroke: product === 'gas' ? 'black' : 'purple'
+                    stroke: product === 'oil' ? '#48ac76' : '#f05b72'
                 }
                 return config;
             },

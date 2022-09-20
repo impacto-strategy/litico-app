@@ -61,7 +61,7 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getGenderData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Gender' }), (m: any) => ([
+        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce, by Gender' }), (m: any) => ([
             { label: parseInt(m.date), type: 'Female', value: m.num_2 },
             { label: parseInt(m.date), type: 'Male', value: m.num_1 },
             { label: parseInt(m.date), type: 'Non-Binary', value: m.num_3 },
@@ -70,7 +70,7 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getEthnicityData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Ethnicity' }), (m: any) => ([
+        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce, by Ethnicity' }), (m: any) => ([
             { label: parseInt(m.date), type: 'White/Caucasian', value: m.num_1 },
             { label: parseInt(m.date), type: 'Black/African American', value: m.num_2 },
             { label: parseInt(m.date), type: 'Asian/Pacific American', value: m.num_3 },
@@ -237,7 +237,7 @@ const Dashboard: FC = () => {
                     <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} gridColumns="1/3" title="Employees by Gender" subTitle="" />
                 }
                 {getEthnicityData.length > 0 &&
-                    <PieWidget gridColumns="3/5" data={getEthnicityData} label="ethnicity" title="Employee Diversity" subTitle="2021" />
+                    <StackedBarWidget isGroup={false} isPercentage={true} data={getEthnicityData} label={'percentage'} gridColumns='3/5' title='Employee Diversity' subTitle="2021" />
                 }
                 {getDonationData.length > 0 &&
                     <StackedBarWidget isGroup={false} isPercentage={false} data={getDonationData} label={'currency'} gridColumns="1/5" title="Annual Charitable Contributions" subTitle="" />
