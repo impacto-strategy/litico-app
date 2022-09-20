@@ -207,22 +207,10 @@ const Dashboard: FC = () => {
                 {/* <Emissions2020CO2 data={co2Emission} units="mt CO2" title="Carbon Dioxide Emissions for Production" />
                 <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
+                
                 {production.length > 0 &&
                     <Productions
-                        data={filter(production, { 'product': 'oil' })}
-                        productType="oil"
-                        title="Oil Production"
-                        y1Lablel="Oil Production (bbls)"
-                        gridColumns="1/5"
-                    />
-                }
-                {production.length > 0 &&
-                    <Productions
-                        data={filter(production, { 'product': 'gas' })}
-                        productType="gas"
-                        title="Gas Production"
-                        y1Lablel="Natural Gas Production (mmscf)"
-                        gridColumns ="1/5"
+                        data={production}
                     />
                 }
 

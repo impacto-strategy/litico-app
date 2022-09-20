@@ -91,6 +91,9 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
           },
           text: props.y1Lablel
         },
+        label: {
+          formatter: (v: string) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+        },
       },
       intensity: {
         min: 0,

@@ -7,45 +7,64 @@ const Wrapper = styled.div`
   padding: 20px;
 `
 
-const Productions: FC<{ data: any, productType: string, title: string, y1Lablel: string, gridColumns: string }> = props => {
+const Productions: FC<{ data: any }> = props => {
     const Containter = styled.div`
         grid-column: 1 /5;
         @media (min-width: 767px) {
-            grid-column: ${props.gridColumns}
+            grid-column: 1/5
         }
     `
+
     const config: LineConfig = {
         data: props.data,
+        animation: false,
         xField: 'date',
         yField: 'amount',
+        seriesField: 'product',
         smooth: true,
+        yAxis: {
+            label: {
+                formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+            },
+        },
+        legend: {
+            itemName: {
+                formatter: (v) => {
+                    return v === 'oil' ? `${ v[0].toUpperCase() + v.substring(1)} Production (bbls)` : `Natural ${ v[0].toUpperCase() + v.substring(1)} Production (mmscf)`
+                }
+            }
+        },
+        // This will be how we customize the line color.
+        // color: [],
         point: {
             size: 5,
             shape: 'diamond',
-            style: {
-                fill: 'white',
-                stroke: '#5B8FF9',
-                lineWidth: 2,
+            style: ({ product }: {product: string}) => {
+                let config = {
+                    fill: 'white',
+                    lineWidth: 2,
+                    stroke: product === 'gas' ? 'black' : 'purple'
+                }
+                return config;
             },
         },
-        yAxis: {
-            title: {
-                style: {
-                    fontSize: 12,
-                },
-                text: props.y1Lablel
+        tooltip: {
+            formatter: (data: any) => {
+                const value = `${data.amount}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`)
+                const name = data.product === 'oil' ? 'Oil (bbls)' : 'Natural Gas (mmscf)'
+                return { name: name, value: value };
             },
-        },
+          },
     };
     return (
         <Containter>
             {props.data.length > 0 &&
-            <Wrapper>
-                <h3>
-                    {props.title}
-                </h3>
-                <Line {...config} />
-            </Wrapper>
+                <Wrapper>
+                    <h3>
+                        Oil & Gas Production
+                    </h3>
+                    <Line {...config} />
+                </Wrapper>
             }
         </Containter>
     )
