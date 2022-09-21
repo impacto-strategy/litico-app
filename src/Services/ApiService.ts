@@ -1,7 +1,9 @@
 import axios from "axios";
 
+import AuthService from "./AuthService";
+
 const APIClient = axios.create({
-    baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app',
+    baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://api.litico.app',
     withCredentials: true, // required to handle the CSRF token
 });
 
@@ -19,7 +21,14 @@ APIClient.interceptors.response.use(
             error.response &&
             [401, 419].includes(error.response.status)
         ) {
-            console.log('LOG OUT')
+            if (
+                [401].includes(error.response.status)
+            ) {
+                AuthService.logout().finally(() => {
+                    localStorage.removeItem('_U')
+                    window.location.replace("/login");
+                })
+            }
         }
         return Promise.reject(error);
     }
