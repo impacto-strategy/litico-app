@@ -22,7 +22,7 @@ import useAuth from "../Providers/Auth/useAuth";
 import {filter, flatten, groupBy, map, sortBy, sumBy} from "lodash";
 
 const Dashboard: FC = () => {
-    const [metrics, setMetrics] = useState<any>([])
+    const [metrics, setMetrics] = useState<any>({})
     const [emissions, setEmissions] = useState<any>([])
     const [spills, setSpills] = useState<any>([])
     const [complaints, setComplaints] = useState<any>([])
