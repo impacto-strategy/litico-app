@@ -69,12 +69,12 @@ const DataMetricSubtype = () => {
         'X-XSRF-TOKEN': token || ''
     }
 
-    const setDefaultFields = (() => {
+    const setDefaultFields = useCallback(() => {
         form.setFieldsValue({
             state: 'CO',
             basin: 'DJ Basin'
         })
-    })
+    },[form])
     
 
     const getStandards = useCallback(() => {
@@ -87,7 +87,7 @@ const DataMetricSubtype = () => {
             setDefaultFields()
         })
 
-    }, [searchParams, setMetricStandards])
+    }, [searchParams, setMetricStandards, setDefaultFields])
 
     const createMeasurementMetrics = (measurementIds: any[]) => {
         ResourceService.store({
