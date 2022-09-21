@@ -32,13 +32,21 @@ const Dashboard: FC = () => {
     const getAllMetrics = useCallback(() => {
         ResourceService.index({
             resourceName: 'esg-metrics'
-        }).then(({ data }) => {setMetrics(data)})
+        }).then(({ data }) => {
+            setMetrics(data)
+        }).catch((err) =>{
+            console.log(err)
+        })
     }, [setMetrics])
 
     const getAllSpills = useCallback(() => {
         ResourceService.index({
             resourceName: 'spills'
-        }).then(({ data }) => {setSpills(data)})
+        }).then(({ data }) => {
+            setSpills(data)
+        }).catch((err) => {
+            console.log(err)
+        })
     }, [setSpills])
 
     const getTotalProduction = useCallback((year: string) => {
@@ -91,6 +99,8 @@ const Dashboard: FC = () => {
             resourceName: 'productions'
         }).then(({ data }) => {
             setProductionData(data)
+        }).catch((err) =>{
+            console.log(err)
         })
     }, [])
 
@@ -99,6 +109,8 @@ const Dashboard: FC = () => {
             resourceName: 'complaints'
         }).then(({ data }) => {
             setComplaints(data)
+        }).catch((err) =>{
+            console.log(err)
         })
     }, [])
 
