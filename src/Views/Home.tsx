@@ -30,7 +30,7 @@ const CompanyMenu = ({companies, onClick} : {companies: any[], onClick: (ev: any
 const Home: FC = () => {
 
     const [collapsed, setCollapsed] = useState(false)
-    const [companies, setCompanies] = useState<any[]>([])
+    const [companies, setCompanies] = useState<any>([])
 
     const [admin, setAdmin] = useState(false)
 
@@ -45,8 +45,10 @@ const Home: FC = () => {
     useEffect(() => {
         ResourceService.index({
             resourceName:'companies'
-        }).then(({data}) => {
+        }).then(({ data }) => {
             setCompanies(data)
+        }).catch((err) => {
+            console.log(err)
         })
 
         const regex = new RegExp('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@impactostrategy.com');
