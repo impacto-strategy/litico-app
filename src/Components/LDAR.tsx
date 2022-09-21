@@ -1,46 +1,24 @@
 import styled from "styled-components";
-import {Column, ColumnConfig} from "@ant-design/charts";
+import { DualAxes } from '@ant-design/plots';
 
 const dataSource = [
     {
         period: '2017',
-        value: 2100,
-        label: 'Leaks Detected'
-    }, {
-        period: '2017',
-        value: 75,
-        label: 'Inspections'
+        leaks: 2100, // Leaks Detected
+        inspections: 75, // Inspections
     },
     {
         period: '2018',
-        value: 2075,
-        label: 'Leaks Detected'
-
-    }, {
-        period: '2018',
-        value: 60,
-        label: 'Inspections'
-
+        leaks: 2075,
+        inspections: 60,
     }, {
         period: '2019',
-        value: 1900,
-        label: 'Leaks Detected'
-
-    }, {
-        period: '2019',
-        value: 100,
-        label: 'Inspections'
-
+        leaks: 1900,
+        inspections: 100,
     }, {
         period: '2020',
-        value: 1750,
-        label: 'Leaks Detected'
-
-    }, {
-        period: '2020',
-        value: 50,
-        label: 'Inspections'
-
+        leaks: 1750,
+        inspections: 50,
     }
 ]
 
@@ -50,31 +28,73 @@ const Wrapper = styled.div`
   grid-column: 1/5;
 `
 
-
 const LDAR = () => {
-    const config: ColumnConfig = {
-        data: dataSource,
-        // isStack: true,
+
+    const config ={
+        data: [dataSource, dataSource],
         xField: 'period',
-        yField: 'value',
-        seriesField: 'label',
-        isGroup: true,
-        label: {
-            position: 'middle',
-            layout: [
-                {type: 'interval-adjust-position'},
-                {type: 'interval-hide-overlap'},
-                {type: 'adjust-color'},
-            ],
-        }
-    };
+        yField: ['leaks', 'inspections'],
+        yAxis: {
+            leaks: {
+                label: {
+                    formatter: (v: string) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+                },
+            },
+            inspections: {
+                max: 2100,
+                label: {
+                    // Used to hide the second y-axis label
+                    formatter: (v: any) => {
+                        return
+                    },
+                }
+            }
+        },
+        legend: {
+            itemName: {
+                formatter: (v: string) => {
+                    return v === 'leaks' ? 'Leaks Detected' : 'Inspections'
+                }
+            }
+        },
+        geometryOptions: [
+            {
+              geometry: 'column',
+            },
+            {
+                geometry: 'line',
+                lineStyle: {
+                    lineWidth: 0,
+                },
+                point: {
+                    size: 5,
+                    shape: 'dot',
+                    style: {
+                        fill: '#f05b72',
+                        stroke: '#f05b72',
+                        lineWidth: 2,
+                    },
+                },
+                color: '#f05b72'
+            },
+        ],
+        tooltip: {
+            formatter: (data: any) => {
+                let val = data.hasOwnProperty('leaks') ? data.leaks : data.inspections
+                val = `${val}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`)
+                const name = data.hasOwnProperty('leaks') ? 'Leaks Detected' : 'Inspections'
+                return { name: name, value: val };
+            },
+        },
+    }
+
     return (
         <Wrapper>
             <h2>
                 LDAR Inspections - YoY
             </h2>
 
-            <Column {...config} />
+            <DualAxes {...config} />
 
         </Wrapper>
     )

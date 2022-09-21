@@ -1,11 +1,11 @@
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
-import Emissions2020 from "../Components/Emissions2020";
+// import Emissions2020 from "../Components/Emissions2020";
 // import Emissions2020CO2 from "../Components/Emissions2020CO2";
 import ColumnWidget from "../Components/ColumnWidget";
 // import LineWidget from "../Components/LineWidget";
 import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
 import StackedBarWidget from "../Components/StackedBarWidget";
-import PieWidget from "../Components/PieWidget";
+// import PieWidget from "../Components/PieWidget";
 // import DonationsDrilldown from "../DonationsDrilldown";
 import LDAR from "../Components/LDAR";
 import Productions from "../Components/Productions";
@@ -15,8 +15,8 @@ import ResourceService from "../Services/ResourceService";
 import useAuth from "../Providers/Auth/useAuth";
 
 // import WhitingAllData from "../Components/WhitingAllData";
-import MethaneEmissions from "../Components/MethaneEmissions";
-import Flaring from "../Components/Flaring";
+// import MethaneEmissions from "../Components/MethaneEmissions";
+// import Flaring from "../Components/Flaring";
 // import OilSpills from "../Components/OilSpills";
 // import Staff from "../Components/Staff";
 import {filter, flatten, groupBy, map, sortBy, sumBy} from "lodash";
@@ -61,7 +61,7 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getGenderData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Gender' }), (m: any) => ([
+        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce, by Gender' }), (m: any) => ([
             { label: parseInt(m.date), type: 'Female', value: m.num_2 },
             { label: parseInt(m.date), type: 'Male', value: m.num_1 },
             { label: parseInt(m.date), type: 'Non-Binary', value: m.num_3 },
@@ -70,7 +70,7 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getEthnicityData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Ethnicity' }), (m: any) => ([
+        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce, by Ethnicity' }), (m: any) => ([
             { label: parseInt(m.date), type: 'White/Caucasian', value: m.num_1 },
             { label: parseInt(m.date), type: 'Black/African American', value: m.num_2 },
             { label: parseInt(m.date), type: 'Asian/Pacific American', value: m.num_3 },
@@ -164,11 +164,11 @@ const Dashboard: FC = () => {
                 {emissions.length > 0 &&
                     <DualAxesLineColWidget
                         data={getYearlyEmissionData}
-                        colLabel="Greenhouse Gas Emissions (mt)"
+                        colLabel="Greenhouse Gas Emissions (mt CO₂-e)"
                         lineLabel="GHG Emission Intensity (mt/BoE)"
-                        title="Greenhouse Gas Emissions Mass & Intensity"
+                        title="Greenhouse Gas Emissions Volume & Intensity"
                         gridColumns="1 / 5"
-                        y1Lablel="GHG Emissions (mt)"
+                        y1Lablel="GHG Emissions (mt CO₂-e)"
                         y2Lablel="GHG Emission Intensity (mt/BoE)"
                         includeModal={false}
                     />
@@ -179,8 +179,8 @@ const Dashboard: FC = () => {
                 {spills.length > 0 &&
                 <DualAxesLineColWidget
                     data={getYearlySpillsData}
-                    colLabel="Spill Count"
-                    lineLabel="Spills Intensity (spills/bbls prod)"
+                    colLabel="Spill bbl"
+                    lineLabel="Spills Intensity (bbl spill/kbll produced)"
                     title="Spills Quantity & Intensity"
                     gridColumns="1 / 3"
                     y1Lablel="Spill Count"
@@ -191,37 +191,26 @@ const Dashboard: FC = () => {
                 {complaints.length > 0 &&
                     <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
                 }
-                {user.selectedCompany.name === 'Demo Energy' &&
+                {/* Charts/Graphs that are currently beyond MVP. */}
+                {/* {user.selectedCompany.name === 'Demo Energy' &&
                     <MethaneEmissions/>
                 }
                 { user.selectedCompany.name === 'Demo Energy' &&
                     <Flaring/>
-                }
+                } */}
                 {/* { user.selectedCompany.name === 'Demo Energy' &&
                     <OilSpills/>
                 } */}
-                { user.selectedCompany.name === 'Demo Energy' &&
+                {/* { user.selectedCompany.name === 'Demo Energy' &&
                     <Emissions2020/>
-                }
+                } */}
                 {/* <Emissions2020CO2 data={co2Emission} units="mt CO2" title="Carbon Dioxide Emissions for Production" />
                 <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
+                
                 {production.length > 0 &&
                     <Productions
-                        data={filter(production, { 'product': 'oil' })}
-                        productType="oil"
-                        title="Oil Production"
-                        y1Lablel="Oil Production (bbls)"
-                        gridColumns="1/5"
-                    />
-                }
-                {production.length > 0 &&
-                    <Productions
-                        data={filter(production, { 'product': 'gas' })}
-                        productType="gas"
-                        title="Gas Production"
-                        y1Lablel="Natural Gas Production (mmscf)"
-                        gridColumns ="1/5"
+                        data={production}
                     />
                 }
 
@@ -248,7 +237,7 @@ const Dashboard: FC = () => {
                     <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} gridColumns="1/3" title="Employees by Gender" subTitle="" />
                 }
                 {getEthnicityData.length > 0 &&
-                    <PieWidget gridColumns="3/5" data={getEthnicityData} label="ethnicity" title="Employee Diversity" subTitle="2021" />
+                    <StackedBarWidget isGroup={false} isPercentage={true} data={getEthnicityData} label={'percentage'} gridColumns='3/5' title='Employee Diversity' subTitle="2021" />
                 }
                 {getDonationData.length > 0 &&
                     <StackedBarWidget isGroup={false} isPercentage={false} data={getDonationData} label={'currency'} gridColumns="1/5" title="Annual Charitable Contributions" subTitle="" />
