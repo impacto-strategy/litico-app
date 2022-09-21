@@ -133,7 +133,11 @@ const Dashboard: FC = () => {
             resourceName: 'esg-metrics',
             params: {metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Emissions'}
         }).then(res => {
-            setEmissions(sortBy(res.data.esg_metrics, 'date'))
+            if (res.data && res.data.esg_metrics) {
+                setEmissions(sortBy(res.data.esg_metrics, 'date'))
+            }
+        }).catch((err) =>{
+            console.log(err)
         })
     }, [])
 
