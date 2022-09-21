@@ -1,4 +1,4 @@
-import {useParams, useSearchParams} from "react-router-dom";
+import {Link, useParams, useSearchParams} from "react-router-dom";
 import styled from "styled-components";
 import {Button, Card, Col, Descriptions, Divider, List, PageHeader, Row, Skeleton, Space, Table, Tag, Upload } from "antd";
 import {DownloadOutlined, UploadOutlined} from '@ant-design/icons'
@@ -8,7 +8,6 @@ import { CSVLink } from "react-csv";
 import { flatten, map, uniq } from "lodash";
 import moment from 'moment';
 import Cookies from 'js-cookie';
-import { report } from "process";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -626,9 +625,9 @@ const MetricSubtype = () => {
         if (searchParams.get("metric_subtype")?.includes('Discussion')) return discussionColumns
 
         switch (searchParams.get("metric_subtype")) {
-            case 'Volunteer Hours':
+            case 'Volunteering - Community':
                 return hoursColumns
-            case 'Social investment':
+            case 'Social Investment':
                 return donationColumns
             case 'Workforce Demographics - Gender':
                 return genderColumns
@@ -676,6 +675,13 @@ const MetricSubtype = () => {
                     ghost={false}
                     onBack={() => window.history.back()}
                     title={`Edit Report | ${reportData?.year}`}
+                    extra={[
+                        <Link key="1" to={`/metric-subtype?metric_name=${searchParams.get("metric_name")}&metric_subtype=${searchParams.get("metric_subtype")}`}>
+                            <Button type="primary">
+                                Add Data
+                            </Button>
+                        </Link>,
+                    ]}
                 ><Divider />
                     <ContentWrapper>
                         <Skeleton active loading={initLoading}>

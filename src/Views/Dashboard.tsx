@@ -55,7 +55,7 @@ const Dashboard: FC = () => {
     }, [getTotalProduction])
 
     const getDonationData = useMemo(() => {
-        return sortBy(flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Social investment' }), (m: any) => ([
+        return sortBy(flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (m: any) => ([
             { label: m.organization, type: parseInt(m.date), value: m.value }
         ]))), ['label'])
     }, [metrics])
