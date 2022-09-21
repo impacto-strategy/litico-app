@@ -1,10 +1,39 @@
-import { Col, Card, Input, Row, Space, Tag } from "antd";
+import { Button, Col, Card, Input, Modal, Row, Space, Tag } from "antd";
+import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { filter } from "lodash";
 
 const MetricSubtypeTabs = ({ standards, report, showReport }:any) => {
   const [search, setSearch] = useState("");
+  const [metricDescription, setMetricDescription] = useState("");
+  const [showDescription, setShowDescription] = useState<any>([]);
+
+  const displayDescription = (idx: string) => {
+    let arr = [...showDescription]
+    arr.push(idx)
+    setShowDescription(arr)
+  }
+
+  const hideDescription = (idx: any) => {
+    let arr = [...showDescription]
+    setShowDescription(arr.filter(x => x !== idx))
+  }
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = (description:string) => {
+    setMetricDescription(description)
+    setIsModalOpen(true);
+  }
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  }
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const getReportEntries = (metricSubtype:string) => {
     let metrics = filter(report.esg_metrics, {'metric_subtype': metricSubtype});
@@ -27,6 +56,12 @@ const MetricSubtypeTabs = ({ standards, report, showReport }:any) => {
     } 
   }
 
+  useEffect(() => {
+    if (showDescription) {
+     console.log(showDescription);
+    }
+   }, [showDescription]);
+
   return (
     <div>
       <Row gutter={40}>
@@ -41,34 +76,51 @@ const MetricSubtypeTabs = ({ standards, report, showReport }:any) => {
         }
         {modStandards?.map((item: any, idx:string) => (
           <Col sm={{span: 24}} lg={{span: 8}} key={idx} style={{ marginBottom: 32 }}>
-            <Link to={getLink(item)}>
-              <Card
-                title={item.metric_subtype}
-                key={idx} 
-                type='inner'
-                extra={showReport && <Link
-                    to={getLink(item)}>View</Link>}
-                    actions={[
-                        <div>{showReport && getReportEntries(item.metric_subtype)}</div>,
-                        <div>{showReport && '0 Pending Approval'}</div>,
-                    ]}
-                >
-                <Space direction={'vertical'}>
-                        {item.metric_code.split(',').map((code: any, idx:string) => (
-                            <Tag key={idx}>{code}</Tag>
-                          )
-                        )}
-                </Space>
-                {!showReport &&
-                  <Row style={{paddingTop: '20px'}}>
+            <Card
+              title={item.metric_subtype}
+              key={idx}
+              type='inner'
+              extra={<Link
+                  to={getLink(item)}>View</Link>}
+                  actions={[
+                      <div>{showReport && getReportEntries(item.metric_subtype)}</div>,
+                      <div>{showReport && '0 Pending Approval'}</div>,
+                  ]}
+              >
+              <Space direction={'vertical'}>
+                      {item.metric_code.split(',').map((code: any, idx:string) => (
+                          <Tag key={idx}>{code}</Tag>
+                        )
+                      )}
+              </Space>
+              {!showDescription.includes(idx) ?
+                <DownOutlined style={{
+                  float: 'right'
+                }} onClick={(() => displayDescription(idx))} />
+               :
+                <UpOutlined style={{
+                  float: 'right'
+                }} onClick={(() => hideDescription(idx))} />
+              }
+              {(!showReport && showDescription.includes(idx)) &&
+                <Row style={{ paddingTop: '20px' }}>
+                  {(item?.description && item.description.length > 500) ?
+                    <div>
+                      <p>{`${item.description.substring(0, 500)}...`}</p>
+                      <p><Button type="link" onClick={() => showModal(item.description)}>Read more</Button></p>
+                    </div>
+                    :
                     <p>{item.description}</p>
-                  </Row>
-                }
-              </Card>
-            </Link>
+                  }
+                </Row>
+              }
+            </Card>
           </Col>
         ))}
       </Row>
+      <Modal title="Metric Description" visible={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <p>{metricDescription}</p>
+      </Modal>
     </div>
   )
 }
