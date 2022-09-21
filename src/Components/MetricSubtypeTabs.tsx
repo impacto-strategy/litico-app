@@ -33,7 +33,7 @@ const MetricSubtypeTabs = ({ standards, report, showReport }:any) => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
-  };
+  }
 
   const getReportEntries = (metricSubtype:string) => {
     let metrics = filter(report.esg_metrics, {'metric_subtype': metricSubtype});

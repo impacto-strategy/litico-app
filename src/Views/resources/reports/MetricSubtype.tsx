@@ -1,7 +1,7 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import styled from "styled-components";
-import {Button, Card, Col, Descriptions, Divider, List, PageHeader, Row, Skeleton, Space, Table, Tag, Upload } from "antd";
-import {DownloadOutlined, UploadOutlined} from '@ant-design/icons'
+import {Button, Card, Col, Descriptions, Divider, List, Modal, PageHeader, Row, Skeleton, Space, Table, Tag, Upload } from "antd";
+import {DownOutlined, DownloadOutlined, UpOutlined, UploadOutlined} from '@ant-design/icons'
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ResourceService from "../../../Services/ResourceService";
 import { CSVLink } from "react-csv";
@@ -32,6 +32,35 @@ const MetricSubtype = () => {
         'X-XSRF-TOKEN': token || ''
     }
     const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app';
+    const [metricDescription, setMetricDescription] = useState("");
+    const [showDescription, setShowDescription] = useState<any>([]);
+
+    const displayDescription = (idx: any) => {
+        let arr = [...showDescription]
+        arr.push(idx)
+        setShowDescription(arr)
+    }
+
+    const hideDescription = (idx: any) => {
+        let arr = [...showDescription]
+        setShowDescription(arr.filter(x => x !== idx))
+    }
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const showModal = (description:string) => {
+        setMetricDescription(description)
+        setIsModalOpen(true);
+    }
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+    }
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    }
+
     const colHeaders = useMemo(() => {
         return [
             'ESG Pillar',
@@ -721,8 +750,30 @@ const MetricSubtype = () => {
                                                         title={item.metric_name}>
                                                         <Card.Meta title={<Tag>
                                                             {item.metric_code}
-                                                        </Tag>} description={item.description}>
+                                                        </Tag>}>
                                                         </Card.Meta>
+                                                        {(item.description && !showDescription.includes(idx)) &&
+                                                            <DownOutlined style={{
+                                                            float: 'right'
+                                                            }} onClick={(() => displayDescription(idx))} />
+                                                        }
+                                                        {(item.description && showDescription.includes(idx)) &&
+                                                            <UpOutlined style={{
+                                                            float: 'right'
+                                                            }} onClick={(() => hideDescription(idx))} />
+                                                        }
+                                                        {showDescription.includes(idx) &&
+                                                            <Row style={{ paddingTop: '20px' }}>
+                                                            {(item?.description && item.description.length > 500) ?
+                                                                <div>
+                                                                <p>{`${item.description.substring(0, 500)}...`}</p>
+                                                                <p><Button type="link" onClick={() => showModal(item.description)}>Read more</Button></p>
+                                                                </div>
+                                                                :
+                                                                <p>{item.description}</p>
+                                                            }
+                                                            </Row>
+                                                        }
                                                         <Divider/>
                                                         <Descriptions column={1} size={"small"} layout={"horizontal"}>
                                                             {item.measurement_units && <Descriptions.Item
@@ -746,6 +797,9 @@ const MetricSubtype = () => {
 
                 </PageHeader>
             </Space>
+            <Modal title="Metric Description" visible={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                <p>{metricDescription}</p>
+            </Modal>
         </Wrapper>
     )
 }
