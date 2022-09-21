@@ -93,11 +93,12 @@ const MetricSubtypeTabs = ({ standards, report, showReport }:any) => {
                         )
                       )}
               </Space>
-              {!showDescription.includes(idx) ?
+              {(item.description && !showReport && !showDescription.includes(idx)) &&
                 <DownOutlined style={{
                   float: 'right'
                 }} onClick={(() => displayDescription(idx))} />
-               :
+              }
+              {(item.description && !showReport && showDescription.includes(idx)) &&
                 <UpOutlined style={{
                   float: 'right'
                 }} onClick={(() => hideDescription(idx))} />
