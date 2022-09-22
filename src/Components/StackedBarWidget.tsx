@@ -33,7 +33,7 @@ const StackedBarWidget: FC<{ isGroup: boolean, isPercentage: boolean, label: str
       value: {
         formatter: (val: any) => {
           if (props.label === 'currency') {
-            return `${val.toLocaleString("en-US", {style:'currency', currency:'USD'})}`
+            return `$${val.toString().replace(/\d{1,3}(?=(\d{3})+$)/g, (s: any) => `${s},`)}`
           }
 
           if (props.label === 'percentage') {
@@ -50,7 +50,7 @@ const StackedBarWidget: FC<{ isGroup: boolean, isPercentage: boolean, label: str
         let label = data.type
 
         if (props.label === 'currency') {
-          val = `${val.toLocaleString("en-US", {style:'currency', currency:'USD'})}`
+          val = `$${val.toString().replace(/\d{1,3}(?=(\d{3})+$)/g, (s: any) => `${s},`)}`
         }
 
         if (props.label === 'percentage') {
