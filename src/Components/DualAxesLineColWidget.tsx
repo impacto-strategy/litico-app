@@ -72,6 +72,9 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
     color: ['#477EB7', '#5AC5BF', '#46AD75'],
     xField: 'type',
     yField: ['value', 'intensity'],
+    xAxis: {
+      tickCount: 5,
+    },
     yAxis: {
       value: {
         min: 0,
