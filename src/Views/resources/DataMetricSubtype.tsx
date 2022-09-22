@@ -1,5 +1,5 @@
 import { Button, Card, Col, DatePicker, Divider, Form, Input, message, PageHeader, Row, Select, Space, Tag, Upload } from "antd";
-import { InboxOutlined } from '@ant-design/icons';
+import { DownOutlined, InboxOutlined, UpOutlined } from '@ant-design/icons';
 import styled from "styled-components";
 import {useSearchParams} from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
@@ -37,6 +37,8 @@ const DataMetricSubtype = () => {
     const [facilities, setFacilities] = useState<any>()
     const [standards, setMetricStandards] = useState<any>()
     const [fields, setFields] = useState<any>()
+    const [showDescription, setShowDescription] = useState<any>(false)
+
     const riskOptions = [
         {name: 'High', value: 'high'},
         {name: 'Medium', value: 'medium'},
@@ -152,9 +154,23 @@ const DataMetricSubtype = () => {
                                 )
                                 )}
                         </Space>
-                        <Row style={{paddingTop: '20px'}}>
-                            <p>{standards?.[0].description}</p>
-                        </Row>
+                        {(standards?.[0].description && !showDescription) &&
+                            <DownOutlined style={{
+                            float: 'right'
+                            }} onClick={(() => setShowDescription(true))} />
+                        }
+                        {(standards?.[0].description && showDescription) &&
+                            <UpOutlined style={{
+                            float: 'right'
+                            }} onClick={(() => setShowDescription(false))} />
+                        }
+                        {showDescription &&
+                            <Row style={{ paddingTop: '20px' }}>
+                            {standards?.[0].description &&
+                                <p>{standards?.[0].description}</p>
+                            }
+                            </Row>
+                        }
                     </Card>
                     <Divider />
                     <Form
