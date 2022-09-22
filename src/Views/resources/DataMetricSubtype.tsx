@@ -1,5 +1,5 @@
 import { Button, Card, Col, DatePicker, Divider, Form, Input, message, PageHeader, Row, Select, Space, Tag, Upload } from "antd";
-import { InboxOutlined } from '@ant-design/icons';
+import { DownOutlined, InboxOutlined, UpOutlined } from '@ant-design/icons';
 import styled from "styled-components";
 import {useSearchParams} from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
@@ -24,11 +24,21 @@ const ContentWrapper = styled.div`
 const DataMetricSubtype = () => {
     const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app'
     const [searchParams] = useSearchParams();
+
+    const stateCodes = [
+        'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS',
+        'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY',
+        'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV',
+        'WI', 'WY'
+    ]
+
     const [form] = Form.useForm();
     let resources: any[] = [];
     const [facilities, setFacilities] = useState<any>()
     const [standards, setMetricStandards] = useState<any>()
     const [fields, setFields] = useState<any>()
+    const [showDescription, setShowDescription] = useState<any>(false)
+
     const riskOptions = [
         {name: 'High', value: 'high'},
         {name: 'Medium', value: 'medium'},
@@ -60,6 +70,13 @@ const DataMetricSubtype = () => {
     const headers = {
         'X-XSRF-TOKEN': token || ''
     }
+
+    const setDefaultFields = useCallback(() => {
+        form.setFieldsValue({
+            state: 'CO',
+            basin: 'DJ Basin'
+        })
+    },[form])
     
 
     const getStandards = useCallback(() => {
@@ -69,9 +86,10 @@ const DataMetricSubtype = () => {
         }).then(({ data }) => {
             setMetricStandards(data);
             setFields(data[0].esg_metric_factors)
+            setDefaultFields()
         })
 
-    }, [searchParams, setMetricStandards])
+    }, [searchParams, setMetricStandards, setDefaultFields])
 
     const createMeasurementMetrics = (measurementIds: any[]) => {
         ResourceService.store({
@@ -92,6 +110,7 @@ const DataMetricSubtype = () => {
         let requests = Object.keys(values.factors).map(async (key) => {
             let formValues = Object.assign({}, values);
             let factor = find(fields, { 'col_label': key });
+            formValues['value'] = values['factors'][key];
             formValues['value'] = values['factors'][key];
             formValues['esg_metric_factor_id'] = factor.id;
             formValues['esg_metric_factor_name'] = factor.name;
@@ -135,9 +154,22 @@ const DataMetricSubtype = () => {
                                 )
                                 )}
                         </Space>
-                        <Row style={{paddingTop: '20px'}}>
-                            <p>{standards?.[0].description}</p>
-                        </Row>
+                        {(standards?.[0].description && !showDescription) &&
+                            <DownOutlined style={{
+                            float: 'right'
+                            }} onClick={(() => setShowDescription(true))} />
+                        }
+                        {(standards?.[0].description && showDescription) &&
+                            <>
+                                <UpOutlined style={{
+                                    float: 'right'
+                                }} onClick={(() => setShowDescription(false))} />
+
+                                <Row style={{ paddingTop: '20px' }}>
+                                    <p>{standards?.[0].description}</p>
+                                </Row>
+                            </>
+                        }
                     </Card>
                     <Divider />
                     <Form
@@ -156,7 +188,7 @@ const DataMetricSubtype = () => {
                                 </Form.Item>
                                 </Col>
                             <Col lg={{span: 12}} sm={{span: 24}}>
-                                <Form.Item name="date" label="Date">
+                                <Form.Item name="date" required label="Date" tooltip="This is the end date of the Timeframe indicated">
                                     <DatePicker />
                                     </Form.Item>
                             </Col>
@@ -174,7 +206,7 @@ const DataMetricSubtype = () => {
                                 </Col>
                             }
 
-                            { standards?.[0].location_type && standards?.[0].location_type === 'organization' &&
+                            {standards?.[0].location_type && standards?.[0].location_type === 'organization' &&
                                 <Col lg={{span: 12}} sm={{span: 24}}>
                                     <Form.Item name="organization" label="Organization">
                                         <Input/>
@@ -186,9 +218,13 @@ const DataMetricSubtype = () => {
                                     <Input/>
                                 </Form.Item>
                             </Col>
-                            <Col lg={{span: 12}} sm={{span: 24}}>
+                            <Col lg={{span: 4}} sm={{span: 24}}>
                                 <Form.Item name="state" label="State">
-                                    <Input/>
+                                    <Select>
+                                        {stateCodes.map((code: string) => (
+                                            <Select.Option key={code} value={code} >{code}</Select.Option>
+                                        ))}
+                                    </Select>
                                 </Form.Item>
                             </Col>
                         </Row>
@@ -232,7 +268,7 @@ const DataMetricSubtype = () => {
                             ))}
                         </Row>
                         <Divider />
-                        <Form.Item label="Upload">
+                        <Form.Item label="Upload" tooltip="Upload any document that compliments this entry.">
                             <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile}  noStyle>
                                 <Upload.Dragger name="file" action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers} accept=".csv,.pdf,.doc,.docx,.jpeg,.png,.jpg,.svg">
                                     <p className="ant-upload-drag-icon">

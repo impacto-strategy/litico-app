@@ -1,9 +1,8 @@
 import {FC, useCallback, useEffect, useMemo, useState} from "react";
 import styled from "styled-components";
 import ResourceService from "../../../Services/ResourceService";
-import {Button, Divider, PageHeader, Skeleton, Space, Tabs} from "antd";
-import {Link} from "react-router-dom";
-import {groupBy, map} from "lodash";
+import {Divider, PageHeader, Skeleton, Space, Tabs} from "antd";
+import {groupBy, map, orderBy} from "lodash";
 import ReportsViewer from "./components/ReportsViewer";
 
 const {TabPane} = Tabs;
@@ -27,10 +26,10 @@ const ReportsIndex: FC = () => {
     const [initLoading, setInitLoading] = useState(true)
 
     const organizedReports = useMemo(() => {
-        return map(groupBy(reports, 'year'), (reports, year) => ({
+        return orderBy(map(groupBy(reports, 'year'), (reports, year) => ({
             year,
             reports
-        }))
+        })), 'year', 'desc')
     }, [reports])
 
     const getAllReports = useCallback(() => {
@@ -54,13 +53,6 @@ const ReportsIndex: FC = () => {
                     ghost={false}
                     onBack={() => window.history.back()}
                     title="Reports"
-                    extra={[
-                        <Link key="1" to={`/reports/new`}>
-                            <Button type="primary">
-                                Add New Report
-                            </Button>
-                        </Link>,
-                    ]}
                 >
                 </PageHeader>
 

@@ -23,7 +23,7 @@ import useAuth from "../Providers/Auth/useAuth";
 import {filter, flatten, groupBy, map, sortBy, sumBy} from "lodash";
 
 const Dashboard: FC = () => {
-    const [metrics, setMetrics] = useState({ esg_metrics: [] })
+    const [metrics, setMetrics] = useState<any>({})
     const [emissions, setEmissions] = useState<any>([])
     const [spills, setSpills] = useState<any>([])
     const [complaints, setComplaints] = useState<any>([])
@@ -33,13 +33,21 @@ const Dashboard: FC = () => {
     const getAllMetrics = useCallback(() => {
         ResourceService.index({
             resourceName: 'esg-metrics'
-        }).then(({ data }) => {setMetrics(data)})
+        }).then(({ data }) => {
+            setMetrics(data)
+        }).catch((err) =>{
+            console.log(err)
+        })
     }, [setMetrics])
 
     const getAllSpills = useCallback(() => {
         ResourceService.index({
             resourceName: 'spills'
-        }).then(({ data }) => {setSpills(data)})
+        }).then(({ data }) => {
+            setSpills(data)
+        }).catch((err) => {
+            console.log(err)
+        })
     }, [setSpills])
 
     const getTotalProduction = useCallback((year: string) => {
@@ -56,7 +64,7 @@ const Dashboard: FC = () => {
     }, [getTotalProduction])
 
     const getDonationData = useMemo(() => {
-        return sortBy(flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Social investment' }), (m: any) => ([
+        return sortBy(flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (m: any) => ([
             { label: m.organization, type: parseInt(m.date), value: m.value }
         ]))), ['label'])
     }, [metrics])
@@ -92,6 +100,8 @@ const Dashboard: FC = () => {
             resourceName: 'productions'
         }).then(({ data }) => {
             setProductionData(data)
+        }).catch((err) =>{
+            console.log(err)
         })
     }, [])
 
@@ -100,6 +110,8 @@ const Dashboard: FC = () => {
             resourceName: 'complaints'
         }).then(({ data }) => {
             setComplaints(data)
+        }).catch((err) =>{
+            console.log(err)
         })
     }, [])
 
@@ -134,7 +146,11 @@ const Dashboard: FC = () => {
             resourceName: 'esg-metrics',
             params: {metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Emissions'}
         }).then(res => {
-            setEmissions(sortBy(res.data.esg_metrics, 'date'))
+            if (res.data && res.data.esg_metrics) {
+                setEmissions(sortBy(res.data.esg_metrics, 'date'))
+            }
+        }).catch((err) =>{
+            console.log(err)
         })
     }, [])
 
