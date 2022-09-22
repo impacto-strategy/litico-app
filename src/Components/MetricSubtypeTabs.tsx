@@ -119,7 +119,7 @@ const MetricSubtypeTabs = ({ standards, report, showReport }:any) => {
           </Col>
         ))}
       </Row>
-      <Modal title="Metric Description" visible={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Modal title="Metric Description" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <p>{metricDescription}</p>
       </Modal>
     </div>

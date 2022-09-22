@@ -376,7 +376,7 @@ const ResourceIndex: FC = () => {
                 title={drawer.title}
                 placement={drawer.placement}
                 closable={false}
-                visible={visible.drawer}
+                open={visible.drawer}
                 onClose={() => {
                     setData({})
                     setVisible(visibleObj => ({

@@ -72,9 +72,6 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
     color: ['#477EB7', '#5AC5BF', '#46AD75'],
     xField: 'type',
     yField: ['value', 'intensity'],
-    xAxis: {
-      tickCount: 5,
-    },
     yAxis: {
       value: {
         title: {
@@ -143,7 +140,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
       </h3>
       <DualAxes {...config} />
       {props.includeModal &&
-        <Modal title={props.y1Lablel} visible={isModalVisible} onOk={closeModal} onCancel={closeModal} width={1000}>
+        <Modal title={props.y1Lablel} open={isModalVisible} onOk={closeModal} onCancel={closeModal} width={1000}>
           <Table dataSource={drillDownData} columns={columns} />
         </Modal>
       }
