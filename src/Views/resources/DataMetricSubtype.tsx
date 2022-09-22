@@ -160,16 +160,15 @@ const DataMetricSubtype = () => {
                             }} onClick={(() => setShowDescription(true))} />
                         }
                         {(standards?.[0].description && showDescription) &&
-                            <UpOutlined style={{
-                            float: 'right'
-                            }} onClick={(() => setShowDescription(false))} />
-                        }
-                        {showDescription &&
-                            <Row style={{ paddingTop: '20px' }}>
-                            {standards?.[0].description &&
-                                <p>{standards?.[0].description}</p>
-                            }
-                            </Row>
+                            <>
+                                <UpOutlined style={{
+                                    float: 'right'
+                                }} onClick={(() => setShowDescription(false))} />
+
+                                <Row style={{ paddingTop: '20px' }}>
+                                    <p>{standards?.[0].description}</p>
+                                </Row>
+                            </>
                         }
                     </Card>
                     <Divider />
