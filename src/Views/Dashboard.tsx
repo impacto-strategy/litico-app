@@ -5,6 +5,7 @@ import ColumnWidget from "../Components/ColumnWidget";
 // import LineWidget from "../Components/LineWidget";
 import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
 import StackedBarWidget from "../Components/StackedBarWidget";
+import StackedBarMultiLineWidget from "../Components/StackedBarMultiLineWidget";
 // import PieWidget from "../Components/PieWidget";
 // import DonationsDrilldown from "../DonationsDrilldown";
 import LDAR from "../Components/LDAR";
@@ -161,6 +162,7 @@ const Dashboard: FC = () => {
                 gap: '2em'
             }}>
 
+                {/* THIS IS THE OLD VERSION */}
                 {emissions.length > 0 &&
                     <DualAxesLineColWidget
                         data={getYearlyEmissionData}
@@ -174,20 +176,27 @@ const Dashboard: FC = () => {
                     />
                 }
 
-                {/* <WhitingAllData /> */}
-
-                {spills.length > 0 &&
-                <DualAxesLineColWidget
-                    data={getYearlySpillsData}
-                    colLabel="Spill bbl"
-                    lineLabel="Spills Intensity (bbl spill/kbll produced)"
-                    title="Spills Quantity & Intensity"
-                    gridColumns="1 / 3"
-                    y1Lablel="Spill Count"
-                    y2Lablel="Spill Intensity (spills/bbls prod)"
-                    includeModal={true}
-                />
+                {/* THIS IS THE NEW VERSION */}
+                {
+                    <StackedBarMultiLineWidget
+                        data={getYearlyEmissionData}
+                    />
                 }
+
+                {/* <WhitingAllData /> */}
+                {spills.length > 0 &&
+                    <DualAxesLineColWidget
+                        data={getYearlySpillsData}
+                        colLabel="Spill bbl"
+                        lineLabel="Spills Intensity (bbl spill/kbll produced)"
+                        title="Spills Quantity & Intensity"
+                        gridColumns="1 / 3"
+                        y1Lablel="Spill Count"
+                        y2Lablel="Spill Intensity (spills/bbls prod)"
+                        includeModal={true}
+                    />
+                }
+
                 {complaints.length > 0 &&
                     <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
                 }
