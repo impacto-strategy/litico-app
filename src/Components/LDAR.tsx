@@ -41,12 +41,10 @@ const LDAR = () => {
                 },
             },
             inspections: {
-                max: 2100,
+                min: 0,
+                max: 125,
                 label: {
-                    // Used to hide the second y-axis label
-                    formatter: (v: any) => {
-                        return
-                    },
+                    formatter: (v: string) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
                 }
             }
         },

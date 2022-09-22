@@ -5,6 +5,7 @@ import ColumnWidget from "../Components/ColumnWidget";
 // import LineWidget from "../Components/LineWidget";
 import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
 import StackedBarWidget from "../Components/StackedBarWidget";
+// import GHGChart from "../Components/GHGChart";
 // import PieWidget from "../Components/PieWidget";
 // import DonationsDrilldown from "../DonationsDrilldown";
 import LDAR from "../Components/LDAR";
@@ -69,7 +70,7 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getGenderData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce, by Gender' }), (m: any) => ([
+        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Gender' }), (m: any) => ([
             { label: parseInt(m.date), type: 'Female', value: m.num_2 },
             { label: parseInt(m.date), type: 'Male', value: m.num_1 },
             { label: parseInt(m.date), type: 'Non-Binary', value: m.num_3 },
@@ -78,7 +79,7 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getEthnicityData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce, by Ethnicity' }), (m: any) => ([
+        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Ethnicity' }), (m: any) => ([
             { label: parseInt(m.date), type: 'White/Caucasian', value: m.num_1 },
             { label: parseInt(m.date), type: 'Black/African American', value: m.num_2 },
             { label: parseInt(m.date), type: 'Asian/Pacific American', value: m.num_3 },
@@ -177,6 +178,7 @@ const Dashboard: FC = () => {
                 gap: '2em'
             }}>
 
+                {/* THIS IS THE OLD VERSION */}
                 {emissions.length > 0 &&
                     <DualAxesLineColWidget
                         data={getYearlyEmissionData}
@@ -190,20 +192,27 @@ const Dashboard: FC = () => {
                     />
                 }
 
-                {/* <WhitingAllData /> */}
+                {/* THIS IS THE NEW VERSION */}
+                {/* {
+                    <GHGChart
+                        data={getYearlyEmissionData}
+                    />
+                } */}
 
+                {/* <WhitingAllData /> */}
                 {spills.length > 0 &&
-                <DualAxesLineColWidget
-                    data={getYearlySpillsData}
-                    colLabel="Spill bbl"
-                    lineLabel="Spills Intensity (bbl spill/kbll produced)"
-                    title="Spills Quantity & Intensity"
-                    gridColumns="1 / 3"
-                    y1Lablel="Spill Count"
-                    y2Lablel="Spill Intensity (spills/bbls prod)"
-                    includeModal={true}
-                />
+                    <DualAxesLineColWidget
+                        data={getYearlySpillsData}
+                        colLabel="Spill bbl"
+                        lineLabel="Spills Intensity (bbl spill/kbll produced)"
+                        title="Spills Quantity & Intensity"
+                        gridColumns="1 / 3"
+                        y1Lablel="Spill Count"
+                        y2Lablel="Spill Intensity (spills/bbls prod)"
+                        includeModal={true}
+                    />
                 }
+
                 {complaints.length > 0 &&
                     <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
                 }
