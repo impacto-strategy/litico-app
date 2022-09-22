@@ -33,7 +33,6 @@ const Dashboard: FC = () => {
         ResourceService.index({
             resourceName: 'esg-metrics'
         }).then(({ data }) => {
-            console.log(data)
             setMetrics(data)
         }).catch((err) =>{
             console.log(err)
@@ -44,7 +43,6 @@ const Dashboard: FC = () => {
         ResourceService.index({
             resourceName: 'spills'
         }).then(({ data }) => {
-            console.log(data)
             setSpills(data)
         }).catch((err) => {
             console.log(err)
@@ -100,7 +98,6 @@ const Dashboard: FC = () => {
         ResourceService.index({
             resourceName: 'productions'
         }).then(({ data }) => {
-            console.log(data)
             setProductionData(data)
         }).catch((err) =>{
             console.log(err)
@@ -111,7 +108,6 @@ const Dashboard: FC = () => {
         ResourceService.index({
             resourceName: 'complaints'
         }).then(({ data }) => {
-            console.log(data)
             setComplaints(data)
         }).catch((err) =>{
             console.log(err)

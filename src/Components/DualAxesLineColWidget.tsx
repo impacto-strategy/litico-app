@@ -77,7 +77,6 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
     },
     yAxis: {
       value: {
-        min: 0,
         title: {
           style: {
             fontSize: 12,

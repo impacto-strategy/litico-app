@@ -54,9 +54,6 @@ const ColumnWidget: FC<{ data: any, title: string, includeModal: boolean, modalT
         color: ['#477EB7', '#5AC5BF', '#46AD75'],
         xField: 'type',
         yField: 'value',
-        xAxis: {
-            tickCount: 5,
-        },
         seriesField: 'name',
         legend:{
           position: 'top-right'
