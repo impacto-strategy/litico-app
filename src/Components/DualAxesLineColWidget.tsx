@@ -1,7 +1,7 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState } from 'react';
 import styled from "styled-components";
 import { DualAxes } from '@ant-design/plots';
-import { Modal, Table } from 'antd';
+import { Modal } from 'antd';
 // import {sortBy} from 'lodash'
 
 const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean }> = props => {
@@ -16,43 +16,43 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   // const [drillDownData, setDrillDownData] = useState<any>([]);
-  const columns = [
-    {
-      title: 'Date',
-      dataIndex: 'date',
-      key: 'date',
-    },
-    {
-      title: 'Facility Name',
-      dataIndex: 'facility_name',
-      key: 'facility_name',
-    },
-    {
-      title: 'Vol Recovered Oil',
-      dataIndex: 'vol_recover_oil',
-      key: 'vol_recover_oil',
-    },
-    {
-      title: 'Vol Recovered Water',
-      dataIndex: 'vol_recover_water',
-      key: 'vol_recover_water',
-    },
-    {
-      title: 'Vol Released Oil',
-      dataIndex: 'vol_released_oil',
-      key: 'vol_released_oil',
-    },
-    {
-      title: 'Vol Released Water',
-      dataIndex: 'vol_released_water',
-      key: 'vol_released_water',
-    },
-    {
-      title: 'Resolution Date',
-      dataIndex: 'resolution_date',
-      key: 'resolution_date',
-    },
-  ];
+  // const columns = [
+  //   {
+  //     title: 'Date',
+  //     dataIndex: 'date',
+  //     key: 'date',
+  //   },
+  //   {
+  //     title: 'Facility Name',
+  //     dataIndex: 'facility_name',
+  //     key: 'facility_name',
+  //   },
+  //   {
+  //     title: 'Vol Recovered Oil',
+  //     dataIndex: 'vol_recover_oil',
+  //     key: 'vol_recover_oil',
+  //   },
+  //   {
+  //     title: 'Vol Recovered Water',
+  //     dataIndex: 'vol_recover_water',
+  //     key: 'vol_recover_water',
+  //   },
+  //   {
+  //     title: 'Vol Released Oil',
+  //     dataIndex: 'vol_released_oil',
+  //     key: 'vol_released_oil',
+  //   },
+  //   {
+  //     title: 'Vol Released Water',
+  //     dataIndex: 'vol_released_water',
+  //     key: 'vol_released_water',
+  //   },
+  //   {
+  //     title: 'Resolution Date',
+  //     dataIndex: 'resolution_date',
+  //     key: 'resolution_date',
+  //   },
+  // ];
 
   // useEffect(() => {
   //   if (drillDownData.length > 0) showModal();
