@@ -5,11 +5,11 @@ import ColumnWidget from "../Components/ColumnWidget";
 // import LineWidget from "../Components/LineWidget";
 import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
 import StackedBarWidget from "../Components/StackedBarWidget";
-// import GHGChart from "../Components/GHGChart";
+import GHGChart from "../Components/GHGChart";
 // import PieWidget from "../Components/PieWidget";
 // import DonationsDrilldown from "../DonationsDrilldown";
 import LDAR from "../Components/LDAR";
-import Productions from "../Components/Productions";
+import DualAxesMultiLineWidget from "../Components/DualAxesMultiLineWidget";
 import GovernanceCheckList from "../Components/GovernanceCheckList";
 import {Divider} from "antd";
 import ResourceService from "../Services/ResourceService";
@@ -90,6 +90,30 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getYearlyEmissionData = useMemo(() => {
+        const dataByDate: {[key: string]: any} = groupBy(emissions, "date")
+        let temp: Object[] = []
+
+        Object.keys(dataByDate).forEach(function(outerkKey) {
+            let dataByBasin: {[key: string]: any} = groupBy(dataByDate[outerkKey], "basin")
+            Object.keys(dataByBasin).forEach(function(innerKey) {
+                temp.push({
+                    name: "GHG Emissions (CO2e)",
+                    value: sumBy(dataByBasin[innerKey], (o: {[key: string]: any}) => o.value),
+                    basin: innerKey,
+                    date: outerkKey
+                })
+            })
+        });
+
+        console.log("Here's the final array: ", temp)
+
+        /*
+            (1) Groups by date (returns an object)
+            (2) Iterates through object then creates a new object for each
+            (3) returns an array. Flatten seems to remove each individual array.
+        */
+
+        // if (user.selectedCompany.id === 1) {}
         return flatten(map(groupBy(emissions, 'date'), (e: any) => ([
             { name: "GHG Emissions (CO2e)", type: parseInt(e[0].date), value: e[0].value, intensity: e[0].value / getTotalProduction(e[0].date) }
         ])))
@@ -234,8 +258,10 @@ const Dashboard: FC = () => {
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
                 
                 {production.length > 0 &&
-                    <Productions
+                    <DualAxesMultiLineWidget
                         data={production}
+                        gridColumns={'1/5'}
+                        title={'Oil & Gas Production'}
                     />
                 }
 

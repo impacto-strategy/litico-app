@@ -2,6 +2,7 @@ import {FC} from "react"
 import styled from "styled-components";
 import { DualAxes } from '@ant-design/plots';
 
+// Will need to adjust interface.
 interface GHGChartProps {
     data: any
 }
@@ -9,10 +10,10 @@ interface GHGChartProps {
 /**
  * Renders to a chart with stacked bars representing Greenhouse Gas Emissions
  * Volume by basin and multiple lines representing Greenhouse Gas Emissions
- * intensity by basin.
+ * intensity by basin. Might consider making this more general purpose later.
  *
  * @param props - React Component Props.
- * @returns JSX element that renders an Ant Design Chart.
+ * @returns React Component that renders Ant Design graph
  *
  */
 const GHGChart: FC<GHGChartProps> = props => {
@@ -61,7 +62,7 @@ const GHGChart: FC<GHGChartProps> = props => {
                 isStack: true,
                 isPercent: false,
                 // How we seperate the columns
-                // seriesField: 'basin',
+                seriesField: 'basin',
             },
             {
                 geometry: 'line',
@@ -70,7 +71,7 @@ const GHGChart: FC<GHGChartProps> = props => {
                     size: 5,
                 },
                 // How we seperate the lines
-                // seriesField: 'basin',
+                seriesField: 'basin',
             },
         ],
         legend: {
