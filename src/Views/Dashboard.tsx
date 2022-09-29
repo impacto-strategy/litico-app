@@ -233,7 +233,7 @@ const Dashboard: FC = () => {
                 <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
                 
-                {production.length > 0 &&
+                {(false && production.length > 0) &&
                     <Productions
                         data={production}
                     />
