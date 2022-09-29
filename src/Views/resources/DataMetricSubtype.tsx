@@ -54,7 +54,9 @@ const DataMetricSubtype = () => {
         ResourceService.index({
             resourceName: 'facilities'
         }).then(({ data }) => {
-            setFacilities(orderBy(data, 'name'))
+            let facilities = orderBy(data, 'name')
+            facilities.unshift({ name: "All Facilities" })
+            setFacilities(facilities)
         })
     }, [])
 
