@@ -213,7 +213,7 @@ const Dashboard: FC = () => {
                     />
                 }
 
-                {complaints.length > 0 &&
+                {(false && complaints.length > 0) &&
                     <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
                 }
                 {/* Charts/Graphs that are currently beyond MVP. */}
