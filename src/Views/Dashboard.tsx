@@ -69,7 +69,7 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getGenderData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce, by Gender' }), (m: any) => ([
+        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Gender' }), (m: any) => ([
             { label: parseInt(m.date), type: 'Female', value: m.num_2 },
             { label: parseInt(m.date), type: 'Male', value: m.num_1 },
             { label: parseInt(m.date), type: 'Non-Binary', value: m.num_3 },
@@ -78,7 +78,7 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getEthnicityData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce, by Ethnicity' }), (m: any) => ([
+        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Ethnicity' }), (m: any) => ([
             { label: parseInt(m.date), type: 'White/Caucasian', value: m.num_1 },
             { label: parseInt(m.date), type: 'Black/African American', value: m.num_2 },
             { label: parseInt(m.date), type: 'Asian/Pacific American', value: m.num_3 },
