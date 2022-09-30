@@ -105,8 +105,6 @@ const Dashboard: FC = () => {
             })
         });
 
-        console.log("Here's the final array: ", temp)
-
         /*
             (1) Groups by date (returns an object)
             (2) Iterates through object then creates a new object for each
@@ -185,6 +183,25 @@ const Dashboard: FC = () => {
         getComplaints()
         getGhgEmissions()
     }, [getAllMetrics, getOilProduction, getAllSpills, getComplaints, getGhgEmissions])
+
+    /**
+     * Takes data and organizes it based on conidtions provided.
+     * @params
+     * 
+     */
+    const sortData = (data: any, prop: string) => {
+        let var1: {[key:string]: any} = {};
+        data.forEach((obj: {[key:string]: any}) => {
+            if (var1.hasOwnProperty(obj[prop])) {
+                var1[obj[prop]].push(obj)
+            } else {
+                var1[obj[prop]] = [obj]
+            }
+        });
+        return var1;
+    }
+
+    console.log("here's the result: ", sortData(production, "year"))
 
     return (
         <div className="site-layout-background"
