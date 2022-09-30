@@ -253,7 +253,7 @@ const Dashboard: FC = () => {
                     <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} gridColumns="1/3" title="Employees by Gender" subTitle="" />
                 }
                 {getEthnicityData.length > 0 &&
-                    <StackedBarWidget isGroup={false} isPercentage={true} data={getEthnicityData} label={'percentage'} gridColumns='3/5' title='Employee Diversity' subTitle="2021" />
+                    <StackedBarWidget isGroup={false} isPercentage={true} data={getEthnicityData} label={'percentage'} gridColumns='3/5' title='Employee Diversity' subTitle="" />
                 }
                 {getDonationData.length > 0 &&
                     <StackedBarWidget isGroup={false} isPercentage={false} data={getDonationData} label={'currency'} gridColumns="1/5" title="Annual Charitable Contributions" subTitle="" />
