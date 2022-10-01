@@ -50,7 +50,11 @@ const Dashboard: FC = () => {
     }, [setSpills])
 
     const getTotalProduction = useCallback((year: string) => {
-        return sumBy(filter(production, 'year'), 'amount')
+        if (production.length < 1) return 0
+        let productionByYear = filter(production, { 'year': year })
+        if (productionByYear.length < 1) return 0
+        let sum = sumBy(productionByYear, 'amount')
+        return sum
     }, [production])
 
     const getSpillIntensity = useCallback((num: number, date: string) => {
@@ -89,9 +93,15 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getYearlyEmissionData = useMemo(() => {
-        return flatten(map(groupBy(emissions, 'date'), (e: any) => ([
-            { name: "GHG Emissions (CO2e)", type: parseInt(e[0].date), value: e[0].value, intensity: e[0].value / getTotalProduction(e[0].date) }
-        ])))
+        return flatten(map(groupBy(emissions, 'date'), (e: any) => {
+            let productionByDate = (getTotalProduction(e[0].date))
+            let value = e[0].value
+            let intensity = ((value) / (productionByDate)) * 33
+            if (productionByDate === 0 || value < 1) return []
+            return [
+                { name: "GHG Emissions (CO2e)", type: parseInt(e[0].date), value: e[0].value, intensity: intensity }
+            ]
+        }))
     }, [emissions, getTotalProduction])
 
     const getOilProduction = useCallback(() => {
@@ -136,9 +146,9 @@ const Dashboard: FC = () => {
             return year
         });
         return flatten(map(spillsCountByYear, (e, key) => ([
-            { name: "Spills Count", type: key, value: e.length, intensity: getSpillIntensity(e.length, key), items: e }
+            { name: "Spills Count", type: key, value: e.length, intensity:  (e.length / (getTotalProduction(key))) * 1000, items: e }
         ])))
-    }, [spills, getSpillIntensity])
+    }, [spills, getTotalProduction])
 
     const getGhgEmissions = useCallback(async () => {
         ResourceService.index({
@@ -180,6 +190,7 @@ const Dashboard: FC = () => {
                 {emissions.length > 0 &&
                     <DualAxesLineColWidget
                         data={getYearlyEmissionData}
+                        lineMax={0.4}
                         colLabel="Greenhouse Gas Emissions (mt CO₂-e)"
                         lineLabel="GHG Emission Intensity (mt/BoE)"
                         title="Greenhouse Gas Emissions Volume & Intensity"
@@ -196,6 +207,7 @@ const Dashboard: FC = () => {
                 <DualAxesLineColWidget
                     data={getYearlySpillsData}
                     colLabel="Spill bbl"
+                    lineMax={0.004}
                     lineLabel="Spills Intensity (bbl spill/kbll produced)"
                     title="Spills Quantity & Intensity"
                     gridColumns="1 / 3"

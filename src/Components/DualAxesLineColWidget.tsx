@@ -4,7 +4,7 @@ import { DualAxes } from '@ant-design/plots';
 import { Modal, Table } from 'antd';
 import {sortBy} from 'lodash'
 
-const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean }> = props => {
+const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean, lineMax: number }> = props => {
   const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
@@ -69,11 +69,21 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
   const config = {
     data: [props.data, props.data],
     animation: false,
+    point: {
+      style: () => {
+        let config = {
+            fill: 'white',
+            lineWidth: 2
+        }
+        return config;
+      },
+    },
     color: ['#477EB7', '#5AC5BF', '#46AD75'],
     xField: 'type',
     yField: ['value', 'intensity'],
     yAxis: {
       value: {
+        tickCount: 5,
         title: {
           style: {
             fontSize: 12,
@@ -86,6 +96,8 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
       },
       intensity: {
         min: 0,
+        max: props.lineMax,
+        tickCount: 5,
         title: {
           style: {
             fontSize: 12,
@@ -104,7 +116,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
       {
         geometry: 'line',
         lineStyle: {
-          lineWidth: 1,
+          lineWidth: 2,
         },
       },
     ],
