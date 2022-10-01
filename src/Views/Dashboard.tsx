@@ -57,15 +57,6 @@ const Dashboard: FC = () => {
         return sum
     }, [production])
 
-    const getSpillIntensity = useCallback((num: number, date: string) => {
-        let yearlyProduction = getTotalProduction(date)
-        if (yearlyProduction > 0) {
-            return num / yearlyProduction
-        } else {
-            return 0
-        }
-    }, [getTotalProduction])
-
     const getDonationData = useMemo(() => {
         return sortBy(flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (m: any) => ([
             { label: m.organization, type: parseInt(m.date), value: m.value }
