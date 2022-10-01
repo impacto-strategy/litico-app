@@ -90,20 +90,6 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getYearlyEmissionData = useMemo(() => {
-        const dataByDate: {[key: string]: any} = groupBy(emissions, "date")
-        let temp: Object[] = []
-
-        Object.keys(dataByDate).forEach(function(outerkKey) {
-            let dataByBasin: {[key: string]: any} = groupBy(dataByDate[outerkKey], "basin")
-            Object.keys(dataByBasin).forEach(function(innerKey) {
-                temp.push({
-                    name: "GHG Emissions (CO2e)",
-                    value: sumBy(dataByBasin[innerKey], (o: {[key: string]: any}) => o.value),
-                    basin: innerKey,
-                    date: outerkKey
-                })
-            })
-        });
 
         /*
             (1) Groups by date (returns an object)
@@ -185,23 +171,57 @@ const Dashboard: FC = () => {
     }, [getAllMetrics, getOilProduction, getAllSpills, getComplaints, getGhgEmissions])
 
     /**
-     * Takes data and organizes it based on conidtions provided.
-     * @params
+     * Sorts data into an object with 
      * 
+     * @param data - array of objects
+     * @param prop - object property to sort by.
+     * @returns 
      */
-    const sortData = (data: any, prop: string) => {
-        let var1: {[key:string]: any} = {};
+    const sortArray = (data: {[key:string]: any}[], prop: string) => {
+        let temp: {[key:string]: any} = {};
         data.forEach((obj: {[key:string]: any}) => {
-            if (var1.hasOwnProperty(obj[prop])) {
-                var1[obj[prop]].push(obj)
+            if (temp.hasOwnProperty(obj[prop])) {
+                temp[obj[prop]].push(obj)
             } else {
-                var1[obj[prop]] = [obj]
+                temp[obj[prop]] = [obj]
             }
         });
-        return var1;
+        return temp;
     }
 
-    console.log("here's the result: ", sortData(production, "year"))
+    const sortObjectArr = (obj: {[key:string]: any}) => {
+        console.log("Here's what we are starting with: ", obj);
+        let result: {[key:string]: any} = {}
+        // iterate through object
+        for (const key of Object.keys(obj)) {
+            result[key] = sortArray(obj[key], 'basin')
+        }
+        return result
+    }
+
+    const processGHGData = (arr: {[key: string]: any}[]) => {
+        // End goal: array of objects with yearly data
+        console.log("Here's the sorted data", sortArray(arr, "date"));
+        let data: {[key: string]: any}[] = [];
+        const sortedData = sortArray(arr, "date")
+        Object.keys(sortedData).forEach((key) => {
+            let obj = {
+                date: parseInt(key),
+                name: "GHG Emissions (CO2e)",
+                value: sumBy(sortedData[key], (o: any) => {return o.value})
+            }
+            data.push(obj)
+        })
+        return data;
+    }
+
+    console.log("Here's the final result", processGHGData(emissions))
+
+    // const processOilGasData = (arr: {[key: string]: any}) => {
+
+    // }
+
+    // console.log("here's the result: ", sortObjectArr(sortArray(production, "year")))
 
     return (
         <div className="site-layout-background"

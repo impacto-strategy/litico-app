@@ -51,11 +51,10 @@ const DualAxesMultiLineWidget: FC<DualAxesMultiLineWidgetProps> = props => {
         
         let temp = []
         for(let obj of data) {
-            
+            obj.product === 'gas' ? console.log("Testing") : console.log("No")
         }
     }
-
-    console.log("Data at the moment: ", props.data)
+    adjustData(props.data)
 
     // Configuration options for the graph visuals.
     const config = {
