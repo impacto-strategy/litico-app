@@ -49,9 +49,11 @@ const Dashboard: FC = () => {
         })
     }, [setSpills])
 
-    const getTotalProduction = useCallback((year: string) => {
+    const getTotalProduction = useCallback((value: string) => {
         if (production.length < 1) return 0
-        let productionByYear = filter(production, { 'year': year })
+        const date = new Date(value)
+        const year = date.getFullYear()
+        let productionByYear = filter(production, { 'year': year.toString() })
         if (productionByYear.length < 1) return 0
         let sum = sumBy(productionByYear, 'amount')
         return sum
