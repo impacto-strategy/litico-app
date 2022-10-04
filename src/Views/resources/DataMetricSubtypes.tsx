@@ -28,7 +28,8 @@ const DataMetricSubtypes = () => {
         ResourceService.index({
           resourceName: 'standards',
           params: {
-            metric_name: searchParams.get("metric_name")
+            metric_name: searchParams.get("metric_name"),
+            esg_pillar: searchParams.get("esg_pillar"),
           }
         }).then(({ data }) => {
             setStandards(data)
