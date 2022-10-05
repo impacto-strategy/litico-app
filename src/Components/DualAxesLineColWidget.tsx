@@ -4,7 +4,7 @@ import { DualAxes } from '@ant-design/plots';
 import { Modal, Table } from 'antd';
 import {sortBy} from 'lodash'
 
-const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean }> = props => {
+const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean, lineMax: number }> = props => {
   const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
@@ -69,12 +69,21 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
   const config = {
     data: [props.data, props.data],
     animation: false,
+    point: {
+      style: () => {
+        let config = {
+            fill: 'white',
+            lineWidth: 3
+        }
+        return config;
+      },
+    },
     color: ['#477EB7', '#5AC5BF', '#46AD75'],
     xField: 'type',
     yField: ['value', 'intensity'],
     yAxis: {
       value: {
-        min: 0,
+        tickCount: 5,
         title: {
           style: {
             fontSize: 12,
@@ -87,6 +96,8 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
       },
       intensity: {
         min: 0,
+        max: props.lineMax,
+        tickCount: 5,
         title: {
           style: {
             fontSize: 12,
@@ -105,7 +116,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
       {
         geometry: 'line',
         lineStyle: {
-          lineWidth: 1,
+          lineWidth: 3,
         },
       },
     ],
@@ -141,7 +152,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
       </h3>
       <DualAxes {...config} />
       {props.includeModal &&
-        <Modal title={props.y1Lablel} visible={isModalVisible} onOk={closeModal} onCancel={closeModal} width={1000}>
+        <Modal title={props.y1Lablel} open={isModalVisible} onOk={closeModal} onCancel={closeModal} width={1000}>
           <Table dataSource={drillDownData} columns={columns} />
         </Modal>
       }

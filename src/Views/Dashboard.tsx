@@ -1,26 +1,32 @@
+/* IMPORT EXTERNAL MODULES */
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import {Divider} from "antd";
+import {filter, flatten, forOwn, groupBy, map, sortBy, sumBy} from "lodash";
+
+/* IMPORT INTERNAL MODULES */
+// UNUSED COMPONENTS
 // import Emissions2020 from "../Components/Emissions2020";
 // import Emissions2020CO2 from "../Components/Emissions2020CO2";
-import ColumnWidget from "../Components/ColumnWidget";
-// import LineWidget from "../Components/LineWidget";
-import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
-import StackedBarWidget from "../Components/StackedBarWidget";
-import GHGChart from "../Components/GHGChart";
-// import PieWidget from "../Components/PieWidget";
-// import DonationsDrilldown from "../DonationsDrilldown";
-import LDAR from "../Components/LDAR";
-import DualAxesMultiLineWidget from "../Components/DualAxesMultiLineWidget";
-import GovernanceCheckList from "../Components/GovernanceCheckList";
-import {Divider} from "antd";
-import ResourceService from "../Services/ResourceService";
-import useAuth from "../Providers/Auth/useAuth";
-
 // import WhitingAllData from "../Components/WhitingAllData";
 // import MethaneEmissions from "../Components/MethaneEmissions";
 // import Flaring from "../Components/Flaring";
 // import OilSpills from "../Components/OilSpills";
 // import Staff from "../Components/Staff";
-import {filter, flatten, groupBy, map, sortBy, sumBy} from "lodash";
+// import LineWidget from "../Components/LineWidget";
+// import PieWidget from "../Components/PieWidget";
+// import DonationsDrilldown from "../DonationsDrilldown";
+// REACT COMPONENTS
+import ColumnWidget from "../Components/ColumnWidget";
+import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
+import StackedBarWidget from "../Components/StackedBarWidget";
+import GHGChart from "../Components/GHGChart";
+import LDAR from "../Components/LDAR";
+import ProductionChart from "../Components/ProductionChart"
+import GovernanceCheckList from "../Components/GovernanceCheckList";
+// MISC INTERNAL MODULES
+import ResourceService from "../Services/ResourceService";
+import useAuth from "../Providers/Auth/useAuth";
+import {ArrOfObj} from "../../global"
 
 const Dashboard: FC = () => {
     const [metrics, setMetrics] = useState<any>({})
@@ -50,18 +56,15 @@ const Dashboard: FC = () => {
         })
     }, [setSpills])
 
-    const getTotalProduction = useCallback((year: string) => {
-        return sumBy(filter(production, 'year'), 'amount')
+    const getTotalProduction = useCallback((value: string) => {
+        if (production.length < 1) return 0
+        const date = new Date(value)
+        const year = date.getFullYear()
+        let productionByYear = filter(production, { 'year': year.toString() })
+        if (productionByYear.length < 1) return 0
+        let sum = sumBy(productionByYear, 'amount')
+        return sum
     }, [production])
-
-    const getSpillIntensity = useCallback((num: number, date: string) => {
-        let yearlyProduction = getTotalProduction(date)
-        if (yearlyProduction > 0) {
-            return num / yearlyProduction
-        } else {
-            return 0
-        }
-    }, [getTotalProduction])
 
     const getDonationData = useMemo(() => {
         return sortBy(flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (m: any) => ([
@@ -90,17 +93,26 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getYearlyEmissionData = useMemo(() => {
+        return flatten(map(groupBy(emissions, 'date'), (e: ArrOfObj) => {
+            let data = []
+            for (let i = 0; i < e.length; i++) {
+                let productionByDate = (getTotalProduction(e[i].date))
+                let value = e[i].value
+                let intensity = ((value) / (productionByDate)) * 33
+                if (productionByDate === 0 || value < 1) return []
+                data.push({ 
+                    name: "GHG Emissions (CO2e)", 
+                    type: parseInt(e[i].date), 
+                    value: e[i].value, 
+                    intensity: intensity, 
+                    basin: e[i].basin, 
+                    // Utilized to avoid bugs in GHG Chart
+                    label: `${e[i].basin} Emissions Intensity (mt/BoE)` 
+                })
+            }
 
-        /*
-            (1) Groups by date (returns an object)
-            (2) Iterates through object then creates a new object for each
-            (3) returns an array. Flatten seems to remove each individual array.
-        */
-
-        // if (user.selectedCompany.id === 1) {}
-        return flatten(map(groupBy(emissions, 'date'), (e: any) => ([
-            { name: "GHG Emissions (CO2e)", type: parseInt(e[0].date), value: e[0].value, intensity: e[0].value / getTotalProduction(e[0].date) }
-        ])))
+            return data
+        }))
     }, [emissions, getTotalProduction])
 
     const getOilProduction = useCallback(() => {
@@ -145,9 +157,38 @@ const Dashboard: FC = () => {
             return year
         });
         return flatten(map(spillsCountByYear, (e, key) => ([
-            { name: "Spills Count", type: key, value: e.length, intensity: getSpillIntensity(e.length, key), items: e }
+            { name: "Spills Count", type: key, value: e.length, intensity:  (e.length / (getTotalProduction(key))) * 1000, items: e }
         ])))
-    }, [spills, getSpillIntensity])
+    }, [spills, getTotalProduction])
+
+    /**
+     * Sums total production for Gas, Water, and Oil by year.
+     * Data is organized by product to interact properly with Ant Design's daul axes widget.
+     * 
+     * @returns - Array of objects
+     */
+    const getYearlyProductionData = useMemo(() => {
+        let yearlyData: ArrOfObj = [];
+        // Outerloop iterates based on year
+        forOwn(groupBy(production, 'year'), (value: any, key: any) => {
+            const tmp: {[key: string]: any} = {
+                date: key
+            }
+            // Inner loop iterates based on product
+            for (const product of ['gas', 'oil', 'water']) {
+                const tempGroup = groupBy(filter(value, (o: any) => {
+                    return o.product === product
+                }), "timeframe")
+                if (tempGroup.hasOwnProperty('yearly')) {
+                    tmp[product] = sumBy(tempGroup['yearly'], 'amount') / 1000
+                } else {
+                    tmp[product] = sumBy(tempGroup['monthly'], 'amount') / 1000
+                }
+            }
+            yearlyData.push(tmp)
+        })
+        return yearlyData
+    }, [production])
 
     const getGhgEmissions = useCallback(async () => {
         ResourceService.index({
@@ -170,59 +211,6 @@ const Dashboard: FC = () => {
         getGhgEmissions()
     }, [getAllMetrics, getOilProduction, getAllSpills, getComplaints, getGhgEmissions])
 
-    /**
-     * Sorts data into an object with 
-     * 
-     * @param data - array of objects
-     * @param prop - object property to sort by.
-     * @returns 
-     */
-    const sortArray = (data: {[key:string]: any}[], prop: string) => {
-        let temp: {[key:string]: any} = {};
-        data.forEach((obj: {[key:string]: any}) => {
-            if (temp.hasOwnProperty(obj[prop])) {
-                temp[obj[prop]].push(obj)
-            } else {
-                temp[obj[prop]] = [obj]
-            }
-        });
-        return temp;
-    }
-
-    const sortObjectArr = (obj: {[key:string]: any}) => {
-        console.log("Here's what we are starting with: ", obj);
-        let result: {[key:string]: any} = {}
-        // iterate through object
-        for (const key of Object.keys(obj)) {
-            result[key] = sortArray(obj[key], 'basin')
-        }
-        return result
-    }
-
-    const processGHGData = (arr: {[key: string]: any}[]) => {
-        // End goal: array of objects with yearly data
-        console.log("Here's the sorted data", sortArray(arr, "date"));
-        let data: {[key: string]: any}[] = [];
-        const sortedData = sortArray(arr, "date")
-        Object.keys(sortedData).forEach((key) => {
-            let obj = {
-                date: parseInt(key),
-                name: "GHG Emissions (CO2e)",
-                value: sumBy(sortedData[key], (o: any) => {return o.value})
-            }
-            data.push(obj)
-        })
-        return data;
-    }
-
-    console.log("Here's the final result", processGHGData(emissions))
-
-    // const processOilGasData = (arr: {[key: string]: any}) => {
-
-    // }
-
-    // console.log("here's the result: ", sortObjectArr(sortArray(production, "year")))
-
     return (
         <div className="site-layout-background"
         >
@@ -239,32 +227,19 @@ const Dashboard: FC = () => {
                 gap: '2em'
             }}>
 
-                {/* THIS IS THE OLD VERSION */}
                 {emissions.length > 0 &&
-                    <DualAxesLineColWidget
-                        data={getYearlyEmissionData}
-                        colLabel="Greenhouse Gas Emissions (mt CO₂-e)"
-                        lineLabel="GHG Emission Intensity (mt/BoE)"
-                        title="Greenhouse Gas Emissions Volume & Intensity"
-                        gridColumns="1 / 5"
-                        y1Lablel="GHG Emissions (mt CO₂-e)"
-                        y2Lablel="GHG Emission Intensity (mt/BoE)"
-                        includeModal={false}
-                    />
-                }
-
-                {/* THIS IS THE NEW VERSION */}
-                {/* {
                     <GHGChart
                         data={getYearlyEmissionData}
                     />
-                } */}
+                }
 
                 {/* <WhitingAllData /> */}
+
                 {spills.length > 0 &&
                     <DualAxesLineColWidget
                         data={getYearlySpillsData}
                         colLabel="Spill bbl"
+                        lineMax={0.004}
                         lineLabel="Spills Intensity (bbl spill/kbll produced)"
                         title="Spills Quantity & Intensity"
                         gridColumns="1 / 3"
@@ -277,6 +252,7 @@ const Dashboard: FC = () => {
                 {complaints.length > 0 &&
                     <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
                 }
+
                 {/* Charts/Graphs that are currently beyond MVP. */}
                 {/* {user.selectedCompany.name === 'Demo Energy' &&
                     <MethaneEmissions/>
@@ -295,8 +271,8 @@ const Dashboard: FC = () => {
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
                 
                 {production.length > 0 &&
-                    <DualAxesMultiLineWidget
-                        data={production}
+                    <ProductionChart
+                        data={getYearlyProductionData}
                         gridColumns={'1/5'}
                         title={'Oil & Gas Production'}
                     />
@@ -325,7 +301,7 @@ const Dashboard: FC = () => {
                     <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} gridColumns="1/3" title="Employees by Gender" subTitle="" />
                 }
                 {getEthnicityData.length > 0 &&
-                    <StackedBarWidget isGroup={false} isPercentage={true} data={getEthnicityData} label={'percentage'} gridColumns='3/5' title='Employee Diversity' subTitle="2021" />
+                    <StackedBarWidget isGroup={false} isPercentage={true} data={getEthnicityData} label={'percentage'} gridColumns='3/5' title='Employee Diversity' subTitle="" />
                 }
                 {getDonationData.length > 0 &&
                     <StackedBarWidget isGroup={false} isPercentage={false} data={getDonationData} label={'currency'} gridColumns="1/5" title="Annual Charitable Contributions" subTitle="" />

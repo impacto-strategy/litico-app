@@ -10,7 +10,7 @@ const escapeHtml = require("escape-html");
  * @param v - string representing a label value
  * @returns 
  */
-export const formatValue = (v: string): string => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`)
+export const formatValue = (v: number): string => Intl.NumberFormat().format(v)
 
 export const getQuarterFromDate = (date?: Date) => {
     if (!date) {

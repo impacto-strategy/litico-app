@@ -73,7 +73,7 @@ const SignupForm: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<bool
     // Alterations to Modal style can be found in global.less
     <Modal 
       title={title}
-      visible={props.visible}
+      open={props.visible}
       onCancel={(e) => {
         e.preventDefault();
         props.setVisible(false);

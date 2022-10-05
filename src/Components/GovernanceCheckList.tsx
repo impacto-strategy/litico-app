@@ -7,27 +7,27 @@ import { find } from 'lodash'
 const governanceData = [
   {
     metricName: 'Discussion - Anti-Corruption and Bribery',
-    displayName: 'Anti-Corruption and Bribery',
+    displayName: 'Anti-Corruption and Bribery Document',
     hasPolicy: true
   },
   {
     metricName: 'Discussion - Tail Risks',
-    displayName: 'Catostrophic/Tail-End Risks',
+    displayName: 'Catostrophic/Tail-End Risks Document',
     hasPolicy: false
   },
   {
     metricName: 'Discussion - Governance Structure',
-    displayName: 'Governance Structure',
+    displayName: 'Governance Structure Document',
     hasPolicy: false
   },
   {
     metricName: 'Discussion - Lobbying',
-    displayName: 'Lobbying',
+    displayName: 'Lobbying Document',
     hasPolicy: false
   },
   {
     metricName: 'Discussion - Regulatory Risk',
-    displayName: 'Regulatory Risk',
+    displayName: 'Regulatory Risk Document',
     hasPolicy: false
   },
 ]

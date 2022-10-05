@@ -87,7 +87,7 @@ const ColumnWidget: FC<{ data: any, title: string, includeModal: boolean, modalT
             </h3>
             <Column style={{ height: 500 }} {...config} />
             {props.includeModal &&
-                <Modal title={props.modalTitle} visible={isModalVisible} onOk={closeModal} onCancel={closeModal} width={1000}>
+                <Modal title={props.modalTitle} open={isModalVisible} onOk={closeModal} onCancel={closeModal} width={1000}>
                     <Table dataSource={drillDownData} columns={columns} />
                 </Modal>
             }
