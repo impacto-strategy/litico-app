@@ -2,12 +2,10 @@
 import { FC } from 'react';
 import { DualAxes} from "@ant-design/charts";
 import styled from "styled-components";
-import { maxBy } from 'lodash';
 
 /* IMPORT INTERNAL MODULES */
 import { formatValue } from '../utils';
 import { ArrOfObj } from '../../global';
-import { CardNumberElement } from '@stripe/react-stripe-js';
 
 interface ProductionChartProps {
     data: ArrOfObj
