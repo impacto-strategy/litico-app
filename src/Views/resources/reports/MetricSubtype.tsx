@@ -727,7 +727,7 @@ const MetricSubtype = () => {
                             {reportData && <Row>
                                 <Col span={24}>
                                     <Table
-                                        title={() => `${reportData?.esg_metrics[0]?.metric_name} - ${reportData?.esg_metrics[0]?.metric_subtype}`}
+                                        title={() => `${searchParams.get("metric_name")} - ${searchParams.get("metric_subtype")}`}
                                         pagination={false}
                                         columns={getColumns()} dataSource={reportData?.esg_metrics} rowKey={'id'} />
                                 </Col>

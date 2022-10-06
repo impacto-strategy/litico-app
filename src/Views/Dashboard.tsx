@@ -237,17 +237,17 @@ const Dashboard: FC = () => {
                 {/* <WhitingAllData /> */}
 
                 {spills.length > 0 &&
-                    <DualAxesLineColWidget
-                        data={getYearlySpillsData}
-                        colLabel="Spill bbl"
-                        lineMax={0.004}
-                        lineLabel="Spills Intensity (bbl spill/kbll produced)"
-                        title="Spills Quantity & Intensity"
-                        gridColumns="1 / 3"
-                        y1Lablel="Spill Count"
-                        y2Lablel="Spill Intensity (spills/bbls prod)"
-                        includeModal={true}
-                    />
+                  <DualAxesLineColWidget
+                      data={getYearlySpillsData}
+                      colLabel="Spill bbl"
+                      lineMax={0.004}
+                      lineLabel="Spills Intensity (bbl spill/kbbl produced)"
+                      title="Spills Quantity & Intensity"
+                      gridColumns="1 / 3"
+                      y1Lablel="Spill Count"
+                      y2Lablel="Spill Intensity (bbl spill/kbbl produced)"
+                      includeModal={true}
+                  />
                 }
 
                 {complaints.length > 0 &&
