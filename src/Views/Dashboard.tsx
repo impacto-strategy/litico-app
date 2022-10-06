@@ -206,7 +206,7 @@ const Dashboard: FC = () => {
                     title="Spills Quantity & Intensity"
                     gridColumns="1 / 3"
                     y1Lablel="Spill Count"
-                    y2Lablel="Spill Intensity (spills/bbls prod)"
+                    y2Lablel="Spill Intensity (bbl spill/kbbl produced)"
                     includeModal={true}
                 />
                 }
