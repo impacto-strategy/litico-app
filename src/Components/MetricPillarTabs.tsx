@@ -24,7 +24,7 @@ const MetricPillarTabs = ({ standards, report, showReport }:any) => {
   const groupByCat = (subMetrics:any) => {
     return sortBy(map(groupBy(subMetrics, 'esg_pillar'), (metric_names, esg_pillar) => ({
         esg_pillar: esg_pillar,
-        metric_names: map(groupBy(metric_names, 'metric_name'), (items,name) => ({items, name}))
+        metric_names: sortBy(map(groupBy(metric_names, 'metric_name'), (items,name) => ({items, name})), 'name')
     })), (item) => {
         const order: any = {
             'Environment': 0,
