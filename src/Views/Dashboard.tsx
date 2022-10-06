@@ -202,7 +202,7 @@ const Dashboard: FC = () => {
                     data={getYearlySpillsData}
                     colLabel="Spill bbl"
                     lineMax={0.004}
-                    lineLabel="Spills Intensity (bbl spill/kbll produced)"
+                    lineLabel="Spills Intensity (bbl spill/kbbl produced)"
                     title="Spills Quantity & Intensity"
                     gridColumns="1 / 3"
                     y1Lablel="Spill Count"
