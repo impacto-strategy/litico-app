@@ -132,10 +132,10 @@ const Home: FC = () => {
                         </Menu.Item>
                     </Menu>
                     <div className="hidden-mobile" style={{position: 'absolute', bottom: '50px', paddingLeft: '24px'}}>
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhz31TSBov8mui_c617Nm7m0nyPPRkr-FqIoCnAEiiXPphTg/viewform" target="blank">Send Feedback</a>
+                        <a href="https://forms.clickup.com/10638937/f/a4njt-2500/6FUYOTTMDN0H7VQY35" target="blank">Send Feedback</a>
                     </div>
                     <div className="hidden-desktop" style={{position: 'absolute', bottom: '50px', paddingLeft: '6px'}}>
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhz31TSBov8mui_c617Nm7m0nyPPRkr-FqIoCnAEiiXPphTg/viewform" target="blank">Feedback</a>
+                        <a href="https://forms.clickup.com/10638937/f/a4njt-2500/6FUYOTTMDN0H7VQY35" target="blank">Feedback</a>
                     </div>
                 </>
             </Sider>

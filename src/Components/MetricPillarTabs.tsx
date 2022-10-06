@@ -39,11 +39,11 @@ const MetricPillarTabs = ({ standards, report, showReport }:any) => {
     return groupByCat(standards)
   }, [standards])
 
-  const getLink = (item: any) => {
+  const getLink = (item: any, esg_pillar: string) => {
     if (showReport) {
-      return `/reports/${report.id}/metric-subtypes?metric_name=${item.name}`
+      return `/reports/${report.id}/metric-subtypes?metric_name=${item.name}&esg_pillar=${esg_pillar}`
     } else {
-      return `/metric-subtypes?metric_name=${item.name}`
+      return `/metric-subtypes?metric_name=${item.name}&esg_pillar=${esg_pillar}`
     } 
   }
 
@@ -54,12 +54,12 @@ const MetricPillarTabs = ({ standards, report, showReport }:any) => {
               <Row gutter={40}>
                 {metric_names.map((item: any) => (
                   <Col lg={{span: 8}} sm={{span: 24}} key={item.name} style={{ marginBottom: 32, display: 'block' }}>
-                    <Link to={getLink(item)}>
+                    <Link to={getLink(item, esg_pillar)}>
                       <Card
                         title={item.name}
                         type='inner'
                         extra={showReport && <Link
-                          to={getLink(item)}>View</Link>}
+                          to={getLink(item, esg_pillar)}>View</Link>}
                           actions={[
                             <div>{showReport && getReportEntries(item)}</div>,
                             <div>{showReport && '0 Pending Approval'}</div>,

@@ -119,7 +119,8 @@ const Dashboard: FC = () => {
         ResourceService.index({
             resourceName: 'productions'
         }).then(({ data }) => {
-            setProductionData(data)
+            let sortedData = sortBy(data, 'year')
+            setProductionData(sortedData)
         }).catch((err) =>{
             console.log(err)
         })

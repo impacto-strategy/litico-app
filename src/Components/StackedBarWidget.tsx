@@ -9,7 +9,7 @@ const StackedBarWidget: FC<{ isGroup: boolean, isPercentage: boolean, label: str
     isStack: true,
     isGroup: props.isGroup,
     colorField: 'type',
-    color: ['#477EB7', '#5AC5BF', '#46AD75', '#a978b4', '#f05b72'],
+    color: ['#477EB7', '#5AC5BF', '#4CE64C', '#a978b4', '#f05b72', '#FF3399', '#46AD75'],
     xField: 'value',
     yField: 'label',
     seriesField: 'type',
