@@ -36,6 +36,27 @@ const DataMetricNames = () => {
         })
     }, [])
 
+    const createCompanyUpload = useCallback((data:any) => {
+        ResourceService.store({
+            resourceName: 'company_uploads',
+            fields: {...data}
+        }).then(({ data }) => {
+            setStandards(data)
+        })
+    }, [])
+
+    const normFile = (e: any) => {
+        if (e?.file?.status === 'done') {
+            let data = {
+                url: e.file.response,
+                name: e.file.name,
+                file_type: e.file.type
+            }
+            createCompanyUpload(data)
+        }
+        return e && e.fileList;
+    };
+
     useEffect(() => {
         getStandards()
     }, [getStandards])
@@ -48,10 +69,13 @@ const DataMetricNames = () => {
                         <Col lg={{span: 12}} sm={{span: 24}}>
                             <h2>Add Data to your LITICO Database</h2>
                         </Col>
-                        <Col lg={{span: 12}} sm={{span: 24}}>
-                            <Upload name="file" action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers} accept=".csv,.pdf,.doc,.docx,.jpeg,.png,.jpg,.svg">
-                                <Button icon={<UploadOutlined />}>Upload Documents</Button>
-                            </Upload>
+                        <Col lg={{ span: 12 }} sm={{ span: 24 }}>
+                            <div style={{ float: 'right' }} >
+                                <Upload name="file" onChange={(normFile)} action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers} accept=".csv,.pdf,.doc,.docx,.jpeg,.png,.jpg,.svg">
+                                    <Button icon={<UploadOutlined />}>Raw Data File Upload</Button>
+                                </Upload>
+                                <Button style={{ marginBottom: '20px', marginTop: '20px' }}>Upload History</Button>
+                            </div>
                         </Col>
                     </Row>
                     <MetricPillarTabs standards={standards} report={null} showReport={false}/>
