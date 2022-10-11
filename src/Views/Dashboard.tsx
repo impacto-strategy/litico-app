@@ -31,6 +31,7 @@ import {ArrOfObj} from "../../global"
 const Dashboard: FC = () => {
     const [metrics, setMetrics] = useState<any>({})
     const [emissions, setEmissions] = useState<any>([])
+    const [emissionsIntensity, setEmissionsIntensity] = useState<any>([])
     const [spills, setSpills] = useState<any>([])
     const [complaints, setComplaints] = useState<any>([])
     const [production, setProductionData] = useState<any>([])
@@ -93,27 +94,27 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getYearlyEmissionData = useMemo(() => {
+        let idx = 0;
         return flatten(map(groupBy(emissions, 'date'), (e: ArrOfObj) => {
             let data = []
             for (let i = 0; i < e.length; i++) {
                 let productionByDate = (getTotalProduction(e[i].date))
                 let value = e[i].value
-                let intensity = ((value) / (productionByDate)) * 33
                 if (productionByDate === 0 || value < 1) return []
                 data.push({ 
                     name: "GHG Emissions (CO2e)", 
                     type: parseInt(e[i].date), 
                     value: e[i].value, 
-                    intensity: intensity, 
+                    intensity: emissionsIntensity[idx]["value"], 
                     basin: e[i].basin, 
                     // Utilized to avoid bugs in GHG Chart
                     label: `${e[i].basin} Emissions Intensity (mt/BoE)` 
                 })
+                idx++
             }
-
             return data
         }))
-    }, [emissions, getTotalProduction])
+    }, [emissions, emissionsIntensity, getTotalProduction])
 
     const getOilProduction = useCallback(() => {
         ResourceService.index({
@@ -192,12 +193,22 @@ const Dashboard: FC = () => {
     }, [production])
 
     const getGhgEmissions = useCallback(async () => {
-        ResourceService.index({
+        await ResourceService.index({
             resourceName: 'esg-metrics',
             params: {metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Emissions'}
         }).then(res => {
             if (res.data && res.data.esg_metrics) {
                 setEmissions(sortBy(res.data.esg_metrics, 'date'))
+            }
+        }).catch((err) =>{
+            console.log(err)
+        })
+        await ResourceService.index({
+            resourceName: 'esg-metrics',
+            params: {metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Intensity - BOE'}
+        }).then(res => {
+            if (res.data && res.data.esg_metrics) {
+                setEmissionsIntensity(sortBy(res.data.esg_metrics, 'date'))
             }
         }).catch((err) =>{
             console.log(err)
