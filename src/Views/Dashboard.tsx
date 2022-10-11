@@ -9,6 +9,7 @@ import StackedBarWidget from "../Components/StackedBarWidget";
 // import DonationsDrilldown from "../DonationsDrilldown";
 import LDAR from "../Components/LDAR";
 import Productions from "../Components/Productions";
+import SafetyMetrics from "../Components/SafetyMetrics";
 import GovernanceCheckList from "../Components/GovernanceCheckList";
 import {Divider} from "antd";
 import ResourceService from "../Services/ResourceService";
@@ -230,6 +231,9 @@ const Dashboard: FC = () => {
                 <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
                 
+                <SafetyMetrics
+                />
+
                 {production.length > 0 &&
                     <Productions
                         data={production}

@@ -21,6 +21,13 @@ const ContentWrapper = styled.div`
   margin-bottom: 32px;
 `
 
+/**
+ * General purpose module that provides users the ability to add data on a specifc metric and sub metric type.
+ * 
+ * @params - No parameters.
+ * 
+ * @returns - JSX element that renders to form.
+ */
 const DataMetricSubtype = () => {
     const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app'
     const [searchParams] = useSearchParams();
