@@ -309,7 +309,11 @@ const ResourceIndex: FC = () => {
             }
 
             if (_field.external_ref) {
-                _field.render = (text: any, record: any, index: any) => <a href={`${record[_field.external_ref.key]}`} target='blank'>{`${record[_field.external_ref.key]}`}</a>
+                _field.render = (text: any, record: any, index: any) => <a href={`${record[_field.external_ref.key]}`} target='blank'>{`${record[_field.external_ref.valueIndex] || record[_field.external_ref.key]}`}</a>
+            }
+
+            if (_field.date) {
+                _field.render = (text: any, record: any, index: any) => <span>{`${new Date(record[_field.date.valueIndex]).toLocaleString()}`}</span>
             }
 
             return _field

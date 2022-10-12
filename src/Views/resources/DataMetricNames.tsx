@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import MetricPillarTabs from "../../Components/MetricPillarTabs";
 import ResourceService from "../../Services/ResourceService";
 import Cookies from 'js-cookie';
+import {Link} from "react-router-dom";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -38,10 +39,10 @@ const DataMetricNames = () => {
 
     const createCompanyUpload = useCallback((data:any) => {
         ResourceService.store({
-            resourceName: 'company_uploads',
+            resourceName: 'company-uploads',
             fields: {...data}
         }).then(({ data }) => {
-            setStandards(data)
+            console.log(data)
         })
     }, [])
 
@@ -69,13 +70,15 @@ const DataMetricNames = () => {
                         <Col lg={{span: 12}} sm={{span: 24}}>
                             <h2>Add Data to your LITICO Database</h2>
                         </Col>
-                        <Col lg={{ span: 12 }} sm={{ span: 24 }}>
+                        <Col lg={{ span: 10 }} sm={{ span: 24 }}>
                             <div style={{ float: 'right' }} >
                                 <Upload name="file" onChange={(normFile)} action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers} accept=".csv,.pdf,.doc,.docx,.jpeg,.png,.jpg,.svg">
                                     <Button icon={<UploadOutlined />}>Raw Data File Upload</Button>
                                 </Upload>
-                                <Button style={{ marginBottom: '20px', marginTop: '20px' }}>Upload History</Button>
                             </div>
+                        </Col>
+                        <Col lg={{ span: 2 }} sm={{ span: 24 }}>
+                            <Button style={{ float: 'right' }}><Link to="/company-uploads">Upload History</Link></Button>
                         </Col>
                     </Row>
                     <MetricPillarTabs standards={standards} report={null} showReport={false}/>
