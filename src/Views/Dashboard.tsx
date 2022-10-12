@@ -1,7 +1,7 @@
 /* IMPORT EXTERNAL MODULES */
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import {Divider} from "antd";
-import {filter, flatten, forOwn, groupBy, map, sortBy, sumBy} from "lodash";
+import {filter, find, flatten, forOwn, groupBy, map, sortBy, sumBy} from "lodash";
 
 /* IMPORT INTERNAL MODULES */
 // UNUSED COMPONENTS
@@ -57,6 +57,17 @@ const Dashboard: FC = () => {
         })
     }, [setSpills])
 
+    const getIntensityByDate = useCallback((date: string, basin: string) => {
+        if (emissionsIntensity.length < 1) return 0
+        let year = new Date(date).getFullYear()
+        let intensityByYear = find(emissionsIntensity, (em) => {
+            return  new Date(em.date).getFullYear() === year && em.basin === basin
+        })
+
+        if (!intensityByYear?.value) return 0
+        return intensityByYear.value
+    }, [emissionsIntensity])
+
     const getTotalProduction = useCallback((value: string) => {
         if (production.length < 1) return 0
         const date = new Date(value)
@@ -94,27 +105,23 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getYearlyEmissionData = useMemo(() => {
-        let idx = 0;
-        return flatten(map(groupBy(emissions, 'date'), (e: ArrOfObj) => {
+        return flatten(map(sortBy(groupBy(emissions, 'date'), 'date'), (e: ArrOfObj) => {
             let data = []
             for (let i = 0; i < e.length; i++) {
-                let productionByDate = (getTotalProduction(e[i].date))
-                let value = e[i].value
-                if (productionByDate === 0 || value < 1) return []
+                let intensity = getIntensityByDate(e[i].date, e[i].basin)
                 data.push({ 
                     name: "GHG Emissions (CO2e)", 
                     type: parseInt(e[i].date), 
                     value: e[i].value, 
-                    intensity: emissionsIntensity[idx]["value"], 
+                    intensity: intensity,
                     basin: e[i].basin, 
                     // Utilized to avoid bugs in GHG Chart
                     label: `${e[i].basin} Emissions Intensity (mt/BoE)` 
                 })
-                idx++
             }
             return data
         }))
-    }, [emissions, emissionsIntensity, getTotalProduction])
+    }, [emissions, getIntensityByDate])
 
     const getOilProduction = useCallback(() => {
         ResourceService.index({
