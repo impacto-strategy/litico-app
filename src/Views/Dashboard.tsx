@@ -1,29 +1,37 @@
+/* IMPORT EXTERNAL MODULES */
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import {Divider} from "antd";
+import {filter, find, flatten, forOwn, groupBy, map, sortBy, sumBy} from "lodash";
+
+/* IMPORT INTERNAL MODULES */
+// UNUSED COMPONENTS
 // import Emissions2020 from "../Components/Emissions2020";
 // import Emissions2020CO2 from "../Components/Emissions2020CO2";
-import ColumnWidget from "../Components/ColumnWidget";
-// import LineWidget from "../Components/LineWidget";
-import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
-import StackedBarWidget from "../Components/StackedBarWidget";
-// import PieWidget from "../Components/PieWidget";
-// import DonationsDrilldown from "../DonationsDrilldown";
-import LDAR from "../Components/LDAR";
-import Productions from "../Components/Productions";
-import GovernanceCheckList from "../Components/GovernanceCheckList";
-import {Divider} from "antd";
-import ResourceService from "../Services/ResourceService";
-import useAuth from "../Providers/Auth/useAuth";
-
 // import WhitingAllData from "../Components/WhitingAllData";
 // import MethaneEmissions from "../Components/MethaneEmissions";
 // import Flaring from "../Components/Flaring";
 // import OilSpills from "../Components/OilSpills";
 // import Staff from "../Components/Staff";
-import {filter, flatten, groupBy, map, sortBy, sumBy} from "lodash";
+// import LineWidget from "../Components/LineWidget";
+// import PieWidget from "../Components/PieWidget";
+// import DonationsDrilldown from "../DonationsDrilldown";
+// REACT COMPONENTS
+import ColumnWidget from "../Components/ColumnWidget";
+import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
+import StackedBarWidget from "../Components/StackedBarWidget";
+import GHGChart from "../Components/GHGChart";
+import LDAR from "../Components/LDAR";
+import ProductionChart from "../Components/ProductionChart"
+import GovernanceCheckList from "../Components/GovernanceCheckList";
+// MISC INTERNAL MODULES
+import ResourceService from "../Services/ResourceService";
+import useAuth from "../Providers/Auth/useAuth";
+import {ArrOfObj} from "../../global"
 
 const Dashboard: FC = () => {
     const [metrics, setMetrics] = useState<any>({})
     const [emissions, setEmissions] = useState<any>([])
+    const [emissionsIntensity, setEmissionsIntensity] = useState<any>([])
     const [spills, setSpills] = useState<any>([])
     const [complaints, setComplaints] = useState<any>([])
     const [production, setProductionData] = useState<any>([])
@@ -48,6 +56,17 @@ const Dashboard: FC = () => {
             console.log(err)
         })
     }, [setSpills])
+
+    const getIntensityByDate = useCallback((date: string, basin: string) => {
+        if (emissionsIntensity.length < 1) return 0
+        let year = new Date(date).getFullYear()
+        let intensityByYear = find(emissionsIntensity, (em) => {
+            return  new Date(em.date).getFullYear() === year && em.basin === basin
+        })
+
+        if (!intensityByYear?.value) return 0
+        return intensityByYear.value
+    }, [emissionsIntensity])
 
     const getTotalProduction = useCallback((value: string) => {
         if (production.length < 1) return 0
@@ -86,16 +105,23 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getYearlyEmissionData = useMemo(() => {
-        return flatten(map(groupBy(emissions, 'date'), (e: any) => {
-            let productionByDate = (getTotalProduction(e[0].date))
-            let value = e[0].value
-            let intensity = ((value) / (productionByDate)) * 33
-            if (productionByDate === 0 || value < 1) return []
-            return [
-                { name: "GHG Emissions (CO2e)", type: parseInt(e[0].date), value: e[0].value, intensity: intensity }
-            ]
+        return flatten(map(sortBy(groupBy(emissions, 'date'), 'date'), (e: ArrOfObj) => {
+            let data = []
+            for (let i = 0; i < e.length; i++) {
+                let intensity = getIntensityByDate(e[i].date, e[i].basin)
+                data.push({ 
+                    name: "GHG Emissions (CO2e)", 
+                    type: parseInt(e[i].date), 
+                    value: e[i].value, 
+                    intensity: intensity,
+                    basin: e[i].basin, 
+                    // Utilized to avoid bugs in GHG Chart
+                    label: `${e[i].basin} Emissions Intensity (mt/BoE)` 
+                })
+            }
+            return data
         }))
-    }, [emissions, getTotalProduction])
+    }, [emissions, getIntensityByDate])
 
     const getOilProduction = useCallback(() => {
         ResourceService.index({
@@ -144,13 +170,52 @@ const Dashboard: FC = () => {
         ])))
     }, [spills, getTotalProduction])
 
+    /**
+     * Sums total production for Gas, Water, and Oil by year.
+     * Data is organized by product to interact properly with Ant Design's daul axes widget.
+     * 
+     * @returns - Array of objects
+     */
+    const getYearlyProductionData = useMemo(() => {
+        let yearlyData: ArrOfObj = [];
+        // Outerloop iterates based on year
+        forOwn(groupBy(production, 'year'), (value: any, key: any) => {
+            const tmp: {[key: string]: any} = {
+                date: key
+            }
+            // Inner loop iterates based on product
+            for (const product of ['gas', 'oil', 'water']) {
+                const tempGroup = groupBy(filter(value, (o: any) => {
+                    return o.product === product
+                }), "timeframe")
+                if (tempGroup.hasOwnProperty('yearly')) {
+                    tmp[product] = sumBy(tempGroup['yearly'], 'amount') / 1000
+                } else {
+                    tmp[product] = sumBy(tempGroup['monthly'], 'amount') / 1000
+                }
+            }
+            yearlyData.push(tmp)
+        })
+        return yearlyData
+    }, [production])
+
     const getGhgEmissions = useCallback(async () => {
-        ResourceService.index({
+        await ResourceService.index({
             resourceName: 'esg-metrics',
             params: {metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Emissions'}
         }).then(res => {
             if (res.data && res.data.esg_metrics) {
                 setEmissions(sortBy(res.data.esg_metrics, 'date'))
+            }
+        }).catch((err) =>{
+            console.log(err)
+        })
+        await ResourceService.index({
+            resourceName: 'esg-metrics',
+            params: {metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Intensity - BOE'}
+        }).then(res => {
+            if (res.data && res.data.esg_metrics) {
+                setEmissionsIntensity(sortBy(res.data.esg_metrics, 'date'))
             }
         }).catch((err) =>{
             console.log(err)
@@ -182,37 +247,31 @@ const Dashboard: FC = () => {
             }}>
 
                 {emissions.length > 0 &&
-                    <DualAxesLineColWidget
+                    <GHGChart
                         data={getYearlyEmissionData}
-                        lineMax={0.4}
-                        colLabel="Greenhouse Gas Emissions (mt CO₂-e)"
-                        lineLabel="GHG Emission Intensity (mt/BoE)"
-                        title="Greenhouse Gas Emissions Volume & Intensity"
-                        gridColumns="1 / 5"
-                        y1Lablel="GHG Emissions (mt CO₂-e)"
-                        y2Lablel="GHG Emission Intensity (mt/BoE)"
-                        includeModal={false}
                     />
                 }
 
                 {/* <WhitingAllData /> */}
 
                 {spills.length > 0 &&
-                <DualAxesLineColWidget
-                    data={getYearlySpillsData}
-                    colLabel="Spill bbl"
-                    lineMax={0.004}
-                    lineLabel="Spills Intensity (bbl spill/kbbl produced)"
-                    title="Spills Quantity & Intensity"
-                    gridColumns="1 / 3"
-                    y1Lablel="Spill Count"
-                    y2Lablel="Spill Intensity (bbl spill/kbbl produced)"
-                    includeModal={true}
-                />
+                  <DualAxesLineColWidget
+                      data={getYearlySpillsData}
+                      colLabel="Spill bbl"
+                      lineMax={0.004}
+                      lineLabel="Spills Intensity (bbl spill/kbbl produced)"
+                      title="Spills Quantity & Intensity"
+                      gridColumns="1 / 3"
+                      y1Lablel="Spill Count"
+                      y2Lablel="Spill Intensity (bbl spill/kbbl produced)"
+                      includeModal={true}
+                  />
                 }
+
                 {complaints.length > 0 &&
                     <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
                 }
+
                 {/* Charts/Graphs that are currently beyond MVP. */}
                 {/* {user.selectedCompany.name === 'Demo Energy' &&
                     <MethaneEmissions/>
@@ -231,8 +290,10 @@ const Dashboard: FC = () => {
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
                 
                 {production.length > 0 &&
-                    <Productions
-                        data={production}
+                    <ProductionChart
+                        data={getYearlyProductionData}
+                        gridColumns={'1/5'}
+                        title={'Oil & Gas Production'}
                     />
                 }
 
