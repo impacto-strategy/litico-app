@@ -198,17 +198,9 @@ const Dashboard: FC = () => {
                     return o.product === product
                 }), "timeframe")
                 if (tempGroup.hasOwnProperty('yearly')) {
-                    if (tempGroup['yearly'][0].product === "gas") {
-                        tmp[product] = sumBy(tempGroup['yearly'], 'amount') / 1000
-                    } else {
-                        tmp[product] = sumBy(tempGroup['yearly'], 'amount')
-                    }
+                    tmp[product] = sumBy(tempGroup['yearly'], 'amount') / 1000
                 } else {
-                    if (tempGroup['monthly'][0].product === "gas") {
-                        tmp[product] = sumBy(tempGroup['monthly'], 'amount') / 1000
-                    } else {
-                        tmp[product] = sumBy(tempGroup['monthly'], 'amount')
-                    }
+                    tmp[product] = sumBy(tempGroup['monthly'], 'amount') / 1000
                 }
             }
             yearlyData.push(tmp)
@@ -310,7 +302,7 @@ const Dashboard: FC = () => {
                     <ProductionChart
                         data={getYearlyProductionData}
                         gridColumns={'1/5'}
-                        title={'Total Oil & Gas Production'}
+                        title={'Oil & Gas Production'}
                     />
                 }
 
