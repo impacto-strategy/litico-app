@@ -255,16 +255,37 @@ const Dashboard: FC = () => {
         return yearlyData
     }, [production])
 
+    /**
+     * Takes incident data and revamps to new collection of incident data and TRIR.
+     * 
+     * @returns - Array of Objects
+     */
     const getQuarterlyIncidentData = useMemo(() => {
-        let data = [];
-        console.log("Filter: ", filter(incidents, (o) => o.timeframe === "quarterly"))
-        // Let's start by organizing it then summing everything up.
-        incidents.forEach(incident => {
-            console.log(incident)
-        })
+        let data: any = [];
+        const organizedData = groupBy(filter(incidents, (o: any) => o.timeframe === "quarterly"), "esg_metric_factor_name")
+        if (!organizedData["Number of Total Recordable Incidents"]) {
+          return;
+        }
         // get date and esg metric factor name
-
-    }, [])
+        for (let i = 0; i < organizedData["Number of Total Recordable Incidents"].length; i++) {
+          let cleanDate = organizedData["Number of Total Recordable Incidents"][i].date.substring(0, 4);
+          if (parseInt(organizedData["Number of Total Recordable Incidents"][i].date.substring(5,7)) <= 3) {
+            cleanDate = `Qtr 1 ${cleanDate}`
+          } else if (parseInt(organizedData["Number of Total Recordable Incidents"][i].date.substring(5,7)) < 7) {
+            cleanDate = `Qtr 2 ${cleanDate}`
+          } else if (parseInt(organizedData["Number of Total Recordable Incidents"][i].date.substring(5,7)) < 10) {
+            cleanDate = `Qtr 3 ${cleanDate}`
+          } else {
+            cleanDate = `Qtr 4 ${cleanDate}`
+          }
+          data.push({
+            date: cleanDate,
+            incidents: organizedData["Number of Total Recordable Incidents"][i].value,
+            trir: (organizedData["Number of Total Recordable Incidents"][i].value * 200000) / organizedData["Total Hours Worked"][i].value
+          })
+        }
+        return data
+    }, [incidents])
 
     useEffect(() => {
         getAllMetrics()
@@ -334,8 +355,11 @@ const Dashboard: FC = () => {
                 <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
                 
-                <SafetyMetrics
-                />
+                {incidents.length > 0 &&
+                    <SafetyMetrics
+                        data={getQuarterlyIncidentData}
+                    />
+                }       
 
                 {production.length > 0 &&
                     <ProductionChart
