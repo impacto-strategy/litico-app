@@ -93,19 +93,34 @@ const DataMetricSubtype = () => {
             resourceName: 'standards',
             params: {metric_subtype: searchParams.get("metric_subtype")}
         }).then(({ data }) => {
-            setMetricStandards(data);
+            setMetricStandards(data)
             setFields(data[0].esg_metric_factors)
             setDefaultFields()
         })
 
     }, [searchParams, setMetricStandards, setDefaultFields])
 
+    /**
+     * Takes the metric subtype and adjusts it for the backend.
+     */
+    const adjustMetricSubtype = (): string => {
+        const metricSubtype = searchParams.get("metric_subtype");
+        if (!metricSubtype) {
+            return "";
+        }
+        if (metricSubtype === "Total Recordable Incident Rate for all workers") {
+            return 'TRIR - All Workers'
+        } else {
+            return metricSubtype;
+        }
+    }
+
     const createMeasurementMetrics = (measurementIds: any[]) => {
         ResourceService.store({
             resourceName: 'measurement-esg-metrics',
             fields: {
                 measurement_ids: measurementIds,
-                metric_subtype: searchParams.get("metric_subtype"),
+                metric_subtype: adjustMetricSubtype(),
                 year: form.getFieldValue('date').year()
             }
         }).then((res) => {

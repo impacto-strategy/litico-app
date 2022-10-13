@@ -30,14 +30,19 @@ import useAuth from "../Providers/Auth/useAuth";
 import {ArrOfObj} from "../../global"
 
 const Dashboard: FC = () => {
+    // React State
+    const [complaints, setComplaints] = useState<ArrOfObj>([])
+    const [emissions, setEmissions] = useState<ArrOfObj>([])
+    const [emissionsIntensity, setEmissionsIntensity] = useState<ArrOfObj>([])
+    const [incidents, setIncidents] = useState<ArrOfObj>([])
     const [metrics, setMetrics] = useState<any>({})
-    const [emissions, setEmissions] = useState<any>([])
-    const [emissionsIntensity, setEmissionsIntensity] = useState<any>([])
-    const [spills, setSpills] = useState<any>([])
-    const [complaints, setComplaints] = useState<any>([])
-    const [production, setProductionData] = useState<any>([])
+    const [production, setProductionData] = useState<ArrOfObj>([])
+    const [spills, setSpills] = useState<ArrOfObj>([])
 
+    // React Context
     const {user} = useAuth();
+
+    /* API Function Calls */
     const getAllMetrics = useCallback(() => {
         ResourceService.index({
             resourceName: 'esg-metrics'
@@ -57,6 +62,33 @@ const Dashboard: FC = () => {
             console.log(err)
         })
     }, [setSpills])
+
+    /**
+     * Generates collection of company incidents and total hours worked.
+     * Utilized for TRIR chart.
+     * 
+     * @params - None
+     * 
+     * @returns - Undefined
+     */
+    const getAllIncidents = useCallback(() => {
+        ResourceService.index({
+            resourceName: 'measurements',
+            params: {esg_metric_factor_name: 'Number of Total Recordable Incidents'}
+        }).then(({ data }) => {
+            let result = data
+            ResourceService.index({
+                resourceName: 'measurements',
+                params: {esg_metric_factor_name: 'Total Hours Worked'}
+            }).then(({ data }) => {
+                setIncidents(result.concat(data))
+            }).catch((err) => {
+                console.log(err)
+            })
+        }).catch((err) => {
+            console.log(err)
+        })
+    }, [setIncidents])
 
     const getIntensityByDate = useCallback((date: string, basin: string) => {
         if (emissionsIntensity.length < 1) return 0
@@ -78,6 +110,50 @@ const Dashboard: FC = () => {
         let sum = sumBy(productionByYear, 'amount')
         return sum
     }, [production])
+
+    const getGhgEmissions = useCallback(async () => {
+        await ResourceService.index({
+            resourceName: 'esg-metrics',
+            params: {metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Emissions'}
+        }).then(res => {
+            if (res.data && res.data.esg_metrics) {
+                setEmissions(sortBy(res.data.esg_metrics, 'date'))
+            }
+        }).catch((err) =>{
+            console.log(err)
+        })
+        await ResourceService.index({
+            resourceName: 'esg-metrics',
+            params: {metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Intensity - BOE'}
+        }).then(res => {
+            if (res.data && res.data.esg_metrics) {
+                setEmissionsIntensity(sortBy(res.data.esg_metrics, 'date'))
+            }
+        }).catch((err) =>{
+            console.log(err)
+        })
+    }, [])
+
+    const getOilProduction = useCallback(() => {
+        ResourceService.index({
+            resourceName: 'productions'
+        }).then(({ data }) => {
+            let sortedData = sortBy(data, 'year')
+            setProductionData(sortedData)
+        }).catch((err) =>{
+            console.log(err)
+        })
+    }, [])
+
+    const getComplaints = useCallback(() => {
+        ResourceService.index({
+            resourceName: 'complaints'
+        }).then(({ data }) => {
+            setComplaints(data)
+        }).catch((err) =>{
+            console.log(err)
+        })
+    }, [])
 
     const getDonationData = useMemo(() => {
         return sortBy(flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (m: any) => ([
@@ -123,27 +199,6 @@ const Dashboard: FC = () => {
             return data
         }))
     }, [emissions, getIntensityByDate])
-
-    const getOilProduction = useCallback(() => {
-        ResourceService.index({
-            resourceName: 'productions'
-        }).then(({ data }) => {
-            let sortedData = sortBy(data, 'year')
-            setProductionData(sortedData)
-        }).catch((err) =>{
-            console.log(err)
-        })
-    }, [])
-
-    const getComplaints = useCallback(() => {
-        ResourceService.index({
-            resourceName: 'complaints'
-        }).then(({ data }) => {
-            setComplaints(data)
-        }).catch((err) =>{
-            console.log(err)
-        })
-    }, [])
 
     const getYearlyComplaintsData = useMemo(() => {
         return flatten(map([2017, 2018, 2019, 2020, 2021], (e) => {
@@ -200,27 +255,15 @@ const Dashboard: FC = () => {
         return yearlyData
     }, [production])
 
-    const getGhgEmissions = useCallback(async () => {
-        await ResourceService.index({
-            resourceName: 'esg-metrics',
-            params: {metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Emissions'}
-        }).then(res => {
-            if (res.data && res.data.esg_metrics) {
-                setEmissions(sortBy(res.data.esg_metrics, 'date'))
-            }
-        }).catch((err) =>{
-            console.log(err)
+    const getQuarterlyIncidentData = useMemo(() => {
+        let data = [];
+        console.log("Filter: ", filter(incidents, (o) => o.timeframe === "quarterly"))
+        // Let's start by organizing it then summing everything up.
+        incidents.forEach(incident => {
+            console.log(incident)
         })
-        await ResourceService.index({
-            resourceName: 'esg-metrics',
-            params: {metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Intensity - BOE'}
-        }).then(res => {
-            if (res.data && res.data.esg_metrics) {
-                setEmissionsIntensity(sortBy(res.data.esg_metrics, 'date'))
-            }
-        }).catch((err) =>{
-            console.log(err)
-        })
+        // get date and esg metric factor name
+
     }, [])
 
     useEffect(() => {
@@ -229,7 +272,8 @@ const Dashboard: FC = () => {
         getAllSpills()
         getComplaints()
         getGhgEmissions()
-    }, [getAllMetrics, getOilProduction, getAllSpills, getComplaints, getGhgEmissions])
+        getAllIncidents()
+    }, [getAllMetrics, getOilProduction, getAllSpills, getComplaints, getGhgEmissions, getAllIncidents])
 
     return (
         <div className="site-layout-background"
