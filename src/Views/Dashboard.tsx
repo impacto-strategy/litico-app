@@ -57,26 +57,35 @@ const Dashboard: FC = () => {
         })
     }, [setSpills])
 
-    const getIntensityByDate = useCallback((date: string, basin: string) => {
-        if (emissionsIntensity.length < 1) return 0
+    const spillsIntensity = useMemo(() => {
+        let data = filter(metrics.esg_metrics, { 'metric_subtype': 'Spill Intensity - Liquids' })
+
+        return sortBy(flatten(map(data, (m: any) => ([
+            { date: m.date, value: m.value }
+        ]))), ['year'])
+    }, [metrics])
+
+    const getIntensityByDate = useCallback((date: string, basin: string, intensityType: string) => {
+        let data = []
+        if (intensityType === 'ghg') {
+            data = emissionsIntensity
+        } else {
+            data = spillsIntensity
+        }
+
+        if (data.length < 1) return 0
         let year = new Date(date).getFullYear()
-        let intensityByYear = find(emissionsIntensity, (em) => {
-            return  new Date(em.date).getFullYear() === year && em.basin === basin
+        let intensityByYear = find(data, (em) => {
+            if (intensityType === 'ghg') {
+                return new Date(em.date).getFullYear() === year && em.basin === basin
+            } else {
+                return new Date(em.date).getFullYear() === year
+            }
         })
 
         if (!intensityByYear?.value) return 0
         return intensityByYear.value
-    }, [emissionsIntensity])
-
-    const getTotalProduction = useCallback((value: string) => {
-        if (production.length < 1) return 0
-        const date = new Date(value)
-        const year = date.getFullYear()
-        let productionByYear = filter(production, { 'year': year.toString() })
-        if (productionByYear.length < 1) return 0
-        let sum = sumBy(productionByYear, 'amount')
-        return sum
-    }, [production])
+    }, [emissionsIntensity, spillsIntensity])
 
     const getDonationData = useMemo(() => {
         return sortBy(flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (m: any) => ([
@@ -108,7 +117,7 @@ const Dashboard: FC = () => {
         return flatten(map(sortBy(groupBy(emissions, 'date'), 'date'), (e: ArrOfObj) => {
             let data = []
             for (let i = 0; i < e.length; i++) {
-                let intensity = getIntensityByDate(e[i].date, e[i].basin)
+                let intensity = getIntensityByDate(e[i].date, e[i].basin, 'ghg')
                 data.push({ 
                     name: "GHG Emissions (CO2e)", 
                     type: parseInt(e[i].date), 
@@ -166,9 +175,9 @@ const Dashboard: FC = () => {
             return year
         });
         return flatten(map(spillsCountByYear, (e, key) => ([
-            { name: "Spills Count", type: key, value: e.length, intensity:  (e.length / (getTotalProduction(key))) * 1000, items: e }
+            { name: "Spills Count", type: key, value: e.length, intensity: getIntensityByDate(e[0]?.date, '', ''), items: e }
         ])))
-    }, [spills, getTotalProduction])
+    }, [spills, getIntensityByDate])
 
     /**
      * Sums total production for Gas, Water, and Oil by year.
@@ -258,7 +267,7 @@ const Dashboard: FC = () => {
                   <DualAxesLineColWidget
                       data={getYearlySpillsData}
                       colLabel="Spill bbl"
-                      lineMax={0.004}
+                      lineMax={0.05}
                       lineLabel="Spills Intensity (bbl spill/kbbl produced)"
                       title="Spills Quantity & Intensity"
                       gridColumns="1 / 3"
