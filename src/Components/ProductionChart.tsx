@@ -32,8 +32,6 @@ const ProductionChart: FC<ProductionChartProps> = props => {
         }
     `
 
-    console.log(props.data)
-
     const config = {
         data: [props.data, props.data],
         animation: false,
