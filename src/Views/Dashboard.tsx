@@ -88,6 +88,10 @@ const Dashboard: FC = () => {
     }, [emissionsIntensity, spillsIntensity])
 
     const getDonationData = useMemo(() => {
+        let result = flatten(map(groupBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => o.date), (year: any) => ([
+                {label: year[0].date, value: sumBy(year, (obj: any) => obj.value)}
+            ])))
+        console.log(result)
         return sortBy(flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (m: any) => ([
             { label: m.organization, type: parseInt(m.date), value: m.value }
         ]))), ['label'])
