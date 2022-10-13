@@ -89,11 +89,16 @@ const Dashboard: FC = () => {
     }, [emissionsIntensity, spillsIntensity])
 
     const getDonationData = useMemo(() => {
-        let result = flatten(map(groupBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => o.date), (year: any) => ([
+        return flatten(map(groupBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => o.date), (year: any) => ([
                 {label: year[0].date, value: sumBy(year, (obj: any) => obj.value)}
             ])))
-        return result
     }, [metrics])
+
+    const getVolunteerHoursData = useMemo(() => {
+        return flatten(map(groupBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Volunteer Hours' }), (o: any) => o.date), (year: any) => ([
+            {label: year[0].date, value: sumBy(year, (obj: any) => obj.value)}
+        ])))
+    }, [metrics.esg_metrics])
 
     const getGenderData = useMemo(() => {
         return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Gender' }), (m: any) => ([
@@ -333,12 +338,23 @@ const Dashboard: FC = () => {
                 {getEthnicityData.length > 0 &&
                     <StackedBarWidget isGroup={false} isPercentage={true} data={getEthnicityData} label={'percentage'} gridColumns='3/5' title='Employee Diversity' subTitle="" />
                 }
-                {/* {getDonationData.length > 0 &&
-                    <StackedBarWidget isGroup={false} isPercentage={false} data={getDonationData} label={'currency'} gridColumns="1/5" title="Annual Charitable Contributions" subTitle="" />
-                } */}
                 {getDonationData.length > 0 && 
-                    <DonationsVolunteer data={getDonationData}/>
+                    <DonationsVolunteer
+                        title={"Charitable Contributions"}
+                        data={getDonationData}
+                        gridCol={"1/3"}
+                        type="Donations"
+                    />
                 }
+                <DonationsVolunteer
+                    title={"Volunteer Hours"}
+                    data={[
+                            {label: "2021", value: 200},
+                            {label: "2022", value: 400}
+                    ]}
+                    gridCol={"3/5"}
+                    type="Volunter"
+                />
             </div>
             <div>
                 <Divider>
