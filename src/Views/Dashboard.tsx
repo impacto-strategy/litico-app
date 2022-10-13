@@ -17,6 +17,7 @@ import {filter, find, flatten, forOwn, groupBy, map, sortBy, sumBy} from "lodash
 // import DonationsDrilldown from "../DonationsDrilldown";
 // REACT COMPONENTS
 import ColumnWidget from "../Components/ColumnWidget";
+import DonationsVolunteer from "../Components/DonationsVolunteer";
 import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
 import StackedBarWidget from "../Components/StackedBarWidget";
 import GHGChart from "../Components/GHGChart";
@@ -91,10 +92,7 @@ const Dashboard: FC = () => {
         let result = flatten(map(groupBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => o.date), (year: any) => ([
                 {label: year[0].date, value: sumBy(year, (obj: any) => obj.value)}
             ])))
-        console.log(result)
-        return sortBy(flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (m: any) => ([
-            { label: m.organization, type: parseInt(m.date), value: m.value }
-        ]))), ['label'])
+        return result
     }, [metrics])
 
     const getGenderData = useMemo(() => {
@@ -335,8 +333,11 @@ const Dashboard: FC = () => {
                 {getEthnicityData.length > 0 &&
                     <StackedBarWidget isGroup={false} isPercentage={true} data={getEthnicityData} label={'percentage'} gridColumns='3/5' title='Employee Diversity' subTitle="" />
                 }
-                {getDonationData.length > 0 &&
+                {/* {getDonationData.length > 0 &&
                     <StackedBarWidget isGroup={false} isPercentage={false} data={getDonationData} label={'currency'} gridColumns="1/5" title="Annual Charitable Contributions" subTitle="" />
+                } */}
+                {getDonationData.length > 0 && 
+                    <DonationsVolunteer data={getDonationData}/>
                 }
             </div>
             <div>
