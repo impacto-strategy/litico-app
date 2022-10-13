@@ -2,7 +2,7 @@ import React, {FC, useCallback, useEffect, useMemo, useRef, useState} from "reac
 import styled from "styled-components";
 import {Link, useParams, useSearchParams, useNavigate} from "react-router-dom";
 import ResourceService from "../../Services/ResourceService";
-import {Button, Input, Space, Table, Drawer, Popconfirm, message} from "antd";
+import {Button, Checkbox, Input, Space, Table, Drawer, Popconfirm, message} from "antd";
 import {DeleteOutlined, EditOutlined, SearchOutlined} from "@ant-design/icons";
 import Highlighter from 'react-highlight-words';
 import ResourceForm from "./ResourceForm";
@@ -309,7 +309,15 @@ const ResourceIndex: FC = () => {
             }
 
             if (_field.external_ref) {
-                _field.render = (text: any, record: any, index: any) => <a href={`${record[_field.external_ref.key]}`} target='blank'>{`${record[_field.external_ref.key]}`}</a>
+                _field.render = (text: any, record: any, index: any) => <a href={`${record[_field.external_ref.key]}`} target='blank'>{`${record[_field.external_ref.valueIndex] || record[_field.external_ref.key]}`}</a>
+            }
+
+            if (_field.date) {
+                _field.render = (text: any, record: any, index: any) => <span>{`${new Date(record[_field.date.valueIndex]).toLocaleString()}`}</span>
+            }
+
+            if (_field.type === 'boolean') {
+                _field.render = () => <Checkbox checked={_field.dataIndex}></Checkbox>
             }
 
             return _field
@@ -321,15 +329,16 @@ const ResourceIndex: FC = () => {
             render: (record: {[key: string]: any}) => {
                 return (
                     <>
-                        <Button 
-                            type="primary" 
-                            style={{marginRight: 10}}
-                            icon={<EditOutlined />}
-                            onClick={(e: ReactButton) => handleClick(e, "Edit", record.id)}
-                        >
-                            Edit
-                        </Button>
-
+                        {resourceName !== 'company-uploads' &&
+                            <Button
+                                type="primary"
+                                style={{ marginRight: 10 }}
+                                icon={<EditOutlined />}
+                                onClick={(e: ReactButton) => handleClick(e, "Edit", record.id)}
+                            >
+                                Edit
+                            </Button>
+                        }
                         <Popconfirm
                             title="Delete This Row?"
                             okText="Delete"
@@ -351,7 +360,7 @@ const ResourceIndex: FC = () => {
 
         return filteredFields;
 
-    }, [fields, getColumnSearchProps, handleClick, handleDelete])
+    }, [fields, getColumnSearchProps, handleClick, handleDelete, resourceName])
 
     useEffect(() => {
         getFieldsAndData()
@@ -364,9 +373,11 @@ const ResourceIndex: FC = () => {
 
     return (
         <Wrapper>
-            <Button type="primary" style={{marginBottom: 16}} id={'id'} onClick={(e: ReactButton) => handleClick(e, "Add")}>
-                Add
-            </Button>
+            {resourceName !== 'company-uploads' &&
+                <Button type="primary" style={{marginBottom: 16}} id={'id'} onClick={(e: ReactButton) => handleClick(e, "Add")}>
+                    Add
+                </Button>
+            }
             <Table
                 pagination={{
                     defaultPageSize: 50,

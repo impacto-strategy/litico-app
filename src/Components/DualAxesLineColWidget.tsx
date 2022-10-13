@@ -73,7 +73,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
       style: () => {
         let config = {
             fill: 'white',
-            lineWidth: 2
+            lineWidth: 3
         }
         return config;
       },
@@ -116,7 +116,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
       {
         geometry: 'line',
         lineStyle: {
-          lineWidth: 2,
+          lineWidth: 3,
         },
       },
     ],

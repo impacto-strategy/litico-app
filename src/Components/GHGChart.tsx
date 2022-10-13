@@ -1,7 +1,8 @@
-import {FC} from "react"
+import {FC, useState, useEffect} from "react"
 import styled from "styled-components";
 import { DualAxes } from '@ant-design/plots';
 
+// Will need to adjust interface.
 interface GHGChartProps {
     data: any
 }
@@ -9,13 +10,22 @@ interface GHGChartProps {
 /**
  * Renders to a chart with stacked bars representing Greenhouse Gas Emissions
  * Volume by basin and multiple lines representing Greenhouse Gas Emissions
- * intensity by basin.
+ * intensity by basin. Might consider making this more general purpose later.
  *
  * @param props - React Component Props.
- * @returns JSX element that renders an Ant Design Chart.
+ * @returns React Component that renders Ant Design graph
  *
  */
 const GHGChart: FC<GHGChartProps> = props => {
+    // Stores number of basin in data set
+    const [occurrences, setOccurrences] = useState<number>()
+
+    useEffect(() => {
+        const result = props.data.reduce( (acc: any, o: any ) => {
+             return (acc[o.basin] = (acc[o.basin] || 0)+1, acc)
+        }, {} );
+        setOccurrences(Object.keys(result).length - 1)
+    }, [occurrences, props.data])
 
     const Wrapper = styled.div`
         background: #fff;
@@ -26,8 +36,7 @@ const GHGChart: FC<GHGChartProps> = props => {
         }
     `
 
-    const config = {
-        color: ['#477EB7', '#5AC5BF', '#46AD75'],
+    let config = {
         // Second source is for our line(s).
         data: [props.data, props.data],
         xField: 'type',
@@ -58,49 +67,66 @@ const GHGChart: FC<GHGChartProps> = props => {
         geometryOptions: [
             {
                 geometry: 'column',
-                isStack: true,
                 isPercent: false,
-                // How we seperate the columns
-                // seriesField: 'basin',
             },
             {
+                color: ['#497cb6', '#218f3d'],
                 geometry: 'line',
                 point: {
+                    lineWidth: 2,
                     shape: 'dot',
                     size: 5,
                 },
-                // How we seperate the lines
-                // seriesField: 'basin',
             },
         ],
         legend: {
             flipPage: false,
             itemName: {
                 formatter: (text: string, item: any, index: number) => {
-                    let name: string;
-                    if (index > 1) {
-                        name = `${text} Intensity`
+                    let name: string
+                    if (occurrences) {
+                        if (index > occurrences) {
+                            name = `${text}`
+                        } else {
+                            name = `${text} Emssions (mt CO2-e)`
+                        }
                     } else {
-                        name = `${text} Emission Volume`
+                        name = text === "value" ? "Greenhouse Gas Emissions (mt CO2-e)" : "GHG Emissions Intensity (mt/BoE)"
                     }
-                    return name
+                    return name;
                 }
             }
         },
+        limitInPlot: false,
         meta: {
             
         },
         // This is for the modal when we hover over a column/line.
         tooltip: {
             formatter: (data: any) => {
-                return { name: data.basin, value: (data.value || data.intensity).toLocaleString() };
+                if (!occurrences) {
+                    return { name: data.value ? "Greenhouse Gas Emissions (mt CO₂-e)" : "GHG Emission Intensity (mt/BoE)", value: (data.value || data.intensity).toLocaleString() }
+                } else {
+                    if (data.basin) {
+                        return { name: `${data.basin} Emissions (mt CO₂-e)`, value: data.value.toLocaleString() };
+                    } else {
+                        return { name: data.label, value: data.intensity.toLocaleString() };
+                    }
+                }
             },
         },
     }
+
+    // Only adds these to config if data by basin is available
+    if(occurrences && occurrences > 0) {
+        Object.assign(config.geometryOptions[0], {isStack: false, seriesField: 'basin',})
+        Object.assign(config.geometryOptions[1], {seriesField: 'label'})
+    }
+    
     return (
         <Wrapper>
         <h3>
-          {/* {props.title} */}
+            Greenhouse Gas Emissions Volume & Intensity
         </h3>
         <DualAxes {...config} />
       </Wrapper>

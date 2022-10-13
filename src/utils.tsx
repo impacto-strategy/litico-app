@@ -4,6 +4,13 @@ import {jsx} from "slate-hyperscript";
 const {Text} = require("slate");
 const escapeHtml = require("escape-html");
 
+/**
+ * Converts a label to use commas (e.g., 1000 becomes 1,000)
+ * 
+ * @param v - string representing a label value
+ * @returns 
+ */
+export const formatValue = (v: number): string => Intl.NumberFormat().format(v)
 
 export const getQuarterFromDate = (date?: Date) => {
     if (!date) {

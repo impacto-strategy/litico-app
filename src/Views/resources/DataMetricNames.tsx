@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import MetricPillarTabs from "../../Components/MetricPillarTabs";
 import ResourceService from "../../Services/ResourceService";
 import Cookies from 'js-cookie';
+import {Link} from "react-router-dom";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -36,6 +37,27 @@ const DataMetricNames = () => {
         })
     }, [])
 
+    const createCompanyUpload = useCallback((data:any) => {
+        ResourceService.store({
+            resourceName: 'company-uploads',
+            fields: {...data}
+        }).then(({ data }) => {
+            console.log(data)
+        })
+    }, [])
+
+    const normFile = (e: any) => {
+        if (e?.file?.status === 'done') {
+            let data = {
+                url: e.file.response,
+                name: e.file.name,
+                file_type: e.file.type
+            }
+            createCompanyUpload(data)
+        }
+        return e && e.fileList;
+    };
+
     useEffect(() => {
         getStandards()
     }, [getStandards])
@@ -48,10 +70,15 @@ const DataMetricNames = () => {
                         <Col lg={{span: 12}} sm={{span: 24}}>
                             <h2>Add Data to your LITICO Database</h2>
                         </Col>
-                        <Col lg={{span: 12}} sm={{span: 24}}>
-                            <Upload name="file" action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers} accept=".csv,.pdf,.doc,.docx,.jpeg,.png,.jpg,.svg">
-                                <Button icon={<UploadOutlined />}>Upload Documents</Button>
-                            </Upload>
+                        <Col lg={{ span: 10 }} sm={{ span: 24 }}>
+                            <div style={{ float: 'right' }} >
+                                <Upload name="file" onChange={(normFile)} action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers} accept=".csv,.pdf,.doc,.docx,.jpeg,.png,.jpg,.svg">
+                                    <Button icon={<UploadOutlined />}>Raw Data File Upload</Button>
+                                </Upload>
+                            </div>
+                        </Col>
+                        <Col lg={{ span: 2 }} sm={{ span: 24 }}>
+                            <Button style={{ float: 'right' }}><Link to="/company-uploads">Upload History</Link></Button>
                         </Col>
                     </Row>
                     <MetricPillarTabs standards={standards} report={null} showReport={false}/>
