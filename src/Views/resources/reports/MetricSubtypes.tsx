@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useCallback, useEffect, useState } from "react";
 import MetricSubtypeTabs from "../../../Components/MetricSubtypeTabs";
 import ResourceService from "../../../Services/ResourceService";
-import { sortBy } from "lodash";
+import { groupBy } from "lodash";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -43,7 +43,16 @@ const MetricSubtypes = () => {
               esg_pillar: searchParams.get("esg_pillar"),
           }
         }).then(({ data }) => {
-            setStandards(sortBy(data, 'metric_subtype'))
+            let groupedData = groupBy(data, 'metric_subtype')
+            let sorted: any[] = []
+            Object.keys(groupedData).sort().reduce(
+                (obj: any, key) => {
+                    sorted.push(groupedData[key])
+                    return groupedData
+                },
+                {}
+            );
+            setStandards(sorted)
         })
     }, [searchParams])
 

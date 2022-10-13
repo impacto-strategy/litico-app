@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import {useSearchParams} from "react-router-dom";
 import MetricSubtypeTabs from "../../Components/MetricSubtypeTabs";
 import ResourceService from "../../Services/ResourceService";
+import { groupBy } from "lodash";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -32,7 +33,16 @@ const DataMetricSubtypes = () => {
             esg_pillar: searchParams.get("esg_pillar"),
           }
         }).then(({ data }) => {
-            setStandards(data)
+            let groupedData = groupBy(data, 'metric_subtype')
+            let sorted: any[] = []
+            Object.keys(groupedData).sort().reduce(
+                (obj: any, key) => {
+                    sorted.push(groupedData[key])
+                    return groupedData
+                },
+                {}
+            );
+            setStandards(sorted)
         })
     }, [searchParams])
 
