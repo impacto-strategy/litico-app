@@ -2,7 +2,7 @@ import { Button, Col, Card, Input, Modal, Row, Space, Tag } from "antd";
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
-import { filter } from "lodash";
+import { filter, flatten, map } from "lodash";
 
 const MetricSubtypeTabs = ({ standards, report, showReport }:any) => {
   const [search, setSearch] = useState("");
@@ -46,7 +46,10 @@ const MetricSubtypeTabs = ({ standards, report, showReport }:any) => {
       return filter(standards, (standard) => { return standard.metric_subtype.toLowerCase().indexOf(search) !== -1; })
   }, [standards, search])
 
-  
+  const metricCodes = (item: any) => {
+    let codes = flatten(map(item, (i) => i['metric_code'].split(',')))
+    return codes
+  }
 
   const getLink = (item: any) => {
     if (showReport) {
@@ -77,41 +80,41 @@ const MetricSubtypeTabs = ({ standards, report, showReport }:any) => {
         {modStandards?.map((item: any, idx:string) => (
           <Col sm={{span: 24}} lg={{span: 8}} key={idx} style={{ marginBottom: 32 }}>
             <Card
-              title={item.metric_subtype}
+              title={item[0].metric_subtype}
               key={idx}
               type='inner'
               extra={<Link
-                  to={getLink(item)}>View</Link>}
+                  to={getLink(item[0])}>View</Link>}
                   actions={[
-                      <div>{showReport && getReportEntries(item.metric_subtype)}</div>,
+                      <div>{showReport && getReportEntries(item[0].metric_subtype)}</div>,
                       <div>{showReport && '0 Pending Approval'}</div>,
                   ]}
               >
               <Space direction={'vertical'}>
-                      {item.metric_code.split(',').map((code: any, idx:string) => (
-                          <Tag key={idx}>{code}</Tag>
-                        )
-                      )}
+                  {metricCodes(item).map((code: any) => (
+                      <Tag key={code}>{code}</Tag>
+                    )
+                  )}
               </Space>
-              {(item.description && !showReport && !showDescription.includes(idx)) &&
+              {(item[0].description && !showReport && !showDescription.includes(idx)) &&
                 <DownOutlined style={{
                   float: 'right'
                 }} onClick={(() => displayDescription(idx))} />
               }
-              {(item.description && !showReport && showDescription.includes(idx)) &&
+              {(item[0].description && !showReport && showDescription.includes(idx)) &&
                 <UpOutlined style={{
                   float: 'right'
                 }} onClick={(() => hideDescription(idx))} />
               }
               {(!showReport && showDescription.includes(idx)) &&
                 <Row style={{ paddingTop: '20px' }}>
-                  {(item?.description && item.description.length > 500) ?
+                  {(item?.description && item[0].description.length > 500) ?
                     <div>
-                      <p>{`${item.description.substring(0, 500)}...`}</p>
-                      <p><Button type="link" onClick={() => showModal(item.description)}>Read more</Button></p>
+                      <p>{`${item[0].description.substring(0, 500)}...`}</p>
+                      <p><Button type="link" onClick={() => showModal(item[0].description)}>Read more</Button></p>
                     </div>
                     :
-                    <p>{item.description}</p>
+                    <p>{item[0].description}</p>
                   }
                 </Row>
               }
