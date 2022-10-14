@@ -154,7 +154,7 @@ const Dashboard: FC = () => {
     }, [])
 
     const getYearlyComplaintsData = useMemo(() => {
-        return flatten(map([2017, 2018, 2019, 2020, 2021], (e) => {
+        return flatten(map([2017, 2018, 2019, 2020, 2021, 2022], (e) => {
             let comps: any[] = filter(complaints, (c: any) => {
                 const date = new Date(c['date'])
                 const year = date.getFullYear()
