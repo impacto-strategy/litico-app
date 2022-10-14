@@ -279,13 +279,13 @@ const Dashboard: FC = () => {
         for (let i = 0; i < organizedData["Number of Total Recordable Incidents"].length; i++) {
           let cleanDate = organizedData["Number of Total Recordable Incidents"][i].date.substring(0, 4);
           if (parseInt(organizedData["Number of Total Recordable Incidents"][i].date.substring(5,7)) <= 3) {
-            cleanDate = `Qtr 1 ${cleanDate}`
+            cleanDate = `1Q ${cleanDate}`
           } else if (parseInt(organizedData["Number of Total Recordable Incidents"][i].date.substring(5,7)) < 7) {
-            cleanDate = `Qtr 2 ${cleanDate}`
+            cleanDate = `2Q ${cleanDate}`
           } else if (parseInt(organizedData["Number of Total Recordable Incidents"][i].date.substring(5,7)) < 10) {
-            cleanDate = `Qtr 3 ${cleanDate}`
+            cleanDate = `3Q ${cleanDate}`
           } else {
-            cleanDate = `Qtr 4 ${cleanDate}`
+            cleanDate = `4Q ${cleanDate}`
           }
           data.push({
             date: cleanDate,
