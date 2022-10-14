@@ -273,7 +273,7 @@ const Dashboard: FC = () => {
         let data: any = [];
         const organizedData = groupBy(filter(incidents, (o: any) => o.timeframe === "quarterly"), "esg_metric_factor_name")
         if (!organizedData["Number of Total Recordable Incidents"]) {
-          return;
+          return false;
         }
         // get date and esg metric factor name
         for (let i = 0; i < organizedData["Number of Total Recordable Incidents"].length; i++) {
@@ -364,11 +364,11 @@ const Dashboard: FC = () => {
                 <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
                 
-                {incidents.length > 0 &&
+                {(incidents.length > 0 && !!getQuarterlyIncidentData) &&
                     <SafetyMetrics
                         data={getQuarterlyIncidentData}
                     />
-                }       
+                }
 
                 {production.length > 0 &&
                     <ProductionChart
