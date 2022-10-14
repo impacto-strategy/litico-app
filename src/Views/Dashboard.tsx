@@ -266,12 +266,12 @@ const Dashboard: FC = () => {
                 {spills.length > 0 &&
                   <DualAxesLineColWidget
                       data={getYearlySpillsData}
-                      colLabel="Spill bbl"
+                      colLabel="Spill Incident Count"
                       lineMax={0.05}
                       lineLabel="Spills Intensity (bbl spill/kbbl produced)"
-                      title="Spills Quantity & Intensity"
+                      title="Spill Incident Count & Intensity"
                       gridColumns="1 / 3"
-                      y1Lablel="Spill Count"
+                      y1Lablel="Spill Incident Count"
                       y2Lablel="Spill Intensity (bbl spill/kbbl produced)"
                       includeModal={true}
                   />
