@@ -1,6 +1,6 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import styled from "styled-components";
-import {Button, Card, Col, Descriptions, Divider, List, Modal, PageHeader, Row, Skeleton, Space, Table, Tag, Upload } from "antd";
+import {Button, Card, Col, Descriptions, Divider, List, Modal, PageHeader, Row, Skeleton, Space, Table, Tag } from "antd";
 import {DownOutlined, UpOutlined} from '@ant-design/icons'
 import { useCallback, useEffect, useState } from "react";
 import ResourceService from "../../../Services/ResourceService";
