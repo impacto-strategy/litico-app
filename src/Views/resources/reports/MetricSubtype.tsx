@@ -1,13 +1,11 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import styled from "styled-components";
-import {Button, Card, Col, Descriptions, Divider, List, Modal, PageHeader, Row, Skeleton, Space, Table, Tag, Upload } from "antd";
-import {DownOutlined, DownloadOutlined, UpOutlined, UploadOutlined} from '@ant-design/icons'
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {Button, Card, Col, Descriptions, Divider, List, Modal, PageHeader, Row, Skeleton, Space, Table, Tag } from "antd";
+import {DownOutlined, UpOutlined} from '@ant-design/icons'
+import { useCallback, useEffect, useState } from "react";
 import ResourceService from "../../../Services/ResourceService";
-import { CSVLink } from "react-csv";
 import { flatten, map, uniq } from "lodash";
 import moment from 'moment';
-import Cookies from 'js-cookie';
 
 const Wrapper = styled.section`
   margin: auto;
@@ -27,11 +25,6 @@ const ContentWrapper = styled.section`
 const MetricSubtype = () => {
     const { reportID } = useParams()
     const [searchParams] = useSearchParams();
-    let token = Cookies.get('XSRF-TOKEN')
-    const headers = {
-        'X-XSRF-TOKEN': token || ''
-    }
-    const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app';
     const [metricDescription, setMetricDescription] = useState("");
     const [showDescription, setShowDescription] = useState<any>([]);
 
@@ -61,39 +54,6 @@ const MetricSubtype = () => {
         setIsModalOpen(false);
     }
 
-    const colHeaders = useMemo(() => {
-        return [
-            'ESG Pillar',
-            'Standard',
-            'Metric Name',
-            'Metric Subtype',
-            'Metric Code',
-            'Risk',
-            'Value',
-            'Measurement Units',
-            'Numerator 1',
-            'Numerator 2',
-            'Numerator 3',
-            'Numerator 4',
-            'Numerator 5',
-            'Numerator 6',
-            'Numerator 7',
-            'Numerator 8',
-            'Denominator',
-            'Description',
-            'Narrative',
-            'Date',
-            'Organization',
-            'Contact',
-            'Name',
-            'Address',
-            'City',
-            'State',
-            'Basin',
-            'Type A',
-            'Type B'
-        ]
-    }, [])
 
     const columns = [
     {
@@ -687,11 +647,6 @@ const MetricSubtype = () => {
 
     }, [reportID, searchParams, getStandards])
 
-    const getMetrics = (e: any) => {
-        if (e?.file?.status === 'done') {
-            getMetric()
-        }
-    }
 
     useEffect(() => {
         getMetric()
@@ -714,16 +669,7 @@ const MetricSubtype = () => {
                 ><Divider />
                     <ContentWrapper>
                         <Skeleton active loading={initLoading}>
-                            <Row>
-                                <Col span={12}>
-                                    <Button icon={<DownloadOutlined />}><CSVLink data={[colHeaders]}> Download Blank Form</CSVLink></Button>
-                                </Col>
-                                <Col span={12}>
-                                    <Upload name="files" onChange={getMetrics} action={`${baseUrl}/api/uploads?report_id=${reportID}`} withCredentials={true} headers={headers}>
-                                        <Button icon={<UploadOutlined />}>Upload Completed Form</Button>
-                                    </Upload>
-                                </Col>
-                            </Row>
+
                             {reportData && <Row>
                                 <Col span={24}>
                                     <Table

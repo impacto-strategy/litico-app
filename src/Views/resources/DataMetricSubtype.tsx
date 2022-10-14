@@ -1,8 +1,9 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, message, PageHeader, Row, Select, Space, Tag, Upload } from "antd";
-import { DownOutlined, InboxOutlined, UpOutlined } from '@ant-design/icons';
+import { Button, Card, Col, DatePicker, Divider, Form, Input, message, PageHeader, Row, Select, Space, Tag, Tooltip, Upload } from "antd";
+import { DownOutlined, DownloadOutlined, InboxOutlined, QuestionCircleOutlined, UpOutlined, UploadOutlined } from '@ant-design/icons';
 import styled from "styled-components";
 import {useSearchParams} from "react-router-dom";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { CSVLink } from "react-csv";
 import ResourceService from "../../Services/ResourceService";
 import { find, orderBy } from 'lodash';
 import Cookies from 'js-cookie';
@@ -24,6 +25,40 @@ const ContentWrapper = styled.div`
 const DataMetricSubtype = () => {
     const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app'
     const [searchParams] = useSearchParams();
+
+    const colHeaders = useMemo(() => {
+        return [
+            'ESG Pillar',
+            'Standard',
+            'Metric Name',
+            'Metric Subtype',
+            'Metric Code',
+            'Risk',
+            'Value',
+            'Measurement Units',
+            'Numerator 1',
+            'Numerator 2',
+            'Numerator 3',
+            'Numerator 4',
+            'Numerator 5',
+            'Numerator 6',
+            'Numerator 7',
+            'Numerator 8',
+            'Denominator',
+            'Description',
+            'Narrative',
+            'Date',
+            'Organization',
+            'Contact',
+            'Name',
+            'Address',
+            'City',
+            'State',
+            'Basin',
+            'Type A',
+            'Type B'
+        ]
+    }, [])
 
     const stateCodes = [
         'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS',
@@ -146,6 +181,25 @@ const DataMetricSubtype = () => {
                     title={searchParams.get("metric_subtype")}
                 />
                 <ContentWrapper>
+                    <Row>
+                        <Col span={24}>
+                            <span style={{ float: 'right' }} >
+                                <Tooltip placement="topLeft" title={'Enter a single data point below or bulk upload using these buttons'}>
+                                    <QuestionCircleOutlined style={{ paddingRight: '24px' }} />
+                                </Tooltip>
+                                <Button icon={<DownloadOutlined />}><CSVLink data={[colHeaders]}> Download Blank Form</CSVLink></Button>
+                            </span>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col style={{ paddingTop: '20px', paddingBottom: '20px' }} span={24}>
+                            <span style={{ float: 'right' }}>
+                                <Upload name="files" action={`${baseUrl}/api/uploads`} withCredentials={true} headers={headers}>
+                                    <Button style={{ float: 'right' }}  icon={<UploadOutlined />}>Upload Completed Form</Button>
+                                </Upload>
+                            </span>
+                        </Col>
+                    </Row>
                     <Card
                         title={standards?.[0].metric_subtype}
                         type='inner'
