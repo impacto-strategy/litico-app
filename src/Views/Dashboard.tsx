@@ -1,7 +1,7 @@
 /* IMPORT EXTERNAL MODULES */
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import {Divider} from "antd";
-import {filter, find, flatten, forOwn, groupBy, map, sortBy, sumBy} from "lodash";
+import {filter, find, flatten, forOwn, groupBy, isEmpty, map, sortBy, sumBy} from "lodash";
 
 /* IMPORT INTERNAL MODULES */
 // UNUSED COMPONENTS
@@ -28,6 +28,7 @@ import GovernanceCheckList from "../Components/GovernanceCheckList";
 import ResourceService from "../Services/ResourceService";
 import useAuth from "../Providers/Auth/useAuth";
 import {ArrOfObj} from "../../global"
+import { ContainerOutlined } from "@ant-design/icons";
 
 const Dashboard: FC = () => {
     // React State
@@ -254,9 +255,23 @@ const Dashboard: FC = () => {
                     return o.product === product
                 }), "timeframe")
                 if (tempGroup.hasOwnProperty('yearly')) {
-                    tmp[product] = sumBy(tempGroup['yearly'], 'amount') / 1000
+                    if (isEmpty(tempGroup)) {
+                        continue;
+                    }
+                    if (tempGroup['yearly'][0].product === "gas") {
+                        tmp[product] = sumBy(tempGroup['yearly'], 'amount') / 1000
+                    } else {
+                        tmp[product] = sumBy(tempGroup['yearly'], 'amount')
+                    }
                 } else {
-                    tmp[product] = sumBy(tempGroup['monthly'], 'amount') / 1000
+                    if (isEmpty(tempGroup)) {
+                        continue;
+                    }
+                    if (tempGroup['monthly'][0].product === "gas") {
+                        tmp[product] = sumBy(tempGroup['monthly'], 'amount') / 1000
+                    } else {
+                        tmp[product] = sumBy(tempGroup['monthly'], 'amount')
+                    }
                 }
             }
             yearlyData.push(tmp)
@@ -374,7 +389,7 @@ const Dashboard: FC = () => {
                     <ProductionChart
                         data={getYearlyProductionData}
                         gridColumns={'1/5'}
-                        title={'Oil & Gas Production'}
+                        title={'Total Oil & Gas Production'}
                     />
                 }
 
