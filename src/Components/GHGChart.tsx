@@ -105,7 +105,7 @@ const GHGChart: FC<GHGChartProps> = props => {
         tooltip: {
             formatter: (data: any) => {
                 if (!occurrences) {
-                    return { name: data.value ? "Greenhouse Gas Emissions (mt CO₂-e)" : "GHG Emission Intensity (mt/BoE)", value: (data.value || data.intensity).toLocaleString() }
+                    return { name: data.value ? "Greenhouse Gas Emissions (mt CO₂-e)" : "GHG Emission Intensity (mt/BoE)", value: (data.value || data.intensity || '').toLocaleString() }
                 } else {
                     if (data.basin) {
                         return { name: `${data.basin} Emissions (mt CO₂-e)`, value: data.value.toLocaleString() };
@@ -119,7 +119,7 @@ const GHGChart: FC<GHGChartProps> = props => {
 
     // Only adds these to config if data by basin is available
     if(occurrences && occurrences > 0) {
-        Object.assign(config.geometryOptions[0], {isStack: false, seriesField: 'basin',})
+        Object.assign(config.geometryOptions[0], {isStack: true, seriesField: 'basin',})
         Object.assign(config.geometryOptions[1], {seriesField: 'label'})
     }
     
