@@ -2,6 +2,17 @@ import {Bar, ColumnConfig} from "@ant-design/charts";
 import styled from "styled-components";
 import { FC } from "react";
 
+/*
+    Breaking Down Modal Table:
+    - Let's find which module has modal tables and see how it solved the problem.
+*/
+
+/**
+ * Generates chart with volunteer and charitable contributions for company.
+ * 
+ * @param props 
+ * @returns JSX Element
+ */
 const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: string}> = (props) => {
     const Wrapper = styled.div`
         background: #fff;
@@ -11,6 +22,17 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
         grid-column: ${props.gridCol}
         }
     `
+
+    // const columns = [
+    //     {
+
+    //     },
+    //     {
+
+    //     }
+    // ]
+
+    // Temporary data to ensure charts work properly.
     let data;
     if (props.type === "Donations") {
         data = props.data.concat([
@@ -19,27 +41,14 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
     } else {
         data = props.data
     }
-
-    console.log(data)
     
     const config: ColumnConfig = {
         data: data,
+        color: "#6395f9",
         xField: 'value',
         yField: 'label',
         seriesField: 'label',
-        legend: {
-            position: 'top-left',
-            flipPage: false,
-            itemName: {
-                formatter: (text: string, item: any, index: number) => {
-                    if (props.type === "Donations") {
-                        return text + " Donations ($)";
-                    } else {
-                        return text + " Volunteer Hours";
-                    }
-                }
-            }
-        },
+        legend: false,
         xAxis: {
             // Adjust label for hours
             label: {
@@ -69,7 +78,9 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
             formatter: (data: any) => {
                 return {
                     name: data.label + (props.type === "Donations" ? " Donations ($)" : " Volunteer Hours"), 
-                    value: props.type === "Donations" ? `$${data.value.toString().replace(/\d{1,3}(?=(\d{3})+$)/g, (s: any) => `${s},`)}` : data.value
+                    value: props.type === "Donations" 
+                        ? data.value.toLocaleString('en-US', {style: 'currency',currency: 'USD'}) 
+                        : data.value
                 }
             }
         }
