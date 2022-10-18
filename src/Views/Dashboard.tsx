@@ -353,7 +353,7 @@ const Dashboard: FC = () => {
                         data={getVolunteerHoursData}
                         gridCol={"3/5"}
                         type="Volunter"
-                        tableData={{}}
+                        tableData={filter(metrics.esg_metrics, { 'metric_subtype': 'Volunteer Hours' })}
                     />
                 }
 

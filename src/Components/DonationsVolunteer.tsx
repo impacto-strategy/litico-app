@@ -2,19 +2,7 @@ import {Bar, ColumnConfig} from "@ant-design/charts";
 import styled from "styled-components";
 import { FC, useState, useEffect } from "react";
 import { Modal, Table } from 'antd';
-import { sortBy, values } from "lodash";
-
-/*
-    Breaking Down Modal Table:
-    - Let's find which module has modal tables and see how it solved the problem.
-    
-    Breakdown of Modal Table:
-    - Each object in the array is being passed a collection of the data.
-    
-    Gameplan: 
-    - Create additional prop with relevant data
-    - Pass to table thing.
-*/
+import { sortBy } from "lodash";
 
 /**
  * Generates chart with volunteer and charitable contributions for company.
