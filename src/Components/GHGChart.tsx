@@ -119,7 +119,7 @@ const GHGChart: FC<GHGChartProps> = props => {
 
     // Only adds these to config if data by basin is available
     if(occurrences && occurrences > 0) {
-        Object.assign(config.geometryOptions[0], {isStack: false, seriesField: 'basin',})
+        Object.assign(config.geometryOptions[0], {isStack: true, seriesField: 'basin',})
         Object.assign(config.geometryOptions[1], {seriesField: 'label'})
     }
     
