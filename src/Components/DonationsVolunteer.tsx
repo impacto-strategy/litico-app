@@ -5,6 +5,13 @@ import { FC } from "react";
 /*
     Breaking Down Modal Table:
     - Let's find which module has modal tables and see how it solved the problem.
+    
+    Breakdown of Modal Table:
+    - Each object in the array is being passed a collection of the data.
+    
+    Gameplan: 
+    - Create additional prop with relevant data
+    - Pass to table thing.
 */
 
 /**
@@ -23,14 +30,22 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
         }
     `
 
-    // const columns = [
-    //     {
+    const columns = [
+        {
+            Title: "Date",
+            dataIndex: "date",
+            key: "date"
+        },
+        {
+            Title: "Organization",
+            dataIndex: "organization",
+            key: "organization"
+        },
+        // Volunteer Hours or Contribution Amount
+        {
 
-    //     },
-    //     {
-
-    //     }
-    // ]
+        }
+    ]
 
     // Temporary data to ensure charts work properly.
     let data;
