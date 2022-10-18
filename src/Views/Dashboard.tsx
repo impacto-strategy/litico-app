@@ -363,12 +363,6 @@ const Dashboard: FC = () => {
                 {/* <Emissions2020CO2 data={co2Emission} units="mt CO2" title="Carbon Dioxide Emissions for Production" />
                 <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
                 <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
-                
-                {(incidents.length > 0 && !!getQuarterlyIncidentData) &&
-                    <SafetyMetrics
-                        data={getQuarterlyIncidentData}
-                    />
-                }
 
                 {production.length > 0 &&
                     <ProductionChart
@@ -396,6 +390,12 @@ const Dashboard: FC = () => {
                 {/* <Staff/> */}
                 {/*<Donations/>*/}
                 {/* <DonationsDrilldown /> */}
+
+                {(incidents.length > 0 && !!getQuarterlyIncidentData) &&
+                    <SafetyMetrics
+                        data={getQuarterlyIncidentData}
+                    />
+                }
 
                 {getGenderData.length > 0 &&
                     <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} gridColumns="1/3" title="Employees by Gender" subTitle="" />
