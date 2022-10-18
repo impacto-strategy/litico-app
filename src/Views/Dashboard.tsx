@@ -344,17 +344,19 @@ const Dashboard: FC = () => {
                         data={getDonationData}
                         gridCol={"1/3"}
                         type="Donations"
+                        tableData={filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' })}
                     />
                 }
-                <DonationsVolunteer
-                    title={"Volunteer Hours"}
-                    data={[
-                            {label: "2021", value: 200},
-                            {label: "2022", value: 400}
-                    ]}
-                    gridCol={"3/5"}
-                    type="Volunter"
-                />
+                {getVolunteerHoursData.length > 0 &&
+                    <DonationsVolunteer
+                        title={"Volunteer Hours"}
+                        data={getVolunteerHoursData}
+                        gridCol={"3/5"}
+                        type="Volunter"
+                        tableData={{}}
+                    />
+                }
+
             </div>
             <div>
                 <Divider>

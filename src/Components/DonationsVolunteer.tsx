@@ -1,6 +1,8 @@
 import {Bar, ColumnConfig} from "@ant-design/charts";
 import styled from "styled-components";
-import { FC } from "react";
+import { FC, useState, useEffect } from "react";
+import { Modal, Table } from 'antd';
+import { sortBy, values } from "lodash";
 
 /*
     Breaking Down Modal Table:
@@ -20,45 +22,52 @@ import { FC } from "react";
  * @param props 
  * @returns JSX Element
  */
-const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: string}> = (props) => {
+const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: string, tableData: any}> = (props) => {
     const Wrapper = styled.div`
         background: #fff;
         padding: 20px;
         grid-column: 1/5;
         @media (min-width: 767px) {
-        grid-column: ${props.gridCol}
+            grid-column: ${props.gridCol}
         }
     `
 
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [drillDownData, setDrillDownData] = useState<any>([]);
+
     const columns = [
         {
-            Title: "Date",
+            title: "Date",
             dataIndex: "date",
             key: "date"
         },
         {
-            Title: "Organization",
+            title: "Organization",
             dataIndex: "organization",
             key: "organization"
         },
         // Volunteer Hours or Contribution Amount
         {
-
+            title: props.type === "Donations" ? "Donations ($)" : "Volunteer Hours",
+            dataIndex: "value",
+            key: "value"
         }
     ]
 
-    // Temporary data to ensure charts work properly.
-    let data;
-    if (props.type === "Donations") {
-        data = props.data.concat([
-            {label: 2022, value: 34567}
-        ])
-    } else {
-        data = props.data
-    }
+    useEffect(() => {
+        if (drillDownData.length > 0) showModal();
+      }, [drillDownData]);
+    
+      const showModal = () => {
+        setIsModalVisible(true);
+      };
+    
+      const closeModal = () => {
+        setIsModalVisible(false);
+      };
     
     const config: ColumnConfig = {
-        data: data,
+        data: props.data,
         color: "#6395f9",
         xField: 'value',
         yField: 'label',
@@ -95,8 +104,23 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
                     name: data.label + (props.type === "Donations" ? " Donations ($)" : " Volunteer Hours"), 
                     value: props.type === "Donations" 
                         ? data.value.toLocaleString('en-US', {style: 'currency',currency: 'USD'}) 
-                        : data.value
+                        : data.value + "Hours"
                 }
+            }
+        },
+        onReady: (plot: any) => {
+            if (props.tableData) {
+                plot.on('interval:click', (args: any) => {
+                    let elements = sortBy(props.tableData, function(em:any) {
+                        return new Date(em.date);
+                    });
+                    elements = elements.map((obj: any) => ({
+                        date: obj.date,
+                        organization: obj.organization,
+                        value: obj.value.toLocaleString('en-US', {style: 'currency',currency: 'USD'})
+                    }))
+                    setDrillDownData(elements)
+                });
             }
         }
     };
@@ -106,6 +130,12 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
                 {props.title}
             </h2>
             <Bar {...config} />
+            {props.tableData &&
+                <Modal title={props.type === "Donations" ? "Contributions by Organization" : "Hours by Organization"} open={isModalVisible} onOk={closeModal} onCancel={closeModal} width={1000}>
+                    <Table dataSource={drillDownData} columns={columns} />
+                </Modal>
+            }
+
         </Wrapper>
     )
 }
