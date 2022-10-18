@@ -167,13 +167,13 @@ const Dashboard: FC = () => {
 
     const getDonationData = useMemo(() => {
         return flatten(map(groupBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => o.date), (year: any) => ([
-                {label: year[0].date, value: sumBy(year, (obj: any) => obj.value)}
-            ])))
+            {label: new Date(year[0].date).getFullYear(), value: sumBy(year, (obj: any) => obj.value)}
+        ])))
     }, [metrics])
 
     const getVolunteerHoursData = useMemo(() => {
         return flatten(map(groupBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Volunteer Hours' }), (o: any) => o.date), (year: any) => ([
-            {label: year[0].date, value: sumBy(year, (obj: any) => obj.value)}
+            {label: new Date(year[0].date).getFullYear(), value: sumBy(year, (obj: any) => obj.value)}
         ])))
     }, [metrics.esg_metrics])
 
