@@ -22,7 +22,6 @@ import ReportMetricType from "./Views/resources/reports/ReportMetricType";
 import CompaniesNew from "./Views/resources/companies/CompaniesNew";
 import PerformanceDashboard from "./Views/PerformanceDashboard";
 import Landing from "./Views/Landing";
-import Blank from "./Components/Blank";
 
 
 const App: FC = () => {
@@ -47,7 +46,6 @@ const App: FC = () => {
                 <Route path="reports/:reportID/metric-subtype" element={<MetricSubtype/>}/>
                 <Route path="add-metric" element={<AddMetric/>}/>
                 <Route path="performance" element={<PerformanceDashboard/>}/>
-                <Route path="blank" element={<Blank />} />
             </Route>
 
             <Route path={"/"} element={<Landing/>}/>

@@ -12,6 +12,23 @@ const escapeHtml = require("escape-html");
  */
 export const formatValue = (v: number): string => Intl.NumberFormat().format(v)
 
+/**
+ * Finds the year from a date and returns it.
+ * 
+ * @param label - String
+ * @returns - Year as string
+ */
+export const extractYear = (label: string) => {
+    const reg = /^(?:19|20)\d{2}$/
+    if (reg.test(label.split('-')[0])) {
+        return label.split('-')[0]
+    } else if (reg.test(label.split('/')[2])) {
+        return label.split('/')[2]
+    } else if (reg.test(label.split('/')[1])) {
+        return label.split('/')[1]
+    }
+}
+
 export const getQuarterFromDate = (date?: Date) => {
     if (!date) {
         date = new Date()

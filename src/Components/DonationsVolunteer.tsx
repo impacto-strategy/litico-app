@@ -1,8 +1,12 @@
+/* IMPORT EXTERNAL MODULES */
 import {Bar, ColumnConfig} from "@ant-design/charts";
 import styled from "styled-components";
 import { FC, useState, useEffect } from "react";
 import { Modal, Table } from 'antd';
-import { sortBy, filter } from "lodash";
+import { filter } from "lodash";
+
+/* IMPORT INTERNAL MODULES */
+import { extractYear } from "../utils";
 
 /**
  * Generates chart with volunteer and charitable contributions for company.
@@ -91,7 +95,7 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
                     name: data.label + (props.type === "Donations" ? " Donations ($)" : " Volunteer Hours"), 
                     value: props.type === "Donations" 
                         ? data.value.toLocaleString('en-US', {style: 'currency',currency: 'USD'}) 
-                        : data.value + "Hours"
+                        : data.value + " Hours"
                 }
             }
         },
@@ -100,15 +104,18 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
                 plot.on('interval:click', (args: any) => {
                     // Filters by individual bar date then adjusts data for table.
                     setDrillDownData(filter(props.tableData, (o: any) => {
-                        if (o.date.split('-')[0] === args.data.data.label) {
+                        if (extractYear(o.date) === args.data.data.label.toString()) {
                             return o.date
                         }
                     })
-                    // Revamp data for better presentation
+                    // Data gets revamped for better presentation
                     .map((obj: any) => ({
-                        date: obj.date.split('-')[0],
+                        date: extractYear(obj.date),
                         organization: obj.organization,
-                        value: obj.value.toLocaleString('en-US', {style: 'currency',currency: 'USD'})
+                        // Needs to be revamped for hours as well.
+                        value: props.type === "Donations" 
+                        ? obj.value.toLocaleString('en-US', {style: 'currency',currency: 'USD'}) 
+                        : obj.value + " Hours"
                     })))
                 });
             }
