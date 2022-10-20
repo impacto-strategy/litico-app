@@ -2,7 +2,7 @@ import {Bar, ColumnConfig} from "@ant-design/charts";
 import styled from "styled-components";
 import { FC, useState, useEffect } from "react";
 import { Modal, Table } from 'antd';
-import { sortBy } from "lodash";
+import { sortBy, filter } from "lodash";
 
 /**
  * Generates chart with volunteer and charitable contributions for company.
@@ -62,7 +62,6 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
         seriesField: 'label',
         legend: false,
         xAxis: {
-            // Adjust label for hours
             label: {
               formatter: (val: any) => {
                 if (props.type === "Donations") {
@@ -99,15 +98,18 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
         onReady: (plot: any) => {
             if (props.tableData) {
                 plot.on('interval:click', (args: any) => {
-                    let elements = sortBy(props.tableData, function(em:any) {
-                        return new Date(em.date);
-                    });
-                    elements = elements.map((obj: any) => ({
-                        date: obj.date,
+                    // Filters by individual bar date then adjusts data for table.
+                    setDrillDownData(filter(props.tableData, (o: any) => {
+                        if (o.date.split('-')[0] === args.data.data.label) {
+                            return o.date
+                        }
+                    })
+                    // Revamp data for better presentation
+                    .map((obj: any) => ({
+                        date: obj.date.split('-')[0],
                         organization: obj.organization,
                         value: obj.value.toLocaleString('en-US', {style: 'currency',currency: 'USD'})
-                    }))
-                    setDrillDownData(elements)
+                    })))
                 });
             }
         }
