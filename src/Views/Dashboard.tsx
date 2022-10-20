@@ -28,7 +28,6 @@ import GovernanceCheckList from "../Components/GovernanceCheckList";
 import ResourceService from "../Services/ResourceService";
 import useAuth from "../Providers/Auth/useAuth";
 import {ArrOfObj} from "../../global"
-import { ContainerOutlined } from "@ant-design/icons";
 
 const Dashboard: FC = () => {
     // React State
