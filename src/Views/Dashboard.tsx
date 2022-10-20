@@ -169,7 +169,7 @@ const Dashboard: FC = () => {
     const getDonationData = useMemo(() => {
         return flatten(map(groupBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => extractYear(o.date)), (year: any) => ([
             {label: extractYear(year[0].date), value: sumBy(year, (obj: any) => obj.value)}
-        ])))
+        ]))).reverse()
     }, [metrics])
 
     const getVolunteerHoursData = useMemo(() => {
@@ -177,7 +177,7 @@ const Dashboard: FC = () => {
              return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Volunteering - Community'
         }), (o: any) => extractYear(o.date)), (year: any) => ([
             {label: extractYear(year[0].date), value: sumBy(year, (obj: any) => obj.value)}
-        ])))
+        ]))).reverse()
     }, [metrics.esg_metrics])
 
     const getGenderData = useMemo(() => {
@@ -419,7 +419,7 @@ const Dashboard: FC = () => {
                         data={getDonationData}
                         gridCol={"1/3"}
                         type="Donations"
-                        tableData={filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' })}
+                        tableData={sortBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => o.organization)}
                     />
                 }
                 {getVolunteerHoursData.length > 0 &&
@@ -428,9 +428,9 @@ const Dashboard: FC = () => {
                         data={getVolunteerHoursData}
                         gridCol={"3/5"}
                         type="Volunter"
-                        tableData={filter(metrics.esg_metrics, (o: any) => {
+                        tableData={sortBy(filter(metrics.esg_metrics, (o: any) => {
                             return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Volunteering - Community'
-                       })}
+                       }), (o: any) => o.organization)}
                     />
                 }
 
