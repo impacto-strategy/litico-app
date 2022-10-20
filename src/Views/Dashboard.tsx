@@ -17,7 +17,7 @@ import {filter, find, flatten, forOwn, groupBy, map, sortBy, sumBy} from "lodash
 // import DonationsDrilldown from "../DonationsDrilldown";
 // REACT COMPONENTS
 import ColumnWidget from "../Components/ColumnWidget";
-import DonationsVolunteer from "../Components/DonationsVolunteer";
+import DonationsVolunteerCharts from "../Components/DonationsVolunteerCharts";
 import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
 import StackedBarWidget from "../Components/StackedBarWidget";
 import GHGChart from "../Components/GHGChart";
@@ -414,7 +414,7 @@ const Dashboard: FC = () => {
                     <StackedBarWidget isGroup={false} isPercentage={true} data={getEthnicityData} label={'percentage'} gridColumns='3/5' title='Employee Diversity' subTitle="" />
                 }
                 {getDonationData.length > 0 && 
-                    <DonationsVolunteer
+                    <DonationsVolunteerCharts
                         title={"Charitable Contributions"}
                         data={getDonationData}
                         gridCol={"1/3"}
@@ -423,7 +423,7 @@ const Dashboard: FC = () => {
                     />
                 }
                 {getVolunteerHoursData.length > 0 &&
-                    <DonationsVolunteer
+                    <DonationsVolunteerCharts
                         title={"Volunteer Hours"}
                         data={getVolunteerHoursData}
                         gridCol={"3/5"}

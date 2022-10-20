@@ -14,18 +14,19 @@ export const formatValue = (v: number): string => Intl.NumberFormat().format(v)
 
 /**
  * Finds the year from a date and returns it.
+ * E.g., 2020-12-31 becomes 2020
  * 
- * @param label - String
- * @returns - Year as string
+ * @param {string} str - Date string to be passed
+ * @returns - Four digit year as string (e.g., 2020)
  */
-export const extractYear = (label: string) => {
+export const extractYear = (str: string) => {
     const reg = /^(?:19|20)\d{2}$/
-    if (reg.test(label.split('-')[0])) {
-        return label.split('-')[0]
-    } else if (reg.test(label.split('/')[2])) {
-        return label.split('/')[2]
-    } else if (reg.test(label.split('/')[1])) {
-        return label.split('/')[1]
+    if (reg.test(str.split('-')[0])) {
+        return str.split('-')[0]
+    } else if (reg.test(str.split('/')[2])) {
+        return str.split('/')[2]
+    } else if (reg.test(str.split('/')[1])) {
+        return str.split('/')[1]
     }
 }
 

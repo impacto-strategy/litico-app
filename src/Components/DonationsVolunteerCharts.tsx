@@ -9,12 +9,16 @@ import { filter } from "lodash";
 import { extractYear } from "../utils";
 
 /**
- * Generates chart with volunteer and charitable contributions for company.
+ * Side by side charts highlighting volunteer hours/charitable donations by year.
  * 
- * @param props 
- * @returns JSX Element
+ * @param {string} props.title - Chart title
+ * @param {array} props.data - Array of objects
+ * @param {string} props.type - What item the chart is for. The two options are Donations or Volunteer Hours
+ * @param {array} props.tableData - Array of objects containing data for pop up table.
+ * 
+ * @returns JSX element that renders a Bar Chart
  */
-const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: string, tableData: any}> = (props) => {
+const DonationsVolunteerCharts: FC<{title: string, data: any, gridCol: string, type: string, tableData: any}> = (props) => {
     const Wrapper = styled.div`
         background: #fff;
         padding: 20px;
@@ -27,6 +31,7 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [drillDownData, setDrillDownData] = useState<any>([]);
 
+    // Used for table that "drills down" into specific contributions
     const columns = [
         {
             title: "Date",
@@ -38,7 +43,6 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
             dataIndex: "organization",
             key: "organization"
         },
-        // Volunteer Hours or Contribution Amount
         {
             title: props.type === "Donations" ? "Donations ($)" : "Volunteer Hours",
             dataIndex: "value",
@@ -58,6 +62,7 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
         setIsModalVisible(false);
       };
     
+    // Chart Configuration Options
     const config: ColumnConfig = {
         data: props.data,
         color: "#6395f9",
@@ -108,11 +113,10 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
                             return o.date
                         }
                     })
-                    // Data gets revamped for better presentation
+                    // Formats data for table presentation
                     .map((obj: any) => ({
                         date: extractYear(obj.date),
                         organization: obj.organization,
-                        // Needs to be revamped for hours as well.
                         value: props.type === "Donations" 
                         ? obj.value.toLocaleString('en-US', {style: 'currency',currency: 'USD'}) 
                         : obj.value + " Hours"
@@ -137,4 +141,4 @@ const DonationsVolunteer: FC<{title: string, data: any, gridCol: string, type: s
     )
 }
 
-export default DonationsVolunteer
+export default DonationsVolunteerCharts
