@@ -17,6 +17,7 @@ import {filter, find, flatten, forOwn, groupBy, map, sortBy, sumBy} from "lodash
 // import DonationsDrilldown from "../DonationsDrilldown";
 // REACT COMPONENTS
 import ColumnWidget from "../Components/ColumnWidget";
+import DonationsVolunteerCharts from "../Components/DonationsVolunteerCharts";
 import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
 import StackedBarWidget from "../Components/StackedBarWidget";
 import GHGChart from "../Components/GHGChart";
@@ -28,6 +29,7 @@ import GovernanceCheckList from "../Components/GovernanceCheckList";
 import ResourceService from "../Services/ResourceService";
 import useAuth from "../Providers/Auth/useAuth";
 import {ArrOfObj} from "../../global"
+import { extractYear } from "../utils";
 
 const Dashboard: FC = () => {
     // React State
@@ -165,10 +167,18 @@ const Dashboard: FC = () => {
     }, [])
 
     const getDonationData = useMemo(() => {
-        return sortBy(flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (m: any) => ([
-            { label: m.organization, type: parseInt(m.date), value: m.value }
-        ]))), ['label'])
+        return flatten(map(groupBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => extractYear(o.date)), (year: any) => ([
+            {label: extractYear(year[0].date), value: sumBy(year, (obj: any) => obj.value)}
+        ]))).reverse()
     }, [metrics])
+
+    const getVolunteerHoursData = useMemo(() => {
+        return flatten(map(groupBy(filter(metrics.esg_metrics, (o: any) => {
+             return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Volunteering - Community'
+        }), (o: any) => extractYear(o.date)), (year: any) => ([
+            {label: extractYear(year[0].date), value: sumBy(year, (obj: any) => obj.value)}
+        ]))).reverse()
+    }, [metrics.esg_metrics])
 
     const getGenderData = useMemo(() => {
         return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Gender' }), (m: any) => ([
@@ -403,9 +413,27 @@ const Dashboard: FC = () => {
                 {getEthnicityData.length > 0 &&
                     <StackedBarWidget isGroup={false} isPercentage={true} data={getEthnicityData} label={'percentage'} gridColumns='3/5' title='Employee Diversity' subTitle="" />
                 }
-                {getDonationData.length > 0 &&
-                    <StackedBarWidget isGroup={false} isPercentage={false} data={getDonationData} label={'currency'} gridColumns="1/5" title="Annual Charitable Contributions" subTitle="" />
+                {getDonationData.length > 0 && 
+                    <DonationsVolunteerCharts
+                        title={"Charitable Contributions"}
+                        data={getDonationData}
+                        gridCol={"1/3"}
+                        type="Donations"
+                        tableData={sortBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => o.organization)}
+                    />
                 }
+                {getVolunteerHoursData.length > 0 &&
+                    <DonationsVolunteerCharts
+                        title={"Volunteer Hours"}
+                        data={getVolunteerHoursData}
+                        gridCol={"3/5"}
+                        type="Volunter"
+                        tableData={sortBy(filter(metrics.esg_metrics, (o: any) => {
+                            return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Volunteering - Community'
+                       }), (o: any) => o.organization)}
+                    />
+                }
+
             </div>
             <div>
                 <Divider>

@@ -12,6 +12,24 @@ const escapeHtml = require("escape-html");
  */
 export const formatValue = (v: number): string => Intl.NumberFormat().format(v)
 
+/**
+ * Finds the year from a date and returns it.
+ * E.g., 2020-12-31 becomes 2020
+ * 
+ * @param {string} str - Date string to be passed
+ * @returns - Four digit year as string (e.g., 2020)
+ */
+export const extractYear = (str: string) => {
+    const reg = /^(?:19|20)\d{2}$/
+    if (reg.test(str.split('-')[0])) {
+        return str.split('-')[0]
+    } else if (reg.test(str.split('/')[2])) {
+        return str.split('/')[2]
+    } else if (reg.test(str.split('/')[1])) {
+        return str.split('/')[1]
+    }
+}
+
 export const getQuarterFromDate = (date?: Date) => {
     if (!date) {
         date = new Date()
