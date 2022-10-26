@@ -4,7 +4,7 @@ import { DualAxes } from '@ant-design/plots';
 import { Modal, Table } from 'antd';
 import {sortBy} from 'lodash'
 
-const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean, lineMax: number }> = props => {
+const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean}> = props => {
   const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
@@ -96,7 +96,6 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
       },
       intensity: {
         min: 0,
-        max: props.lineMax,
         tickCount: 5,
         title: {
           style: {

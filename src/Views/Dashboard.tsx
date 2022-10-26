@@ -357,7 +357,6 @@ const Dashboard: FC = () => {
                   <DualAxesLineColWidget
                       data={getYearlySpillsData}
                       colLabel="Spill Incident Count"
-                      lineMax={0.05}
                       lineLabel="Spills Intensity (bbl spill/kbbl produced)"
                       title="Spill Incident Count & Intensity"
                       gridColumns="1 / 3"
