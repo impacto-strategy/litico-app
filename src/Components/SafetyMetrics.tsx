@@ -86,8 +86,8 @@ const SafetyMetrics: FC<{data: any}> = (props) => {
         ],
         tooltip: {
             formatter: (data: any) => {
-                let name = data.incidents ? "# of Recordable Incidents" : "Total Recordable Incident Rate"
-                return { name: name, value: (data.incidents || data.trir).toLocaleString() };
+                let name = (data.incidents || data.incidents === 0 ) ? "# of Recordable Incidents" : "Total Recordable Incident Rate"
+                return { name: name, value: (data.incidents || data.trir || 0).toLocaleString() };
             },
         },
     }
