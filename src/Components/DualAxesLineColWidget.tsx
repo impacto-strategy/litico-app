@@ -121,7 +121,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
     ],
     tooltip: {
       formatter: (data: any) => {
-        let name = data.intensity ? props.lineLabel : props.colLabel
+        let name = (data.intensity || data.intensity === 0) ? props.lineLabel : props.colLabel
         return { name: name, value: (data.value || data.intensity).toLocaleString() };
       },
     },
