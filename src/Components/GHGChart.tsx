@@ -1,6 +1,10 @@
+/* IMPORT EXTERNAL MODULES */
 import {FC, useState, useEffect} from "react"
 import styled from "styled-components";
 import { DualAxes } from '@ant-design/plots';
+
+/* IMPORT INTERNAL MODULES */
+import {formatValue} from "../utils";
 
 // Will need to adjust interface.
 interface GHGChartProps {
@@ -53,7 +57,7 @@ const GHGChart: FC<GHGChartProps> = props => {
             },
             value: {
                 label: {
-                    formatter: (v: string) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+                    formatter: (v: string) => formatValue(+v),
                 },
                 min: 0,
                 title: {
@@ -108,7 +112,7 @@ const GHGChart: FC<GHGChartProps> = props => {
                     return { name: data.value ? "Greenhouse Gas Emissions (mt CO₂-e)" : "GHG Emission Intensity (mt/BoE)", value: (data.value || data.intensity || '').toLocaleString() }
                 } else {
                     if (data.basin) {
-                        return { name: `${data.basin} Emissions (mt CO₂-e)`, value: data.value.toLocaleString() };
+                        return { name: `${data.basin} Emissions (mt CO₂-e)`, value: formatValue(data.value, 0) };
                     } else {
                         return { name: data.label, value: data.intensity.toLocaleString() };
                     }

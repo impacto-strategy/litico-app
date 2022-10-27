@@ -1,5 +1,9 @@
+/* IMPORT EXTERNAL MODULES */
 import styled from "styled-components";
 import { DualAxes } from '@ant-design/plots';
+
+/* IMPORT INTERNAL MODULES */
+import { formatValue } from "../utils";
 
 const dataSource = [
     {
@@ -37,14 +41,14 @@ const LDAR = () => {
         yAxis: {
             leaks: {
                 label: {
-                    formatter: (v: string) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+                    formatter: (v: string) => formatValue(+v),
                 },
             },
             inspections: {
                 min: 0,
                 max: 125,
                 label: {
-                    formatter: (v: string) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+                    formatter: (v: string) => formatValue(+v),
                 }
             }
         },
