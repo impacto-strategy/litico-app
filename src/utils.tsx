@@ -12,6 +12,25 @@ const escapeHtml = require("escape-html");
  */
 export const formatValue = (v: number): string => Intl.NumberFormat().format(v)
 
+// NEW VERSION
+/**
+ * Adjusts value for better presentation (e.g., currency amounts, oil amounts, etc.).
+ * Will also need to think about currency conversion scenarios.
+ * 
+ * @param val - The number to format
+ * @param roundBy - How many digits to round by. Default is 0 (i.e., no decimals)
+ * @param currency - Whether this is currency or not.
+ * 
+ * @return string representing formatted value.
+ */
+
+ const formatValue2 = (val: number, roundBy: number = 0, currency: boolean = false) => {
+    // Split dollar and change into two seperate arrays.
+    const x = (val.toFixed(roundBy) + '').split('.');
+    // Combine and return result.
+    return (currency ? '$' : '') + `${x[0]}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`) + (x.length > 1 ? '.' + x[1] : '');
+}
+
 /**
  * Finds the year from a date and returns it.
  * E.g., 2020-12-31 becomes 2020
