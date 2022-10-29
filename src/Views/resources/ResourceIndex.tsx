@@ -1,13 +1,16 @@
+/* IMPORT EXTERNAL MODULES */
 import React, {FC, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import styled from "styled-components";
 import {Link, useParams, useSearchParams, useNavigate} from "react-router-dom";
-import ResourceService from "../../Services/ResourceService";
 import {Button, Checkbox, Input, Space, Table, Drawer, Popconfirm, message} from "antd";
 import {DeleteOutlined, EditOutlined, SearchOutlined} from "@ant-design/icons";
 import Highlighter from 'react-highlight-words';
-import ResourceForm from "./ResourceForm";
-
 import { DrawerProps } from "antd";
+
+/* IMPORT INTERNAL MODULES */
+import ResourceService from "../../Services/ResourceService";
+import ResourceForm from "./ResourceForm";
+import useAuth from "../../Providers/Auth/useAuth";
 
 const Wrapper = styled.div`
   padding: 30px;
@@ -40,10 +43,12 @@ let formMessage: JSX.Element;
 const ResourceIndex: FC = () => {
     const {resourceName} = useParams()
     const navigate = useNavigate()
+    const {user} = useAuth();
 
     const [searchParam] = useSearchParams()
     const facility_name = searchParam.get('facility_name')
 
+    const [admin, setAdmin] = useState<boolean>(false)
     const [fields, setFields] = useState([])
     const [dataSource, setDataSource] = useState([])
 
@@ -252,6 +257,44 @@ const ResourceIndex: FC = () => {
         }))
     }
 
+    /**
+     * This function alters the column in company-uploads table called live. This determines
+     * whether a resource's data is incorporated into the system.
+     * 
+     * @param e The event object being passed to our event handler
+     * @param data The data for that specific row.
+     * 
+     * @return void
+     */
+    const updateLiveStatus = useCallback(async (e: React.MouseEvent<HTMLElement, MouseEvent>, data: any) => {
+        if (admin && resourceName) {
+            try {
+                let payload = {
+                    resourceName,
+                    resourceID: data.id,
+                    fields: data 
+                }
+                payload.fields.live = data.live ? 0 : 1
+                const res = await ResourceService.update(payload)
+                if (res.data) {
+                    message.success("Live Status Updated")
+                    getFieldsAndData();
+                } else {
+                    message.error("Unable to Update, Try Again Later")
+                }
+            } catch (err) {
+                console.log(err)
+                message.error("Unable to Update, Try Again Later")
+            }
+        } else {
+            if (data.id) {
+                message.info("Data is live")
+            } else {
+                message.info("Data is not live")
+            }
+        }
+    }, [admin, resourceName, getFieldsAndData])
+
     const handleDelete = useCallback( async (e: React.MouseEvent<HTMLElement, MouseEvent> | undefined, id: number) => {
         if (e) {
             e.preventDefault()
@@ -317,7 +360,13 @@ const ResourceIndex: FC = () => {
             }
 
             if (_field.type === 'boolean') {
-                _field.render = () => <Checkbox checked={_field.dataIndex}></Checkbox>
+                _field.render = (record: any) => {
+                    if (resourceName === "company-uploads") {
+                        return <Checkbox checked={record.live} onClick={(e) => updateLiveStatus(e, record)}></Checkbox>
+                    } else {
+                        return <Checkbox checked={_field.dataIndex}></Checkbox>
+                    }
+                }
             }
 
             return _field
@@ -360,16 +409,18 @@ const ResourceIndex: FC = () => {
 
         return filteredFields;
 
-    }, [fields, getColumnSearchProps, handleClick, handleDelete, resourceName])
+    }, [fields, getColumnSearchProps, handleClick, handleDelete, resourceName, updateLiveStatus])
 
     useEffect(() => {
         getFieldsAndData()
 
-        const user = localStorage.getItem("_U")
-        if (!user || !user.includes("@impactostrategy.com")) {
+        // Helps for admin access capabilities
+        if (!user || !user.email.includes("@impactostrategy.com")) {
             navigate('/dashboard')
+        } else {
+            setAdmin(true)
         }
-    }, [facility_name, handleDelete, getFieldsAndData, navigate, resourceName])
+    }, [facility_name, handleDelete, getFieldsAndData, navigate, resourceName, user])
 
     return (
         <Wrapper>
