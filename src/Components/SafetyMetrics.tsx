@@ -1,6 +1,10 @@
+/* IMPORT EXTERNAL MODULES */
 import {FC} from 'react'
 import styled from "styled-components";
 import { DualAxes } from '@ant-design/plots';
+
+/* IMPORT INTERNAL MODULES */
+import { formatValue } from '../utils';
 
 const Wrapper = styled.div`
 background: #fff;
@@ -31,7 +35,7 @@ const SafetyMetrics: FC<{data: any}> = (props) => {
             incidents: {
                 // Chart values for value label
                 label: {
-                    formatter: (v: string) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+                    formatter: (v: string) => formatValue(+v),
                 },
                 tickInterval: 1,
                 title: {

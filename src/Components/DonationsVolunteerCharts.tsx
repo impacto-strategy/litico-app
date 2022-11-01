@@ -6,7 +6,7 @@ import { Modal, Table } from 'antd';
 import { filter } from "lodash";
 
 /* IMPORT INTERNAL MODULES */
-import { extractYear } from "../utils";
+import { formatValue, extractYear } from "../utils";
 
 /**
  * Side by side charts highlighting volunteer hours/charitable donations by year.
@@ -76,7 +76,7 @@ const DonationsVolunteerCharts: FC<{title: string, data: any, gridCol: string, t
                 if (props.type === "Donations") {
                     return `${(val).substring(0,15)}`
                 } else {
-                    return val
+                    return formatValue(+val)
                 }
               },
             },

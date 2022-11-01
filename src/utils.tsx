@@ -5,12 +5,21 @@ const {Text} = require("slate");
 const escapeHtml = require("escape-html");
 
 /**
- * Converts a label to use commas (e.g., 1000 becomes 1,000)
+ * Configures values for better presentation. 
+ * Example, 1000.123 can be formatted to 1,000.12
  * 
- * @param v - string representing a label value
- * @returns 
+ * @param val - The number to format
+ * @param roundBy - How many digits to round by. Default is 0 (i.e., no decimals)
+ * @param dollar - Whether value is US dollars or not (adds $ to value).
+ * 
+ * @return string representing formatted value.
  */
-export const formatValue = (v: number): string => Intl.NumberFormat().format(v)
+ export const formatValue = (val: number, roundBy: number = 0, dollar: boolean = false) => {
+    // Split dollar and change into two seperate arrays.
+    const x = (val.toFixed(roundBy) + '').split('.');
+    // Combine and return result.
+    return (dollar ? '$' : '') + `${x[0]}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`) + (x.length > 1 ? '.' + x[1] : '');
+}
 
 /**
  * Finds the year from a date and returns it.
