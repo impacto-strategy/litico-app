@@ -22,7 +22,8 @@ import ReportMetricType from "./Views/resources/reports/ReportMetricType";
 import CompaniesNew from "./Views/resources/companies/CompaniesNew";
 import PerformanceDashboard from "./Views/PerformanceDashboard";
 import Landing from "./Views/Landing";
-
+import ForgotPassword from "./Views/auth/ForgotPassword";
+import ResetPassword from "./Views/auth/ResetPassword";
 
 const App: FC = () => {
     return (
@@ -51,7 +52,8 @@ const App: FC = () => {
             <Route path={"/"} element={<Landing/>}/>
 
             <Route path={"/login"} element={<Login/>}/>
-
+            <Route path={"/forgot-password"} element={<ForgotPassword />} />
+            <Route path={"/reset-password"} element={<ResetPassword/>}/>
         </Routes>
 
     );

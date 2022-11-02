@@ -1,10 +1,8 @@
-import {useLocation, useNavigate} from 'react-router-dom'
-import {Button, Col, Form, Input, Row} from 'antd';
-import useAuth from "../../Providers/Auth/useAuth"
+import {Alert, Button, Col, Form, Input, Row} from 'antd';
+import ResourceService from "../../Services/ResourceService";
 import styled from "styled-components";
-import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import {useEffect, useState} from "react";
-import {AxiosResponse} from "axios";
+import {UserOutlined} from '@ant-design/icons';
+import {useCallback, useState} from "react";
 
 const Wrapper = styled.div`
   padding: 70px 0;
@@ -46,36 +44,18 @@ const FormWrap = styled.h1`
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
 `
 
-
-const Login = () => {
-    const navigate = useNavigate();
-    const {login, user} = useAuth();
-
-    const {state} = useLocation();
-
-    const [errors, setErrors] = useState([])
-    const [loading, setLoading] = useState(false)
-
-
-    useEffect(() => {
-        if(user){
-            navigate('/dashboard')
-        }
-    }, [navigate, user])
-
-    const onFinish = (values: any) => {
-
-        setLoading(true)
-        login({...values}).then(() => {
-            navigate((state as any).from.pathname || "/dashboard");
-        }).catch((e: AxiosResponse) => {
-            if (e?.data?.errors?.email) {
-                setErrors(e.data.errors.email)
-            }
-            setLoading(false)
-        })
-    };
-
+const ForgotPassword = () => {
+  const [success, setSuccess] = useState(false)
+  const sendPasswordLink = useCallback((data:any) => {
+      ResourceService.store({
+          resourceName: 'forgot-password',
+          fields: {...data}
+      }).then(({ data }) => {
+        setSuccess(true)
+      }).catch(() => {
+        setSuccess(true)
+      })
+  }, [])
 
     return (
         <Wrapper>
@@ -91,9 +71,9 @@ const Login = () => {
                                 </Title>
                                 </div>
                                 <Form
-                                    name="login"
+                                    name="resetPassword"
                                     initialValues={{remember: true}}
-                                    onFinish={onFinish}
+                                    onFinish={sendPasswordLink}
                                     size={"large"}
                                     layout={"vertical"}
                                 >
@@ -103,27 +83,16 @@ const Login = () => {
                                     >
                                         <Input prefix={<IconWrapper><UserOutlined/></IconWrapper>}
                                                placeholder="Email"/>
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        name="password"
-                                        rules={[{required: true, message: 'Please enter your password!'}]}
-                                    >
-                                        <Input.Password
-                                            prefix={<IconWrapper><LockOutlined/></IconWrapper>}
-                                            placeholder={"Password"}
-                                        />
-                                    </Form.Item>
-
-                                    <a href='/forgot-password'>Forgot password?</a>
-
+                                      </Form.Item>
                                     <Form.Item>
-                                        <Button loading={loading} type="primary" htmlType="submit"
+                                        <Button type="primary" htmlType="submit"
                                                 style={{width: '100%', marginTop: 20}}>
-                                            Submit
+                                            Send Reset Link
                                         </Button>
-                                    </Form.Item>
-                                    <Form.ErrorList errors={errors}/>
+                                      </Form.Item>
+                                      {success &&
+                                        <Alert message="Reset link sent. Please check your email." type="success" closable/>
+                                      }
                                 </Form>
                             </FormWrap>
                         </Col>
@@ -135,4 +104,4 @@ const Login = () => {
 };
 
 
-export default Login
+export default ForgotPassword
