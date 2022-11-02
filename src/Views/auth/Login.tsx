@@ -86,7 +86,7 @@ const Login = () => {
                             <FormWrap>
                                 <div><Title>
                                     <div className="logo">
-                                        Litico
+                                        <a style={{color: '#333'}}href="/">Litico</a>
                                     </div>
                                 </Title>
                                 </div>

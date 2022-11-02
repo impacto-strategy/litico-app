@@ -64,9 +64,9 @@ const ResetPassword = () => {
                         <Col sm={{span: 24, offset: 8}} lg={{span: 12, offset: 6}}>
                             <FormWrap>
                                 <div><Title>
-                                    <div className="logo">
-                                        Litico
-                                    </div>
+                                  <div className="logo">
+                                    <a style={{color: '#333'}}href="/">Litico</a>
+                                  </div>
                                 </Title>
                                 </div>
                                 <Form
