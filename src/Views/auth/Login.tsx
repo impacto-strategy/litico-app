@@ -1,12 +1,10 @@
 import {useLocation, useNavigate} from 'react-router-dom'
-import {Button, Checkbox, Col, Form, Input, Row} from 'antd';
-
+import {Button, Col, Form, Input, Row} from 'antd';
 import useAuth from "../../Providers/Auth/useAuth"
 import styled from "styled-components";
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {AxiosResponse} from "axios";
-
 
 const Wrapper = styled.div`
   padding: 70px 0;
@@ -88,7 +86,7 @@ const Login = () => {
                             <FormWrap>
                                 <div><Title>
                                     <div className="logo">
-                                        Litico
+                                        <a style={{color: '#333'}}href="/">Litico</a>
                                     </div>
                                 </Title>
                                 </div>
@@ -117,10 +115,7 @@ const Login = () => {
                                         />
                                     </Form.Item>
 
-                                    <Form.Item name="remember" valuePropName="checked" noStyle>
-                                        <Checkbox>Remember me</Checkbox>
-                                    </Form.Item>
-
+                                    <a href='/forgot-password'>Forgot password?</a>
 
                                     <Form.Item>
                                         <Button loading={loading} type="primary" htmlType="submit"
@@ -134,8 +129,6 @@ const Login = () => {
                         </Col>
                     </Row>
                 </div>
-
-
             </Container>
         </Wrapper>
     );
