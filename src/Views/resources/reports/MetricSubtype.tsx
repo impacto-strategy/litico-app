@@ -1,11 +1,31 @@
+/* IMPORT EXTERNAL MODULES */
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import styled from "styled-components";
-import {Button, Card, Col, Descriptions, Divider, List, Modal, PageHeader, Row, Skeleton, Space, Table, Tag } from "antd";
-import {DownOutlined, UpOutlined} from '@ant-design/icons'
+import {
+    Button, 
+    Card, 
+    Col,
+    Descriptions, 
+    Divider, 
+    List,
+    message,
+    Modal, 
+    PageHeader,
+    Popconfirm,
+    Popover,
+    Row, 
+    Skeleton, 
+    Space, 
+    Table, 
+    Tag 
+} from "antd";
+import { DeleteOutlined, DownOutlined, UpOutlined } from '@ant-design/icons'
 import { useCallback, useEffect, useState } from "react";
-import ResourceService from "../../../Services/ResourceService";
 import { flatten, map, uniq } from "lodash";
 import moment from 'moment';
+
+/* IMPORT INTERNAL MODULES */
+import ResourceService from "../../../Services/ResourceService";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -21,12 +41,16 @@ const ContentWrapper = styled.section`
 
 `
 
-
 const MetricSubtype = () => {
     const { reportID } = useParams()
     const [searchParams] = useSearchParams();
-    const [metricDescription, setMetricDescription] = useState("");
-    const [showDescription, setShowDescription] = useState<any>([]);
+    /* REACT STATE */
+    const [initLoading, setInitLoading] = useState(true)
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [metricDescription, setMetricDescription] = useState("")
+    const [metricStandards, setMetricStandards] = useState<any>()
+    const [reportData, setReportData] = useState<any>({year: '', period: '', esg_metrics: [], report: {}})
+    const [showDescription, setShowDescription] = useState<any>([])
 
     const displayDescription = (idx: any) => {
         let arr = [...showDescription]
@@ -38,8 +62,6 @@ const MetricSubtype = () => {
         let arr = [...showDescription]
         setShowDescription(arr.filter(x => x !== idx))
     }
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = (description:string) => {
         setMetricDescription(description)
@@ -54,9 +76,7 @@ const MetricSubtype = () => {
         setIsModalOpen(false);
     }
 
-
-    const columns = [
-    {
+    const columns = [{
         title: searchParams.get("metric_subtype") || '',
         dataIndex: 'value',
         key: 'value'
@@ -364,6 +384,7 @@ const MetricSubtype = () => {
             </span>
         ),
     }]
+
     const genderColumns = [
     {
         title: 'Total Employees',
@@ -437,6 +458,7 @@ const MetricSubtype = () => {
             </span>
         ),
     }]
+
     const ethnicityColumns = [
     {
         title: 'Total Employees',
@@ -520,6 +542,7 @@ const MetricSubtype = () => {
             </span>
         ),
     }]
+
     const trirColumns = [
         {
             title: 'TRIR Employees',
@@ -592,10 +615,7 @@ const MetricSubtype = () => {
                     {moment(value).format('MM/DD/YYYY h:mm')}
                 </span>
             ),
-        }]
-    const [initLoading, setInitLoading] = useState(true)
-    const [reportData, setReportData] = useState<any>({year: '', period: '', esg_metrics: [], report: {}})
-    const [metricStandards, setMetricStandards] = useState<any>()
+    }]
 
     const getStandards = useCallback((metricCodes: any) =>{
         ResourceService.index({
@@ -609,26 +629,60 @@ const MetricSubtype = () => {
 
     }, [setMetricStandards])
 
+    /**
+     * Determines which columns to generate based on metric-subtype.
+     * 
+     * @returns Array of Objects
+     */
     const getColumns = () => {
-        if (searchParams.get("metric_subtype") === 'GHG Emissions') return ghgColumns
-        if (searchParams.get("metric_subtype")?.includes('Discussion')) return discussionColumns
+        // Placing this column allows me to place it on every table.
+        const actionsColumn = [{
+            title: 'Actions',
+            // Gives access to ID for deleting the value.
+            dataIndex: 'id',
+            key: 'id',
+            render: (value: any) => (
+                <Popconfirm
+                    title="Delete This Row?"
+                    okText="Delete"
+                    onConfirm={(e: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => {
+                        handleDelete(e, value)
+                    }}
+                >
+                    <Popover content="Delete Datapoint">
+                        <DeleteOutlined 
+                            style={{color: 'red'}}
+                        />
+                    </Popover>
+                </Popconfirm>
+            )
+        }]
+
+        if (searchParams.get("metric_subtype") === 'GHG Emissions') return ghgColumns.concat(actionsColumn)
+        if (searchParams.get("metric_subtype")?.includes('Discussion')) return discussionColumns.concat(actionsColumn)
 
         switch (searchParams.get("metric_subtype")) {
             case 'Volunteering - Community':
-                return hoursColumns
+                return hoursColumns.concat(actionsColumn)
             case 'Social Investment':
-                return donationColumns
+                return donationColumns.concat(actionsColumn)
             case 'Workforce Demographics - Gender':
-                return genderColumns
+                return genderColumns.concat(actionsColumn)
             case 'Workforce Demographics - Ethnicity':
-                return ethnicityColumns
+                return ethnicityColumns.concat(actionsColumn)
             case 'TRIR - Employees':
-                return trirColumns
+                return trirColumns.concat(actionsColumn)
             default:
-                return columns
+                return columns.concat(actionsColumn)
         }
     }
 
+    /**
+     * Gets esg metric data based on metric-subtype.
+     * 
+     * @returns Object - includes property with array of objects representing
+     * esg metric data.
+     */
     const getMetric = useCallback(() => {
         ResourceService.index({
             resourceName: 'esg-metrics',
@@ -646,6 +700,31 @@ const MetricSubtype = () => {
             .finally(() => setInitLoading(false))
 
     }, [reportID, searchParams, getStandards])
+
+    /**
+     * Removes selected row of data from database.
+     * 
+     * @params e - Event Object.
+     * @params id - data's id number in the database.
+     */
+    const handleDelete = useCallback( async (e: React.MouseEvent<HTMLElement, MouseEvent> | undefined, id: number) => {
+        if (e) {
+            e.preventDefault()
+        }
+
+        const payload = {
+            resourceID: id,
+            resourceName: 'esg-metrics'
+        }
+        try {
+            ResourceService.delete(payload)
+            message.success("Successfully Deleted")
+            getMetric()
+        } catch (err) {
+            console.log(err)
+            message.error("Unable to delete")
+        }
+    }, [getMetric])
 
 
     useEffect(() => {
