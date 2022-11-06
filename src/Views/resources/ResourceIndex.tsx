@@ -275,6 +275,15 @@ const ResourceIndex: FC = () => {
                     fields: data 
                 }
                 payload.fields.live = data.live ? 0 : 1
+                
+                // Ensures date format is valid for MYSQL else live status won't work.
+                if (payload.fields.created_at) {
+                    payload.fields.created_at = payload.fields.created_at.slice(0, 19).replace('T', ' ');
+                }
+                if (payload.fields.updated_at) {
+                    payload.fields.updated_at = payload.fields.updated_at.slice(0, 19).replace('T', ' ');
+                }
+    
                 const res = await ResourceService.update(payload)
                 if (res.data) {
                     message.success("Live Status Updated")
