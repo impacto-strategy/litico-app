@@ -91,7 +91,7 @@ const ForgotPassword = () => {
                                         </Button>
                                       </Form.Item>
                                       {success &&
-                                        <Alert message="Reset link sent. Please check your email." type="success" closable/>
+                                        <Alert message="If your e-mail is in our system then a password reset link has been sent. Please check your e-mail." type="success" closable/>
                                       }
                                 </Form>
                             </FormWrap>
