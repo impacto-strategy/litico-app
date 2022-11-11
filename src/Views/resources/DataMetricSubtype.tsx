@@ -79,11 +79,39 @@ const DataMetricSubtype = () => {
         {name: 'Medium', value: 'medium'},
         {name: 'Low', value: 'low'}
     ]
-    const timeframeOptions = [
-        {name: 'Yearly', value: 'yearly'},
-        {name: 'Quarterly', value: 'quarterly'},
-        {name: 'Daily', value: 'daily'}
-    ]
+
+    // Commented out temporarily until forms have all options available.
+    // const timeframeOptions = [
+    //     {name: 'Yearly', value: 'yearly'},
+    //     {name: 'Quarterly', value: 'quarterly'},
+    //     {name: 'Daily', value: 'daily'}
+    // ]
+
+    // Temporary timeframe options function.
+    const getTimeframeOptions = useCallback((subMetricName: string): any => {
+        if (
+            subMetricName === "GHG Emissions" ||
+            subMetricName === "Spils- Volume" ||
+            subMetricName === "Production - Gas" ||
+            subMetricName === "Production - Oil" ||
+            subMetricName === "Community Grievances" ||
+            subMetricName === "Social Investment" ||
+            subMetricName === "Volunteering - Community" ||
+            subMetricName === "Workforce Demographics - Ethnicity" ||
+            subMetricName === "Workforce Demographics - Gender"
+        ){
+            return [ {name: 'Yearly', value: 'yearly'} ]
+        } else if (subMetricName === "TRIR - Employees") {
+            return [ {name: 'Quarterly', value: 'quarterly'} ]
+        }
+        else {
+            return [
+                {name: 'Yearly', value: 'yearly'},
+                {name: 'Quarterly', value: 'quarterly'},
+                {name: 'Daily', value: 'daily'}
+            ]
+        }
+    }, [])
 
     const getFacilities = useCallback(() => {
         ResourceService.index({
@@ -237,7 +265,7 @@ const DataMetricSubtype = () => {
                             <Col lg={{span: 12}} sm={{span: 24}}>
                                 <Form.Item name="timeframe" label="Timeframe" required tooltip="This is a required field">
                                     <Select>
-                                        {timeframeOptions.map((option: any) => (
+                                        {getTimeframeOptions(searchParams.get("metric_subtype")!).map((option: any) => (
                                             <Select.Option key={option.name} value={option.value} >{option.name}</Select.Option>
                                         ))}
                                     </Select>
