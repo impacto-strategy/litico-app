@@ -101,14 +101,17 @@ const DataMetricSubtype = () => {
             subMetricName === "Workforce Demographics - Gender"
         ){
             return [ {name: 'Yearly', value: 'yearly'} ]
-        } else if (subMetricName === "TRIR - Employees") {
+        } else if (
+            subMetricName === "TRIR - Employees" ||
+            subMetricName === "TRIR - All Workers"
+        ) {
             return [ {name: 'Quarterly', value: 'quarterly'} ]
         }
         else {
             return [
                 {name: 'Yearly', value: 'yearly'},
                 {name: 'Quarterly', value: 'quarterly'},
-                {name: 'Daily', value: 'daily'}
+                {name: 'Monthly', value: 'monthly'}
             ]
         }
     }, [])
