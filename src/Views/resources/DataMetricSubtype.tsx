@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, message, PageHeader, Row, Select, Space, Tag, Tooltip, Upload } from "antd";
+import { Alert, Button, Card, Col, DatePicker, Divider, Form, Input, message, PageHeader, Row, Select, Space, Tag, Tooltip, Upload } from "antd";
 import { DownOutlined, DownloadOutlined, InboxOutlined, QuestionCircleOutlined, UpOutlined, UploadOutlined } from '@ant-design/icons';
 import styled from "styled-components";
 import {useSearchParams} from "react-router-dom";
@@ -71,6 +71,7 @@ const DataMetricSubtype = () => {
     const [fields, setFields] = useState<any>()
     const [headerColumns, setHeaderColumns] = useState<any>()
     const [showDescription, setShowDescription] = useState<any>(false)
+    const [uploaded, setUploaded] = useState<any>(false)
 
     const colHeaders = useMemo(() => {
         if (headerColumns && headerColumns.length > 0) {
@@ -107,6 +108,12 @@ const DataMetricSubtype = () => {
             resources.push(e.file.response)
         }
         return e && e.fileList;
+    };
+
+    const uploadFile = (e: any) => {
+        if (e?.file?.status === 'done') {
+            setUploaded(true)
+        }
     };
 
     let token = Cookies.get('XSRF-TOKEN')
@@ -213,9 +220,12 @@ const DataMetricSubtype = () => {
                     <Row>
                         <Col style={{ paddingTop: '20px', paddingBottom: '20px' }} span={24}>
                             <span style={{ float: 'right' }}>
-                                <Upload name="files" action={`${baseUrl}/api/uploads?metric_subtype=${searchParams.get("metric_subtype")}`} withCredentials={true} headers={headers}>
+                                <Upload name="files" action={`${baseUrl}/api/uploads?metric_subtype=${searchParams.get("metric_subtype")}`} onChange={uploadFile} withCredentials={true} headers={headers}>
                                     <Button style={{ float: 'right' }}  icon={<UploadOutlined />}>Upload Completed Form</Button>
                                 </Upload>
+                                {uploaded &&
+                                    <Alert message="Upload Successful" type="success" closable/>
+                                }
                             </span>
                         </Col>
                     </Row>

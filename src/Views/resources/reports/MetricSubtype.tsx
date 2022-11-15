@@ -265,13 +265,13 @@ const MetricSubtype = () => {
     },
     {
         title: 'Employee ID',
-        dataIndex: 'num_2',
-        key: 'num_2',
+        dataIndex: 'employee_id',
+        key: 'employee_id',
     },
     {
         title: 'Tax ID',
-        dataIndex: 'num_3',
-        key: 'num_3',
+        dataIndex: 'tax_id',
+        key: 'tax_id',
     },
     {
         title: 'Timeframe',
