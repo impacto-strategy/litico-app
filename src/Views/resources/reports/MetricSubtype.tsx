@@ -21,7 +21,7 @@ import {
 } from "antd";
 import { DeleteOutlined, DownOutlined, UpOutlined } from '@ant-design/icons'
 import { useCallback, useEffect, useState } from "react";
-import { flatten, map, uniq } from "lodash";
+import { flatten, map, sortBy, uniq } from "lodash";
 import moment from 'moment';
 
 /* IMPORT INTERNAL MODULES */
@@ -693,7 +693,7 @@ const MetricSubtype = () => {
             }
         })
             .then(({ data }) => {
-                setReportData(data);
+                setReportData(data)
                 let codes = map(data.esg_metrics, 'metric_code').map((m) => m.split(';'))
                 getStandards(uniq(flatten(codes)).filter(c => c !== 'n/a'))
             })
@@ -754,7 +754,10 @@ const MetricSubtype = () => {
                                     <Table
                                         title={() => `${searchParams.get("metric_name")} - ${searchParams.get("metric_subtype")}`}
                                         pagination={false}
-                                        columns={getColumns()} dataSource={reportData?.esg_metrics} rowKey={'id'} />
+                                        columns={getColumns()} 
+                                        dataSource={sortBy(reportData?.esg_metrics, [function(o) { return o.date; }])} 
+                                        rowKey={'id'} 
+                                    />
                                 </Col>
                             </Row>}
                             <Row>
