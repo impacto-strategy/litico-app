@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, message, PageHeader, Row, Select, Space, Tag, Tooltip, Upload } from "antd";
+import { Alert, Button, Card, Col, DatePicker, Divider, Form, Input, message, PageHeader, Row, Select, Space, Tag, Tooltip, Upload } from "antd";
 import { DownOutlined, DownloadOutlined, InboxOutlined, QuestionCircleOutlined, UpOutlined, UploadOutlined } from '@ant-design/icons';
 import styled from "styled-components";
 import {useSearchParams} from "react-router-dom";
@@ -25,40 +25,37 @@ const ContentWrapper = styled.div`
 const DataMetricSubtype = () => {
     const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app'
     const [searchParams] = useSearchParams();
-
-    const colHeaders = useMemo(() => {
-        return [
-            'ESG Pillar',
-            'Standard',
-            'Metric Name',
-            'Metric Subtype',
-            'Metric Code',
-            'Risk',
-            'Value',
-            'Measurement Units',
-            'Numerator 1',
-            'Numerator 2',
-            'Numerator 3',
-            'Numerator 4',
-            'Numerator 5',
-            'Numerator 6',
-            'Numerator 7',
-            'Numerator 8',
-            'Denominator',
-            'Description',
-            'Narrative',
-            'Date',
-            'Organization',
-            'Contact',
-            'Name',
-            'Address',
-            'City',
-            'State',
-            'Basin',
-            'Type A',
-            'Type B'
-        ]
-    }, [])
+    const [defaultColumns] = useState<any>([
+        'ESG Pillar',
+        'Standard',
+        'Metric Name',
+        'Metric Subtype',
+        'Metric Code',
+        'Risk',
+        'Value',
+        'Measurement Units',
+        'Numerator 1',
+        'Numerator 2',
+        'Numerator 3',
+        'Numerator 4',
+        'Numerator 5',
+        'Numerator 6',
+        'Numerator 7',
+        'Numerator 8',
+        'Denominator',
+        'Description',
+        'Narrative',
+        'Date',
+        'Organization',
+        'Contact',
+        'Name',
+        'Address',
+        'City',
+        'State',
+        'Basin',
+        'Type A',
+        'Type B'
+    ])
 
     const stateCodes = [
         'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS',
@@ -72,7 +69,17 @@ const DataMetricSubtype = () => {
     const [facilities, setFacilities] = useState<any>()
     const [standards, setMetricStandards] = useState<any>()
     const [fields, setFields] = useState<any>()
+    const [headerColumns, setHeaderColumns] = useState<any>()
     const [showDescription, setShowDescription] = useState<any>(false)
+    const [uploaded, setUploaded] = useState<any>(false)
+
+    const colHeaders = useMemo(() => {
+        if (headerColumns && headerColumns.length > 0) {
+            return [headerColumns.map((header :any) => header.col_header), headerColumns.map((header:any) => header.default_value)]
+        } else {
+            return [defaultColumns, defaultColumns.map(() => '')]
+        }
+    }, [defaultColumns, headerColumns])
 
     const riskOptions = [
         {name: 'High', value: 'high'},
@@ -134,6 +141,12 @@ const DataMetricSubtype = () => {
         return e && e.fileList;
     };
 
+    const uploadFile = (e: any) => {
+        if (e?.file?.status === 'done') {
+            setUploaded(true)
+        }
+    };
+
     let token = Cookies.get('XSRF-TOKEN')
     const headers = {
         'X-XSRF-TOKEN': token || ''
@@ -158,6 +171,18 @@ const DataMetricSubtype = () => {
         })
 
     }, [searchParams, setMetricStandards, setDefaultFields])
+
+    const getColumns = useCallback(() => {
+        ResourceService.fields(
+            {
+                resourceName: 'metric-types',
+                params: {metric_subtype: searchParams.get("metric_subtype")}
+            }
+        ).then(({ data }) => {
+            setHeaderColumns(data)
+        })
+
+    }, [searchParams])
 
     const createMeasurementMetrics = (measurementIds: any[]) => {
         ResourceService.store({
@@ -201,7 +226,8 @@ const DataMetricSubtype = () => {
     useEffect(() => {
         getFacilities()
         getStandards()
-    }, [getFacilities, getStandards])
+        getColumns()
+    }, [getColumns, getFacilities, getStandards])
 
     return (
         <Wrapper>
@@ -218,16 +244,19 @@ const DataMetricSubtype = () => {
                                 <Tooltip placement="topLeft" title={'Enter a single data point below or bulk upload using these buttons'}>
                                     <QuestionCircleOutlined style={{ paddingRight: '24px' }} />
                                 </Tooltip>
-                                <Button icon={<DownloadOutlined />}><CSVLink data={[colHeaders]}> Download Blank Form</CSVLink></Button>
+                                <Button icon={<DownloadOutlined />}><CSVLink data={colHeaders}> Download Blank Form</CSVLink></Button>
                             </span>
                         </Col>
                     </Row>
                     <Row>
                         <Col style={{ paddingTop: '20px', paddingBottom: '20px' }} span={24}>
                             <span style={{ float: 'right' }}>
-                                <Upload name="files" action={`${baseUrl}/api/uploads`} withCredentials={true} headers={headers}>
+                                <Upload name="files" action={`${baseUrl}/api/uploads?metric_subtype=${searchParams.get("metric_subtype")}`} onChange={uploadFile} withCredentials={true} headers={headers}>
                                     <Button style={{ float: 'right' }}  icon={<UploadOutlined />}>Upload Completed Form</Button>
                                 </Upload>
+                                {uploaded &&
+                                    <Alert message="Upload Successful" type="success" closable/>
+                                }
                             </span>
                         </Col>
                     </Row>
