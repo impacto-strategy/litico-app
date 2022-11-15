@@ -7,8 +7,8 @@ const ResourceService = {
     async get(payload: { resourceName: string, resourceID: number, params?: any }) {
         return await APIClient.get(`/api/${payload.resourceName}/${payload.resourceID}`, {params: payload.params})
     },
-    async fields(payload: { resourceName: string }) {
-        return await APIClient.get(`/api/fields/${payload.resourceName}`)
+    async fields(payload: { resourceName: string, params?: any  }) {
+        return await APIClient.get(`/api/fields/${payload.resourceName}`, {params: payload.params})
     },
     async find(payload: { resourceName: string, column: string, value: string}) {
         return await APIClient.get(`/api/find/${payload.resourceName}`, {params:{column: payload.column, value: payload.value}})
