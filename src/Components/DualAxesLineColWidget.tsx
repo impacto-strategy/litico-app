@@ -1,3 +1,4 @@
+// IMPORT EXTERNAL MODULES
 import { FC, useState, useEffect } from 'react';
 import styled from "styled-components";
 import { DualAxes } from '@ant-design/plots';
@@ -14,6 +15,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
     }
   `
 
+  // React State
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [drillDownData, setDrillDownData] = useState<any>([]);
   const columns = [
@@ -107,6 +109,11 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
     },
     legend: {
       flipPage: false,
+      itemName: {
+        formatter: (text: string, item: any, index: number) => {
+          return text + " - DJ Basin";
+        }
+    }
     },
     geometryOptions: [
       {
@@ -122,7 +129,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
     tooltip: {
       formatter: (data: any) => {
         let name = (data.intensity || data.intensity === 0) ? props.lineLabel : props.colLabel
-        return { name: name, value: (data.value || data.intensity).toLocaleString() };
+        return { name: name.replace('(bbl spill/kbbl produced)', '') + ' - DJ Basin', value: (data.value || data.intensity).toLocaleString() };
       },
     },
     meta: {

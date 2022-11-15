@@ -330,8 +330,8 @@ const Dashboard: FC = () => {
     }, [getAllMetrics, getOilProduction, getAllSpills, getComplaints, getGhgEmissions, getAllIncidents])
 
     return (
-        <div className="site-layout-background"
-        >
+        <div className="site-layout-background">
+            {/* ENVIRONMENT CHARTS AND GRAPHS SECTION */}
             <div>
                 <Divider>
                     Environment
@@ -399,6 +399,7 @@ const Dashboard: FC = () => {
                     <LDAR />
                 }
             </div>
+            {/* SOCIAL CHARTS AND GRAPHS SECTION */}
             <div>
                 <Divider>
                     Social
