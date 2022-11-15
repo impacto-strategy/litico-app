@@ -56,7 +56,11 @@ const ColumnWidget: FC<{ data: any, title: string, includeModal: boolean, modalT
         yField: 'value',
         seriesField: 'name',
         legend:{
-          position: 'top-right'
+          position: 'top-right',
+          itemName: {
+            formatter: (text: string, item: any, index: number) => {
+                return text + ' - DJ Basin';
+            }}
         },
         label:{
             layout: [
@@ -68,6 +72,11 @@ const ColumnWidget: FC<{ data: any, title: string, includeModal: boolean, modalT
                 textAlign: 'center',
             },
             formatter: (text) => text.name === 'intensity' ? text.value.toFixed(4) : text.value
+        },
+        tooltip: {
+            formatter: (data: any) => {
+                return {name: data.name + ' - DJ Basin', value: data.value}
+            },
         },
         onReady: (plot: any) => {
             if (props.includeModal) {

@@ -111,10 +111,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
       flipPage: false,
       itemName: {
         formatter: (text: string, item: any, index: number) => {
-          console.log("This is text: ", text);
-          console.log("This is item: ", item);
-          console.log("What about index?", index);
-          return text;
+          return text + " - DJ Basin";
         }
     }
     },
@@ -132,7 +129,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
     tooltip: {
       formatter: (data: any) => {
         let name = (data.intensity || data.intensity === 0) ? props.lineLabel : props.colLabel
-        return { name: name, value: (data.value || data.intensity).toLocaleString() };
+        return { name: name.replace('(bbl spill/kbbl produced)', '') + ' - DJ Basin', value: (data.value || data.intensity).toLocaleString() };
       },
     },
     meta: {
