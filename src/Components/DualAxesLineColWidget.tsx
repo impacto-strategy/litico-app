@@ -1,3 +1,4 @@
+// IMPORT EXTERNAL MODULES
 import { FC, useState, useEffect } from 'react';
 import styled from "styled-components";
 import { DualAxes } from '@ant-design/plots';
@@ -14,6 +15,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
     }
   `
 
+  // React State
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [drillDownData, setDrillDownData] = useState<any>([]);
   const columns = [
@@ -107,6 +109,14 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
     },
     legend: {
       flipPage: false,
+      itemName: {
+        formatter: (text: string, item: any, index: number) => {
+          console.log("This is text: ", text);
+          console.log("This is item: ", item);
+          console.log("What about index?", index);
+          return text;
+        }
+    }
     },
     geometryOptions: [
       {
