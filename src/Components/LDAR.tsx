@@ -66,7 +66,7 @@ const LDAR = () => {
             {
                 geometry: 'line',
                 lineStyle: {
-                    lineWidth: 0,
+                    lineWidth: 2,
                 },
                 point: {
                     size: 5,
