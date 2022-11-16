@@ -111,7 +111,7 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
       flipPage: false,
       itemName: {
         formatter: (text: string, item: any, index: number) => {
-          return text + " - DJ Basin";
+          return text.replace('(bbl spill/kbbl produced)', '') + ' - DJ Basin';
         }
     }
     },
