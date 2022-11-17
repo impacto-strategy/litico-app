@@ -304,6 +304,7 @@ const Dashboard: FC = () => {
         getOilProduction()
         getAllSpills()
         getComplaints()
+        getGhgEmissions()
     }, [getAllMetrics, getOilProduction, getAllSpills, getComplaints, getGhgEmissions])
 
     return (
