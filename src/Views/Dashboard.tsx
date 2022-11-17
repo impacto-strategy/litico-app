@@ -36,7 +36,6 @@ const Dashboard: FC = () => {
     const [complaints, setComplaints] = useState<ArrOfObj>([])
     const [emissions, setEmissions] = useState<ArrOfObj>([])
     const [emissionsIntensity, setEmissionsIntensity] = useState<ArrOfObj>([])
-    const [incidents, setIncidents] = useState<ArrOfObj>([])
     const [metrics, setMetrics] = useState<any>({})
     const [production, setProductionData] = useState<ArrOfObj>([])
     const [spills, setSpills] = useState<ArrOfObj>([])
@@ -73,25 +72,6 @@ const Dashboard: FC = () => {
      * 
      * @returns - Undefined
      */
-    const getAllIncidents = useCallback(() => {
-        ResourceService.index({
-            resourceName: 'measurements',
-            params: {esg_metric_factor_name: 'Number of Total Recordable Incidents'}
-        }).then(({ data }) => {
-            let result = data
-            ResourceService.index({
-                resourceName: 'measurements',
-                params: {esg_metric_factor_name: 'Total Hours Worked'}
-            }).then(({ data }) => {
-                setIncidents(result.concat(data))
-            }).catch((err) => {
-                console.log(err)
-            })
-        }).catch((err) => {
-            console.log(err)
-        })
-    }, [setIncidents])
-
     const spillsIntensity = useMemo(() => {
         let data = filter(metrics.esg_metrics, { 'metric_subtype': 'Spill Intensity - Liquids' })
 
@@ -295,39 +275,36 @@ const Dashboard: FC = () => {
      */
     const getQuarterlyIncidentData = useMemo(() => {
         let data: any = [];
-        const organizedData = groupBy(filter(incidents, (o: any) => o.timeframe === "quarterly"), "esg_metric_factor_name")
-        if (!organizedData["Number of Total Recordable Incidents"]) {
-          return false;
+        let organizedData: any = [];
+
+        organizedData = sortBy(filter(metrics.esg_metrics, { 'metric_subtype': 'TRIR - All Workers' }), 'date')
+        for (let i = 0; i < organizedData.length; i++) {
+            let cleanDate = organizedData[i].date.substring(0, 4);
+            if (parseInt(organizedData[i].date.substring(5,7)) <= 3) {
+                cleanDate = `1Q ${cleanDate}`
+            } else if (parseInt(organizedData[i].date.substring(5,7)) < 7) {
+                cleanDate = `2Q ${cleanDate}`
+            } else if (parseInt(organizedData[i].date.substring(5,7)) < 10) {
+                cleanDate = `3Q ${cleanDate}`
+            } else {
+                cleanDate = `4Q ${cleanDate}`
+            }
+            data.push({
+                date: cleanDate,
+                incidents: organizedData[i].num_1,
+                trir:  organizedData[i].value
+            })
         }
-        // get date and esg metric factor name
-        for (let i = 0; i < organizedData["Number of Total Recordable Incidents"].length; i++) {
-          let cleanDate = organizedData["Number of Total Recordable Incidents"][i].date.substring(0, 4);
-          if (parseInt(organizedData["Number of Total Recordable Incidents"][i].date.substring(5,7)) <= 3) {
-            cleanDate = `1Q ${cleanDate}`
-          } else if (parseInt(organizedData["Number of Total Recordable Incidents"][i].date.substring(5,7)) < 7) {
-            cleanDate = `2Q ${cleanDate}`
-          } else if (parseInt(organizedData["Number of Total Recordable Incidents"][i].date.substring(5,7)) < 10) {
-            cleanDate = `3Q ${cleanDate}`
-          } else {
-            cleanDate = `4Q ${cleanDate}`
-          }
-          data.push({
-            date: cleanDate,
-            incidents: organizedData["Number of Total Recordable Incidents"][i].value,
-            trir: (organizedData["Number of Total Recordable Incidents"][i].value * 200000) / organizedData["Total Hours Worked"][i].value
-          })
-        }
+
         return data
-    }, [incidents])
+    }, [metrics])
 
     useEffect(() => {
         getAllMetrics()
         getOilProduction()
         getAllSpills()
         getComplaints()
-        getGhgEmissions()
-        getAllIncidents()
-    }, [getAllMetrics, getOilProduction, getAllSpills, getComplaints, getGhgEmissions, getAllIncidents])
+    }, [getAllMetrics, getOilProduction, getAllSpills, getComplaints, getGhgEmissions])
 
     return (
         <div className="site-layout-background">
@@ -415,7 +392,7 @@ const Dashboard: FC = () => {
                 {/*<Donations/>*/}
                 {/* <DonationsDrilldown /> */}
 
-                {(incidents.length > 0 && !!getQuarterlyIncidentData) &&
+                {getQuarterlyIncidentData.length > 0 &&
                     <SafetyMetrics
                         data={getQuarterlyIncidentData}
                     />
