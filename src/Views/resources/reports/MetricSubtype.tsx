@@ -86,7 +86,7 @@ const MetricSubtype = () => {
         dataIndex: '',
         key: '',
         render: (value: any) => (
-            <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
         )
     },
     {
@@ -140,7 +140,7 @@ const MetricSubtype = () => {
         dataIndex: '',
         key: '',
         render: (value: any) => (
-            <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
         )
     },
     {
@@ -209,7 +209,7 @@ const MetricSubtype = () => {
         dataIndex: '',
         key: '',
         render: (value: any) => (
-            <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
         )
     },
     {
@@ -278,7 +278,7 @@ const MetricSubtype = () => {
         dataIndex: '',
         key: '',
         render: (value: any) => (
-            <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
         )
     },
     {
@@ -342,7 +342,7 @@ const MetricSubtype = () => {
         dataIndex: '',
         key: '',
         render: (value: any) => (
-            <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
         )
     },
     {
@@ -416,7 +416,7 @@ const MetricSubtype = () => {
         dataIndex: '',
         key: '',
         render: (value: any) => (
-            <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
         )
     },
     {
@@ -500,7 +500,7 @@ const MetricSubtype = () => {
         dataIndex: '',
         key: '',
         render: (value: any) => (
-            <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
         )
     },
     {
@@ -574,7 +574,7 @@ const MetricSubtype = () => {
             dataIndex: '',
             key: '',
             render: (value: any) => (
-                <span>{reportData?.period === 'YR' ? 'EOY' : reportData?.period}</span>
+                <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
             )
         },
         {
