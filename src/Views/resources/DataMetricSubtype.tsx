@@ -158,7 +158,6 @@ const DataMetricSubtype = () => {
             basin: 'DJ Basin'
         })
     },[form])
-    
 
     const getStandards = useCallback(() => {
         ResourceService.index({
@@ -190,7 +189,9 @@ const DataMetricSubtype = () => {
             fields: {
                 measurement_ids: measurementIds,
                 metric_subtype: searchParams.get("metric_subtype"),
-                year: form.getFieldValue('date').year()
+                year: form.getFieldValue('date').year(),
+                employee_id: form.getFieldValue('factors').employee_id,
+                tax_id: form.getFieldValue('factors').tax_id,
             }
         }).then((res) => {
             message.success('Data was added successfully');
@@ -200,6 +201,9 @@ const DataMetricSubtype = () => {
 
     const onFinish = (values: any) => {
         let measurementIds: any[] = [];
+        delete values.factors.employee_id
+        delete values.factors.tax_id
+
         let requests = Object.keys(values.factors).map(async (key) => {
             let formValues = Object.assign({}, values);
             let factor = find(fields, { 'col_label': key });

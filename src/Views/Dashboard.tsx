@@ -49,6 +49,8 @@ const Dashboard: FC = () => {
             resourceName: 'esg-metrics'
         }).then(({ data }) => {
             setMetrics(data)
+            setEmissions(sortBy(filter(data.esg_metrics, { metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Emissions' }), 'date'))
+            setEmissionsIntensity(sortBy(filter(data.esg_metrics, { metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Intensity - BOE' }), 'date'))
         }).catch((err) =>{
             console.log(err)
         })
@@ -101,29 +103,6 @@ const Dashboard: FC = () => {
         if (!intensityByYear?.value) return 0
         return intensityByYear.value
     }, [emissionsIntensity, spillsIntensity])
-
-    const getGhgEmissions = useCallback(async () => {
-        await ResourceService.index({
-            resourceName: 'esg-metrics',
-            params: {metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Emissions'}
-        }).then(res => {
-            if (res.data && res.data.esg_metrics) {
-                setEmissions(sortBy(res.data.esg_metrics, 'date'))
-            }
-        }).catch((err) =>{
-            console.log(err)
-        })
-        await ResourceService.index({
-            resourceName: 'esg-metrics',
-            params: {metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Intensity - BOE'}
-        }).then(res => {
-            if (res.data && res.data.esg_metrics) {
-                setEmissionsIntensity(sortBy(res.data.esg_metrics, 'date'))
-            }
-        }).catch((err) =>{
-            console.log(err)
-        })
-    }, [])
 
     const getOilProduction = useCallback(() => {
         ResourceService.index({
@@ -304,8 +283,7 @@ const Dashboard: FC = () => {
         getOilProduction()
         getAllSpills()
         getComplaints()
-        getGhgEmissions()
-    }, [getAllMetrics, getOilProduction, getAllSpills, getComplaints, getGhgEmissions])
+    }, [getAllMetrics, getOilProduction, getAllSpills, getComplaints])
 
     return (
         <div className="site-layout-background">
