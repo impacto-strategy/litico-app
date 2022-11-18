@@ -1,3 +1,4 @@
+/* IMPORT EXTERNAL MODULES */
 import { Col, Card, Row, Space, Tabs, Tag } from "antd";
 import { Link } from "react-router-dom";
 import { useMemo } from "react";
@@ -14,6 +15,12 @@ const MetricPillarTabs = ({ standards, report, showReport }:any) => {
       return text
   }
 
+  /**
+   * Organizes metric codes that corresponds to metric name and groups based on reporting standard.
+   * 
+   * @param items 
+   * @returns Array of Objects
+   */
   const codesByStandard = (items: any) => {
     return map(groupBy(items, 'reporting_standard'), (data, name) => ({
         data,
@@ -29,7 +36,8 @@ const MetricPillarTabs = ({ standards, report, showReport }:any) => {
         const order: any = {
             'Environment': 0,
             "Social": 1,
-            "Governance": 2
+            "Governance": 2,
+            "Activity-Level": 3
         }
         return order[item.esg_pillar]
     })

@@ -1,11 +1,14 @@
+/* IMPORT EXTERNAL MODULES */
 import { Button, Col, Row, Space, Upload } from "antd";
 import {UploadOutlined} from '@ant-design/icons'
 import styled from "styled-components";
 import { useCallback, useEffect, useState } from "react";
-import MetricPillarTabs from "../../Components/MetricPillarTabs";
-import ResourceService from "../../Services/ResourceService";
 import Cookies from 'js-cookie';
 import {Link} from "react-router-dom";
+
+/* IMPORT INTERNAL MODULES */
+import MetricPillarTabs from "../../Components/MetricPillarTabs";
+import ResourceService from "../../Services/ResourceService";
 
 const Wrapper = styled.section`
   margin: auto;
