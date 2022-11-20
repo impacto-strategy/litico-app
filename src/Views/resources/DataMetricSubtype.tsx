@@ -207,16 +207,19 @@ const DataMetricSubtype = () => {
      * 
      */
     const storeAdditionalMetrics = async (data: any) => {
+        let result;
         /*
             This function only supports production and only if production is yearly.
         */
-        let result = ResourceService.store({
+       if (searchParams.get("metric_subtype") === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas") {
+        result = ResourceService.store({
             resourceName: 'productions',
             fields: {
                 year: form.getFieldValue('date').year(),
                 ...data
             }
         })
+       }
 
         return result
     }
@@ -237,7 +240,6 @@ const DataMetricSubtype = () => {
 
     const onFinish = (values: any) => {
         let measurementIds: any[] = [];
-        console.log("Form Values: ", Object.assign({}, values));
         let request1 = Object.keys(values.factors).map(async (key) => {
             let formValues = Object.assign({}, values);
             let factor = find(fields, { 'col_label': key });
@@ -257,7 +259,11 @@ const DataMetricSubtype = () => {
             return request;
         })
 
-        let request2 = storeAdditionalMetrics(Object.assign({}, values));
+        // If there's an additional table needing updating, this function calls otherwise the promise is defaulted to resolved.
+        let request2: Promise<any> = Promise.resolve(123);
+        if (searchParams.get("metric_subtype") === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas") {
+            request2 = storeAdditionalMetrics(Object.assign({}, values));
+        }
 
         Promise.all([request1, request2]).then(() => {
             return createMeasurementMetrics(measurementIds);
