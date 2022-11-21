@@ -256,20 +256,21 @@ const Dashboard: FC = () => {
         let data: any = [];
         let organizedData: any = [];
 
-        organizedData = sortBy(filter(metrics.esg_metrics, { 'metric_subtype': 'TRIR - All Workers' }), 'date')
+        organizedData = sortBy(filter(metrics.esg_metrics, { 'metric_subtype': 'TRIR - All Workers' }), (metric) => new Date(metric.date))
         for (let i = 0; i < organizedData.length; i++) {
-            let cleanDate = organizedData[i].date.substring(0, 4);
-            if (parseInt(organizedData[i].date.substring(5,7)) <= 3) {
-                cleanDate = `1Q ${cleanDate}`
-            } else if (parseInt(organizedData[i].date.substring(5,7)) < 7) {
-                cleanDate = `2Q ${cleanDate}`
-            } else if (parseInt(organizedData[i].date.substring(5,7)) < 10) {
-                cleanDate = `3Q ${cleanDate}`
+            let cleanDate = new Date(organizedData[i].date);
+            let displayedDate = ''
+            if (cleanDate.getMonth() <= 3) {
+                displayedDate = `1Q ${cleanDate.getFullYear()}`
+            } else if (cleanDate.getMonth() < 7) {
+                displayedDate = `2Q ${cleanDate.getFullYear()}`
+            } else if (cleanDate.getMonth() < 10) {
+                displayedDate = `3Q ${cleanDate.getFullYear()}`
             } else {
-                cleanDate = `4Q ${cleanDate}`
+                displayedDate = `4Q ${cleanDate.getFullYear()}`
             }
             data.push({
-                date: cleanDate,
+                date: displayedDate,
                 incidents: organizedData[i].num_1,
                 trir:  organizedData[i].value
             })
