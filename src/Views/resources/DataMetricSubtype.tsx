@@ -25,6 +25,8 @@ const ContentWrapper = styled.div`
 const DataMetricSubtype = () => {
     const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app'
     const [searchParams] = useSearchParams();
+    // React State
+    const [timeframeSelected, setTimeFrame] = useState<"date" | "month" | "quarter" | "year">("date")
     const [defaultColumns] = useState<any>([
         'ESG Pillar',
         'Standard',
@@ -56,6 +58,12 @@ const DataMetricSubtype = () => {
         'Type A',
         'Type B'
     ])
+    const [facilities, setFacilities] = useState<any>()
+    const [fields, setFields] = useState<any>()
+    const [headerColumns, setHeaderColumns] = useState<any>()
+    const [showDescription, setShowDescription] = useState<any>(false)
+    const [standards, setMetricStandards] = useState<any>()
+    const [uploaded, setUploaded] = useState<any>(false)
 
     const stateCodes = [
         'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS',
@@ -66,12 +74,6 @@ const DataMetricSubtype = () => {
 
     const [form] = Form.useForm();
     let resources: any[] = [];
-    const [facilities, setFacilities] = useState<any>()
-    const [standards, setMetricStandards] = useState<any>()
-    const [fields, setFields] = useState<any>()
-    const [headerColumns, setHeaderColumns] = useState<any>()
-    const [showDescription, setShowDescription] = useState<any>(false)
-    const [uploaded, setUploaded] = useState<any>(false)
 
     const colHeaders = useMemo(() => {
         if (headerColumns && headerColumns.length > 0) {
@@ -91,7 +93,7 @@ const DataMetricSubtype = () => {
     // const timeframeOptions = [
     //     {name: 'Yearly', value: 'yearly'},
     //     {name: 'Quarterly', value: 'quarterly'},
-    //     {name: 'Daily', value: 'daily'}
+    //     {name: 'Monthly', value: 'monthly'}
     // ]
 
     // Temporary timeframe options function.
@@ -105,7 +107,8 @@ const DataMetricSubtype = () => {
             subMetricName === "Social Investment" ||
             subMetricName === "Volunteering - Community" ||
             subMetricName === "Workforce Demographics - Ethnicity" ||
-            subMetricName === "Workforce Demographics - Gender"
+            subMetricName === "Workforce Demographics - Gender" ||
+            subMetricName === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas"
         ){
             return [ {name: 'Yearly', value: 'yearly'} ]
         } else if (
@@ -131,6 +134,18 @@ const DataMetricSubtype = () => {
             facilities.unshift({ name: "All Facilities" })
             setFacilities(facilities)
         })
+    }, [])
+
+    const updateTimeFrame = useCallback((e, setState) => {
+        if (e === "yearly") {
+            setState('year');
+        } else if (e === "quarterly") {
+            setState('quarter');
+        } else if (e === "monthly") {
+            setState('month');
+        } else {
+            setState('date');
+        }
     }, [])
 
     const normFile = (e: any) => {
@@ -183,6 +198,31 @@ const DataMetricSubtype = () => {
 
     }, [searchParams])
 
+    /**
+     * Handles cases where data may need to be stored in tables other
+     * than ESG metrics and Measurements (e.g., productions). Will look at
+     * exploring alternatives in the future.
+     * 
+     * @param data The information to be stored
+     * 
+     */
+    const storeAdditionalMetrics = async (data: any): Promise<void> => {
+        /*
+            This function only supports production and only if production is yearly.
+        */
+       if (searchParams.get("metric_subtype") === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas") {
+        return ResourceService.store({
+            resourceName: 'productions',
+            fields: {
+                year: form.getFieldValue('date').year(),
+                ...data
+            }
+        }).then((response) => {
+            return;
+        })
+       }
+    }
+
     const createMeasurementMetrics = (measurementIds: any[]) => {
         ResourceService.store({
             resourceName: 'measurement-esg-metrics',
@@ -222,6 +262,12 @@ const DataMetricSubtype = () => {
 
             return request;
         })
+
+        // If there's an additional table needing updating, this function calls otherwise the promise is defaulted to resolved.
+        if (searchParams.get("metric_subtype") === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas") {
+            requests.push(storeAdditionalMetrics(Object.assign({}, values)));
+        }
+
         Promise.all(requests).then(() => {
             return createMeasurementMetrics(measurementIds);
         });
@@ -297,29 +343,39 @@ const DataMetricSubtype = () => {
                         layout="vertical"
                         onFinish={onFinish}
                     >
+                        {/* Timeframe and Date Section */}
                         <Row gutter={24}>
                             <Col lg={{span: 12}} sm={{span: 24}}>
                                 <Form.Item name="timeframe" label="Timeframe" required tooltip="This is a required field">
-                                    <Select>
+                                    <Select
+                                        // See if we can improve the e's type later.
+                                        onSelect={(e: any) => updateTimeFrame(e, setTimeFrame)}
+                                    >
                                         {getTimeframeOptions(searchParams.get("metric_subtype")!).map((option: any) => (
                                             <Select.Option key={option.name} value={option.value} >{option.name}</Select.Option>
                                         ))}
                                     </Select>
                                 </Form.Item>
-                                </Col>
+                            </Col>
                             <Col lg={{span: 12}} sm={{span: 24}}>
                                 <Form.Item name="date" required label="Date" tooltip="This is the end date of the Timeframe indicated">
-                                    <DatePicker />
-                                    </Form.Item>
+                                    <DatePicker picker={timeframeSelected} />
+                                </Form.Item>
                             </Col>
                         </Row>
+                        {/* Facilities/Organization Section */}
                         <Row gutter={24}>
                             { standards?.[0].location_type && standards?.[0].location_type === 'facility' &&
                                 <Col lg={{span: 12}} sm={{span: 24}}>
-                                    <Form.Item name="organization" label="Facility">
+                                    <Form.Item name="organization" label="Facility" initialValue={'All Facilities'}>
                                         <Select>
                                             {facilities?.map((facility: any) => (
-                                                <Select.Option key={facility.id} value={facility.name} >{facility.name}</Select.Option>
+                                                <Select.Option 
+                                                    key={facility.id} 
+                                                    value={facility.name}
+                                                >
+                                                    {facility.name}
+                                                </Select.Option>
                                             ))}
                                         </Select>
                                     </Form.Item>
