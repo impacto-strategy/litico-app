@@ -30,7 +30,6 @@ import ResourceService from "../Services/ResourceService";
 import useAuth from "../Providers/Auth/useAuth";
 import {ArrOfObj} from "../../global"
 import { extractYear } from "../utils";
-import { debug } from "console";
 
 const Dashboard: FC = () => {
     // React State
