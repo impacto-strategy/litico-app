@@ -1,7 +1,7 @@
 /* IMPORT EXTERNAL MODULES */
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import {Divider} from "antd";
-import {filter, find, flatten, forOwn, groupBy, isEmpty, map, sortBy, sumBy} from "lodash";
+import {filter, find, flatten, forOwn, groupBy, isEmpty, map, sortBy, sumBy, uniq} from "lodash";
 
 /* IMPORT INTERNAL MODULES */
 // UNUSED COMPONENTS
@@ -82,6 +82,21 @@ const Dashboard: FC = () => {
         ]))), ['year'])
     }, [metrics])
 
+    const getMetricsByYear = useCallback((year: number, basin: string, metricSubtype: string) => {
+        let data = filter(metrics.esg_metrics, { 'metric_subtype': metricSubtype })
+
+        let metricByYear = find(data, (em) => {
+            if (basin) {
+                return new Date(em.date).getFullYear() === year && em.basin === basin
+            } else {
+                return new Date(em.date).getFullYear() === year
+            }
+        })
+
+        if (!metricByYear?.value) return null
+        return metricByYear
+    }, [metrics])
+
     const getIntensityByDate = useCallback((date: string, basin: string, intensityType: string) => {
         let data = []
         if (intensityType === 'ghg') {
@@ -160,23 +175,26 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     const getYearlyEmissionData = useMemo(() => {
-        return flatten(map(sortBy(groupBy(emissions, 'date'), 'date'), (e: ArrOfObj) => {
-            let data = []
-            for (let i = 0; i < e.length; i++) {
-                let intensity = getIntensityByDate(e[i].date, e[i].basin, 'ghg')
+        let dates = uniq(map(emissions, ((metric) => new Date(metric.date).getFullYear()))).sort()
+        let basins = uniq(map(emissions, 'basin')).sort().filter(i => typeof i === 'string');
+        return flatten(map(dates, ((date) => {
+            return flatten(map(basins, ((basin) => {
+                let data = []
+                let ghg = getMetricsByYear(date, basin, 'GHG Emissions')
+                let intensity = getMetricsByYear(date, basin, 'GHG Intensity - BOE')
                 data.push({ 
-                    name: "GHG Emissions (CO2e)", 
-                    type: parseInt(e[i].date), 
-                    value: e[i].value, 
-                    intensity: intensity,
-                    basin: e[i].basin, 
+                    name: "GHG Emissions (CO2e)",
+                    type: date,
+                    value: ghg?.value || 0,
+                    intensity: intensity?.value || 0,
+                    basin: basin,
                     // Utilized to avoid bugs in GHG Chart
-                    label: `${e[i].basin} Emissions Intensity (mt/BoE)` 
+                    label: `${basin} Emissions Intensity (mt/BoE)`
                 })
-            }
-            return data
-        }))
-    }, [emissions, getIntensityByDate])
+                return data
+            })))
+        })))
+    }, [emissions, getMetricsByYear])
 
     const getYearlyComplaintsData = useMemo(() => {
         return flatten(map([2017, 2018, 2019, 2020, 2021, 2022], (e) => {
@@ -256,20 +274,21 @@ const Dashboard: FC = () => {
         let data: any = [];
         let organizedData: any = [];
 
-        organizedData = sortBy(filter(metrics.esg_metrics, { 'metric_subtype': 'TRIR - All Workers' }), 'date')
+        organizedData = sortBy(filter(metrics.esg_metrics, { 'metric_subtype': 'TRIR - All Workers' }), (metric) => new Date(metric.date))
         for (let i = 0; i < organizedData.length; i++) {
-            let cleanDate = organizedData[i].date.substring(0, 4);
-            if (parseInt(organizedData[i].date.substring(5,7)) <= 3) {
-                cleanDate = `1Q ${cleanDate}`
-            } else if (parseInt(organizedData[i].date.substring(5,7)) < 7) {
-                cleanDate = `2Q ${cleanDate}`
-            } else if (parseInt(organizedData[i].date.substring(5,7)) < 10) {
-                cleanDate = `3Q ${cleanDate}`
+            let cleanDate = new Date(organizedData[i].date);
+            let displayedDate = ''
+            if (cleanDate.getMonth() <= 3) {
+                displayedDate = `1Q ${cleanDate.getFullYear()}`
+            } else if (cleanDate.getMonth() < 7) {
+                displayedDate = `2Q ${cleanDate.getFullYear()}`
+            } else if (cleanDate.getMonth() < 10) {
+                displayedDate = `3Q ${cleanDate.getFullYear()}`
             } else {
-                cleanDate = `4Q ${cleanDate}`
+                displayedDate = `4Q ${cleanDate.getFullYear()}`
             }
             data.push({
-                date: cleanDate,
+                date: displayedDate,
                 incidents: organizedData[i].num_1,
                 trir:  organizedData[i].value
             })

@@ -114,7 +114,7 @@ const GHGChart: FC<GHGChartProps> = props => {
                     if (data.basin) {
                         return { name: `${data.basin} Emissions (mt CO₂-e)`, value: formatValue(data.value, 0) };
                     } else {
-                        return { name: data.label, value: data.intensity.toLocaleString() };
+                        return { name: data.label, value: data?.intensity ? data?.intensity.toLocaleString() : 0};
                     }
                 }
             },
