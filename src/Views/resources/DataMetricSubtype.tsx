@@ -206,22 +206,21 @@ const DataMetricSubtype = () => {
      * @param data The information to be stored
      * 
      */
-    const storeAdditionalMetrics = async (data: any) => {
-        let result;
+    const storeAdditionalMetrics = async (data: any): Promise<void> => {
         /*
             This function only supports production and only if production is yearly.
         */
        if (searchParams.get("metric_subtype") === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas") {
-        result = ResourceService.store({
+        return ResourceService.store({
             resourceName: 'productions',
             fields: {
                 year: form.getFieldValue('date').year(),
                 ...data
             }
+        }).then((response) => {
+            return;
         })
        }
-
-        return result
     }
 
     const createMeasurementMetrics = (measurementIds: any[]) => {
@@ -245,7 +244,7 @@ const DataMetricSubtype = () => {
         delete values.factors.employee_id
         delete values.factors.tax_id
 
-        let request1 = Object.keys(values.factors).map(async (key) => {
+        let requests = Object.keys(values.factors).map(async (key) => {
             let formValues = Object.assign({}, values);
             let factor = find(fields, { 'col_label': key });
             formValues['value'] = values['factors'][key];
@@ -265,12 +264,11 @@ const DataMetricSubtype = () => {
         })
 
         // If there's an additional table needing updating, this function calls otherwise the promise is defaulted to resolved.
-        let request2: Promise<any> = Promise.resolve(123);
         if (searchParams.get("metric_subtype") === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas") {
-            request2 = storeAdditionalMetrics(Object.assign({}, values));
+            requests.push(storeAdditionalMetrics(Object.assign({}, values)));
         }
 
-        Promise.all([request1, request2]).then(() => {
+        Promise.all(requests).then(() => {
             return createMeasurementMetrics(measurementIds);
         });
     };
