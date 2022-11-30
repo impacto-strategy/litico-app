@@ -807,8 +807,6 @@ const MetricSubtype = () => {
         getMetric()
     }, [getMetric])
 
-    console.log("Is report data what we need to investigate? ", reportData)
-
     return (
         <Wrapper>
             <Space direction="vertical" style={{width: '100%'}} size={"large"}>
