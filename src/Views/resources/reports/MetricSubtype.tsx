@@ -617,6 +617,80 @@ const MetricSubtype = () => {
             ),
     }]
 
+    const productionsColumns = [
+        {
+            title: 'Oil Production',
+            dataIndex: 'num_1',
+            key: 'num_1'
+        },
+        {
+            title: 'Gas Production',
+            dataIndex: 'num_2',
+            key: 'num_2'
+        },
+        {
+            title: 'Produced Water Production',
+            dataIndex: 'num_3',
+            key: 'num_3'
+        },
+        {
+            title: 'Synthetic Oil Production',
+            dataIndex: 'num_4',
+            key: 'num_4'
+        },
+        {
+            title: 'Synthetic Gas Production',
+            dataIndex: 'num_5',
+            key: 'num_5'
+        },
+        {
+            title: 'Timeframe',
+            dataIndex: '',
+            key: '',
+            render: (value: any) => (
+                <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
+            )
+        },
+        {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+            render: (value:any) => (
+                <span>
+                    {moment(value).format('MM/DD/YYYY')}
+                </span>
+            ),
+        },
+        {
+            title: 'Resources',
+            dataIndex: 'resources',
+            key: 'resources',
+            render: (value: any) => (
+                <>
+                {value?.map((link:string, idx:number) => {
+                  return (
+                      <a key={link} href={link}>Resource {idx +1} </a>
+                  );
+                })}
+              </>
+            ),
+        },
+        {
+            title: 'User',
+            dataIndex: 'user_name',
+            key: 'user_name',
+        },
+        {
+            title: 'Submitted on',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            render: (value:any) => (
+                <span>
+                    {moment(value).format('MM/DD/YYYY h:mm')}
+                </span>
+            ),
+    }]
+
     const getStandards = useCallback((metricCodes: any) =>{
         ResourceService.index({
             resourceName: 'standards',
@@ -672,6 +746,8 @@ const MetricSubtype = () => {
                 return ethnicityColumns.concat(actionsColumn)
             case 'TRIR - Employees':
                 return trirColumns.concat(actionsColumn)
+            case 'Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas':
+                return productionsColumns.concat(actionsColumn)
             default:
                 return columns.concat(actionsColumn)
         }
