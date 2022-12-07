@@ -23,7 +23,7 @@ const ContentWrapper = styled.div`
 `
 
 const DataMetricSubtype = () => {
-    const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app'
+    const baseUrl = process.env.API_URL || 'http://localhost'
     const [searchParams] = useSearchParams();
     // React State
     const [timeframeSelected, setTimeFrame] = useState<"date" | "month" | "quarter" | "year">("date")

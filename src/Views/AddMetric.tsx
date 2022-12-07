@@ -29,7 +29,7 @@ declare module 'slate' {
 
 const {Option} = Select;
 
-const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app'
+const baseUrl = process.env.API_URL || 'http://localhost'
 
 const formItemLayout = {
     labelCol: {span: 6},

@@ -3,7 +3,7 @@ import axios from "axios";
 import AuthService from "./AuthService";
 
 const APIClient = axios.create({
-    baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app',
+    baseURL: process.env.API_URL || 'http://localhost',
     withCredentials: true, // required to handle the CSRF token
 });
 
