@@ -27,6 +27,7 @@ import moment from 'moment';
 /* IMPORT INTERNAL MODULES */
 import ResourceService from "../../../Services/ResourceService";
 
+/* STYLED COMPONENTS */
 const Wrapper = styled.section`
   margin: auto;
   max-width: none;
@@ -76,621 +77,6 @@ const MetricSubtype = () => {
         setIsModalOpen(false);
     }
 
-    const columns = [{
-        title: searchParams.get("metric_subtype") || '',
-        dataIndex: 'value',
-        key: 'value'
-    },
-    {
-        title: 'Timeframe',
-        dataIndex: '',
-        key: '',
-        render: (value: any) => (
-            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-        )
-    },
-    {
-        title: 'Date',
-        dataIndex: 'date',
-        key: 'date',
-    },
-    {
-        title: 'Resources',
-        dataIndex: 'resources',
-        key: 'resources',
-        render: (value: any) => (
-            <>
-            {value?.map((link:string, idx:number) => {
-              return (
-                  <a key={link} href={link}>Resource {idx +1} </a>
-              );
-            })}
-          </>
-        ),
-    },
-    {
-        title: 'User',
-        dataIndex: 'user_name',
-        key: 'user_name',
-    },
-    {
-        title: 'Submitted on',
-        dataIndex: 'created_at',
-        key: 'created_at',
-        render: (value:any) => (
-            <span>
-                {moment(value).format('MM/DD/YYYY h:mm')}
-            </span>
-        ),
-    }]
-
-    const discussionColumns = [
-    {
-        title: searchParams.get("metric_subtype") || '',
-        dataIndex: 'value',
-        key: 'value',
-        render: (value:any) => (
-            <span>
-                {value > 0 ? 'Policy in place' : 'No policy'}
-            </span>
-        ),
-    },
-    {
-        title: 'Timeframe',
-        dataIndex: '',
-        key: '',
-        render: (value: any) => (
-            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-        )
-    },
-    {
-        title: 'Date',
-        dataIndex: 'date',
-        key: 'date',
-    },
-    {
-        title: 'Resources',
-        dataIndex: 'resources',
-        key: 'resources',
-        render: (value: any) => (
-            <>
-            {value?.map((link:string, idx:number) => {
-              return (
-                  <a key={link} href={link}>Resource {idx +1} </a>
-              );
-            })}
-          </>
-        ),
-    },
-    {
-        title: 'User',
-        dataIndex: 'user_name',
-        key: 'user_name',
-    },
-    {
-        title: 'Submitted on',
-        dataIndex: 'created_at',
-        key: 'created_at',
-        render: (value:any) => (
-            <span>
-                {moment(value).format('MM/DD/YYYY h:mm')}
-            </span>
-        ),
-    }]
-
-    const ghgColumns = [
-    {
-        title: 'GHG Emissions',
-        dataIndex: 'value',
-        key: 'value',
-        render: (value:any) => (
-            <span>
-                {value.toLocaleString()}
-            </span>
-        ),
-    },
-    {
-        title: 'CO2 Emissions (mt CO2)',
-        dataIndex: 'num_1',
-        key: 'num_1',
-    },
-    {
-        title: 'CH4 Emissions (mt CH4)',
-        dataIndex: 'num_2',
-        key: 'num_2',
-    },
-    {
-        title: 'N2O Emissions (mt N2O)',
-        dataIndex: 'num_3',
-        key: 'num_3',
-    },
-    {
-        title: 'Timeframe',
-        dataIndex: '',
-        key: '',
-        render: (value: any) => (
-            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-        )
-    },
-    {
-        title: 'Date',
-        dataIndex: 'date',
-        key: 'date',
-        render: (value:any) => (
-            <span>
-                {moment(value).format('MM/DD/YYYY')}
-            </span>
-        ),
-    },
-    {
-        title: 'Resources',
-        dataIndex: 'resources',
-        key: 'resources',
-        render: (value: any) => (
-            <>
-            {value?.map((link:string, idx:number) => {
-              return (
-                  <a key={link} href={link}>Resource {idx +1} </a>
-              );
-            })}
-          </>
-        ),
-    },
-    {
-        title: 'User',
-        dataIndex: 'user_name',
-        key: 'user_name',
-    },
-    {
-        title: 'Submitted on',
-        dataIndex: 'created_at',
-        key: 'created_at',
-        render: (value:any) => (
-            <span>
-                {moment(value).format('MM/DD/YYYY h:mm')}
-            </span>
-        ),
-    }]
-
-    const hoursColumns = [
-    {
-        title: 'Organization',
-        dataIndex: 'organization',
-        key: 'organization'
-    },
-    {
-        title: 'Hours',
-        dataIndex: 'num_1',
-        key: 'num_1',
-    },
-    {
-        title: 'Employee ID',
-        dataIndex: 'employee_id',
-        key: 'employee_id',
-    },
-    {
-        title: 'Tax ID',
-        dataIndex: 'tax_id',
-        key: 'tax_id',
-    },
-    {
-        title: 'Timeframe',
-        dataIndex: '',
-        key: '',
-        render: (value: any) => (
-            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-        )
-    },
-    {
-        title: 'Date',
-        dataIndex: 'date',
-        key: 'date',
-        render: (value:any) => (
-            <span>
-                {moment(value).format('MM/DD/YYYY')}
-            </span>
-        ),
-    },
-    {
-        title: 'Resources',
-        dataIndex: 'resources',
-        key: 'resources',
-        render: (value: any) => (
-            <>
-            {value?.map((link:string, idx:number) => {
-              return (
-                  <a key={link} href={link}>Resource {idx +1} </a>
-              );
-            })}
-          </>
-        ),
-    },
-    {
-        title: 'User',
-        dataIndex: 'user_name',
-        key: 'user_name',
-    },
-    {
-        title: 'Submitted on',
-        dataIndex: 'created_at',
-        key: 'created_at',
-        render: (value:any) => (
-            <span>
-                {moment(value).format('MM/DD/YYYY h:mm')}
-            </span>
-        ),
-    }]
-
-    const donationColumns = [
-    {
-        title: 'Organization',
-        dataIndex: 'organization',
-        key: 'organization'
-    },
-    {
-        title: 'Amount Donated',
-        dataIndex: 'denominator',
-        key: 'denominator',
-        render: (value:any) => (
-            <span>
-                {value.toLocaleString('en-US', {style: 'currency',currency: 'USD'})}
-            </span>
-        ),
-    },
-    {
-        title: 'Timeframe',
-        dataIndex: '',
-        key: '',
-        render: (value: any) => (
-            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-        )
-    },
-    {
-        title: 'Date',
-        dataIndex: 'date',
-        key: 'date',
-        render: (value:any) => (
-            <span>
-                {moment(value).format('MM/DD/YYYY')}
-            </span>
-        ),
-    },
-    {
-        title: 'Resources',
-        dataIndex: 'resources',
-        key: 'resources',
-        render: (value: any) => (
-            <>
-            {value?.map((link:string, idx:number) => {
-              return (
-                  <a key={link} href={link}>Resource {idx +1} </a>
-              );
-            })}
-          </>
-        ),
-    },
-    {
-        title: 'User',
-        dataIndex: 'user_name',
-        key: 'user_name',
-    },
-    {
-        title: 'Submitted on',
-        dataIndex: 'created_at',
-        key: 'created_at',
-        render: (value:any) => (
-            <span>
-                {moment(value).format('MM/DD/YYYY h:mm')}
-            </span>
-        ),
-    }]
-
-    const genderColumns = [
-    {
-        title: 'Total Employees',
-        dataIndex: 'value',
-        key: 'value',
-    },
-    {
-        title: 'Male',
-        dataIndex: 'num_1',
-        key: 'num_2',
-    },
-    {
-        title: 'Female',
-        dataIndex: 'num_2',
-        key: 'num_2',
-    },
-    {
-        title: 'Non-Binary',
-        dataIndex: 'num_3',
-        key: 'num_3',
-    },
-    {
-        title: 'No Response',
-        dataIndex: 'num_4',
-        key: 'num_4',
-    },
-    {
-        title: 'Timeframe',
-        dataIndex: '',
-        key: '',
-        render: (value: any) => (
-            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-        )
-    },
-    {
-        title: 'Date',
-        dataIndex: 'date',
-        key: 'date',
-        render: (value:any) => (
-            <span>
-                {moment(value).format('MM/DD/YYYY')}
-            </span>
-        ),
-    },
-    {
-        title: 'Resources',
-        dataIndex: 'resources',
-        key: 'resources',
-        render: (value: any) => (
-            <>
-            {value?.map((link:string, idx:number) => {
-              return (
-                  <a key={link} href={link}>Resource {idx +1} </a>
-              );
-            })}
-          </>
-        ),
-    },
-    {
-        title: 'User',
-        dataIndex: 'user_name',
-        key: 'user_name',
-    },
-    {
-        title: 'Submitted on',
-        dataIndex: 'created_at',
-        key: 'created_at',
-        render: (value:any) => (
-            <span>
-                {moment(value).format('MM/DD/YYYY h:mm')}
-            </span>
-        ),
-    }]
-
-    const ethnicityColumns = [
-    {
-        title: 'Total Employees',
-        dataIndex: 'value',
-        key: 'value',
-    },
-    {
-        title: 'White/Caucasian',
-        dataIndex: 'num_1',
-        key: 'num_2',
-    },
-    {
-        title: 'Black/African American',
-        dataIndex: 'num_2',
-        key: 'num_2',
-    },
-    {
-        title: 'Asian/Pacific American',
-        dataIndex: 'num_3',
-        key: 'num_3',
-    },
-    {
-        title: 'Latino/Hispanics',
-        dataIndex: 'num_4',
-        key: 'num_4',
-    },
-    {
-        title: 'Native American',
-        dataIndex: 'num_5',
-        key: 'num_5',
-    },
-    {
-        title: 'Other',
-        dataIndex: 'num_6',
-        key: 'num_6',
-    },
-    {
-        title: 'Timeframe',
-        dataIndex: '',
-        key: '',
-        render: (value: any) => (
-            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-        )
-    },
-    {
-        title: 'Date',
-        dataIndex: 'date',
-        key: 'date',
-        render: (value:any) => (
-            <span>
-                {moment(value).format('MM/DD/YYYY')}
-            </span>
-        ),
-    },
-    {
-        title: 'Resources',
-        dataIndex: 'resources',
-        key: 'resources',
-        render: (value: any) => (
-            <>
-            {value?.map((link:string, idx:number) => {
-              return (
-                  <a key={link} href={link}>Resource {idx +1} </a>
-              );
-            })}
-          </>
-        ),
-    },
-    {
-        title: 'User',
-        dataIndex: 'user_name',
-        key: 'user_name',
-    },
-    {
-        title: 'Submitted on',
-        dataIndex: 'created_at',
-        key: 'created_at',
-        render: (value:any) => (
-            <span>
-                {moment(value).format('MM/DD/YYYY h:mm')}
-            </span>
-        ),
-    }]
-
-    const trirColumns = [
-        {
-            title: 'TRIR Employees',
-            dataIndex: 'value',
-            key: 'value',
-        },
-        {
-            title: 'Number of Employee Recordable Incidents',
-            dataIndex: 'num_1',
-            key: 'num_2',
-        },
-        {
-            title: 'Number of Employee Fatalities',
-            dataIndex: 'num_2',
-            key: 'num_2',
-        },
-        {
-            title: 'Number of Employee Lost Time Incidents',
-            dataIndex: 'num_3',
-            key: 'num_3',
-        },
-        {
-            title: 'Employee Hours Worked',
-            dataIndex: 'denominator',
-            key: 'denominator',
-        },
-        {
-            title: 'Timeframe',
-            dataIndex: '',
-            key: '',
-            render: (value: any) => (
-                <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-            )
-        },
-        {
-            title: 'Date',
-            dataIndex: 'date',
-            key: 'date',
-            render: (value:any) => (
-                <span>
-                    {moment(value).format('MM/DD/YYYY')}
-                </span>
-            ),
-        },
-        {
-            title: 'Resources',
-            dataIndex: 'resources',
-            key: 'resources',
-            render: (value: any) => (
-                <>
-                {value?.map((link:string, idx:number) => {
-                  return (
-                      <a key={link} href={link}>Resource {idx +1} </a>
-                  );
-                })}
-              </>
-            ),
-        },
-        {
-            title: 'User',
-            dataIndex: 'user_name',
-            key: 'user_name',
-        },
-        {
-            title: 'Submitted on',
-            dataIndex: 'created_at',
-            key: 'created_at',
-            render: (value:any) => (
-                <span>
-                    {moment(value).format('MM/DD/YYYY h:mm')}
-                </span>
-            ),
-    }]
-
-    const productionsColumns = [
-        {
-            title: 'Oil Production',
-            dataIndex: 'num_1',
-            key: 'num_1'
-        },
-        {
-            title: 'Gas Production',
-            dataIndex: 'num_2',
-            key: 'num_2'
-        },
-        {
-            title: 'Produced Water Production',
-            dataIndex: 'num_3',
-            key: 'num_3'
-        },
-        {
-            title: 'Synthetic Oil Production',
-            dataIndex: 'num_4',
-            key: 'num_4'
-        },
-        {
-            title: 'Synthetic Gas Production',
-            dataIndex: 'num_5',
-            key: 'num_5'
-        },
-        {
-            title: 'Timeframe',
-            dataIndex: '',
-            key: '',
-            render: (value: any) => (
-                <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-            )
-        },
-        {
-            title: 'Date',
-            dataIndex: 'date',
-            key: 'date',
-            render: (value:any) => (
-                <span>
-                    {moment(value).format('MM/DD/YYYY')}
-                </span>
-            ),
-        },
-        {
-            title: 'Resources',
-            dataIndex: 'resources',
-            key: 'resources',
-            render: (value: any) => (
-                <>
-                {value?.map((link:string, idx:number) => {
-                  return (
-                      <a key={link} href={link}>Resource {idx +1} </a>
-                  );
-                })}
-              </>
-            ),
-        },
-        {
-            title: 'User',
-            dataIndex: 'user_name',
-            key: 'user_name',
-        },
-        {
-            title: 'Submitted on',
-            dataIndex: 'created_at',
-            key: 'created_at',
-            render: (value:any) => (
-                <span>
-                    {moment(value).format('MM/DD/YYYY h:mm')}
-                </span>
-            ),
-    }]
-
     const getStandards = useCallback((metricCodes: any) =>{
         ResourceService.index({
             resourceName: 'standards',
@@ -703,14 +89,420 @@ const MetricSubtype = () => {
 
     }, [setMetricStandards])
 
+    // DATA STORAGE
+    const subMetricColumns = {
+        "GHG Emissions": [
+            {
+                title: 'GHG Emissions',
+                dataIndex: 'value',
+                key: 'value',
+                render: (value:any) => (
+                    <span>
+                        {value.toLocaleString()}
+                    </span>
+                ),
+            },
+            {
+                title: 'CO2 Emissions (mt CO2)',
+                dataIndex: 'num_1',
+                key: 'num_1',
+            },
+            {
+                title: 'CH4 Emissions (mt CH4)',
+                dataIndex: 'num_2',
+                key: 'num_2',
+            },
+            {
+                title: 'N2O Emissions (mt N2O)',
+                dataIndex: 'num_3',
+                key: 'num_3',
+            },
+            {
+                title: 'Timeframe',
+                dataIndex: '',
+                key: '',
+                render: (value: any) => (
+                    <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
+                )
+            },
+            {
+                title: 'Date',
+                dataIndex: 'date',
+                key: 'date',
+                render: (value:any) => (
+                    <span>
+                        {moment(value).format('MM/DD/YYYY')}
+                    </span>
+                ),
+            },
+        ],
+        "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas": [
+            {
+                title: 'Oil Production',
+                dataIndex: 'num_1',
+                key: 'num_1'
+            },
+            {
+                title: 'Gas Production',
+                dataIndex: 'num_2',
+                key: 'num_2'
+            },
+            {
+                title: 'Produced Water Production',
+                dataIndex: 'num_3',
+                key: 'num_3'
+            },
+            {
+                title: 'Synthetic Oil Production',
+                dataIndex: 'num_4',
+                key: 'num_4'
+            },
+            {
+                title: 'Synthetic Gas Production',
+                dataIndex: 'num_5',
+                key: 'num_5'
+            },
+            {
+                title: 'Timeframe',
+                dataIndex: '',
+                key: '',
+                render: (value: any) => (
+                    <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
+                )
+            },
+            {
+                title: 'Date',
+                dataIndex: 'date',
+                key: 'date',
+                render: (value:any) => (
+                    <span>
+                        {moment(value).format('MM/DD/YYYY')}
+                    </span>
+                ),
+            },
+        ],
+        "Social Investment": [
+            {
+                title: 'Organization',
+                dataIndex: 'organization',
+                key: 'organization'
+            },
+            {
+                title: 'Amount Donated',
+                dataIndex: 'denominator',
+                key: 'denominator',
+                render: (value:any) => (
+                    <span>
+                        {value.toLocaleString('en-US', {style: 'currency',currency: 'USD'})}
+                    </span>
+                ),
+            },
+            {
+                title: 'Timeframe',
+                dataIndex: '',
+                key: '',
+                render: (value: any) => (
+                    <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
+                )
+            },
+            {
+                title: 'Date',
+                dataIndex: 'date',
+                key: 'date',
+                render: (value:any) => (
+                    <span>
+                        {moment(value).format('MM/DD/YYYY')}
+                    </span>
+                ),
+            },
+        ],
+        "TRIR - Employees": [
+            {
+                title: 'TRIR Employees',
+                dataIndex: 'value',
+                key: 'value',
+            },
+            {
+                title: 'Number of Employee Recordable Incidents',
+                dataIndex: 'num_1',
+                key: 'num_2',
+            },
+            {
+                title: 'Number of Employee Fatalities',
+                dataIndex: 'num_2',
+                key: 'num_2',
+            },
+            {
+                title: 'Number of Employee Lost Time Incidents',
+                dataIndex: 'num_3',
+                key: 'num_3',
+            },
+            {
+                title: 'Employee Hours Worked',
+                dataIndex: 'denominator',
+                key: 'denominator',
+            },
+            {
+                title: 'Timeframe',
+                dataIndex: '',
+                key: '',
+                render: (value: any) => (
+                    <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
+                )
+            },
+            {
+                title: 'Date',
+                dataIndex: 'date',
+                key: 'date',
+                render: (value:any) => (
+                    <span>
+                        {moment(value).format('MM/DD/YYYY')}
+                    </span>
+                ),
+            },
+        ],
+        "Volunteering - Community": [
+            {
+                title: 'Organization',
+                dataIndex: 'organization',
+                key: 'organization'
+            },
+            {
+                title: 'Hours',
+                dataIndex: 'num_1',
+                key: 'num_1',
+            },
+            {
+                title: 'Employee ID',
+                dataIndex: 'employee_id',
+                key: 'employee_id',
+            },
+            {
+                title: 'Tax ID',
+                dataIndex: 'tax_id',
+                key: 'tax_id',
+            },
+            {
+                title: 'Timeframe',
+                dataIndex: '',
+                key: '',
+                render: (value: any) => (
+                    <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
+                )
+            },
+            {
+                title: 'Date',
+                dataIndex: 'date',
+                key: 'date',
+                render: (value:any) => (
+                    <span>
+                        {moment(value).format('MM/DD/YYYY')}
+                    </span>
+                ),
+            },
+        ],
+        "Workforce Demographics - Gender": [
+            {
+                title: 'Total Employees',
+                dataIndex: 'value',
+                key: 'value',
+            },
+            {
+                title: 'Male',
+                dataIndex: 'num_1',
+                key: 'num_2',
+            },
+            {
+                title: 'Female',
+                dataIndex: 'num_2',
+                key: 'num_2',
+            },
+            {
+                title: 'Non-Binary',
+                dataIndex: 'num_3',
+                key: 'num_3',
+            },
+            {
+                title: 'No Response',
+                dataIndex: 'num_4',
+                key: 'num_4',
+            },
+            {
+                title: 'Timeframe',
+                dataIndex: '',
+                key: '',
+                render: (value: any) => (
+                    <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
+                )
+            },
+            {
+                title: 'Date',
+                dataIndex: 'date',
+                key: 'date',
+                render: (value:any) => (
+                    <span>
+                        {moment(value).format('MM/DD/YYYY')}
+                    </span>
+                ),
+            },
+        ],
+        "Workforce Demographics - Ethnicity": [
+            {
+                title: 'Total Employees',
+                dataIndex: 'value',
+                key: 'value',
+            },
+            {
+                title: 'White/Caucasian',
+                dataIndex: 'num_1',
+                key: 'num_2',
+            },
+            {
+                title: 'Black/African American',
+                dataIndex: 'num_2',
+                key: 'num_2',
+            },
+            {
+                title: 'Asian/Pacific American',
+                dataIndex: 'num_3',
+                key: 'num_3',
+            },
+            {
+                title: 'Latino/Hispanics',
+                dataIndex: 'num_4',
+                key: 'num_4',
+            },
+            {
+                title: 'Native American',
+                dataIndex: 'num_5',
+                key: 'num_5',
+            },
+            {
+                title: 'Other',
+                dataIndex: 'num_6',
+                key: 'num_6',
+            },
+            {
+                title: 'Timeframe',
+                dataIndex: '',
+                key: '',
+                render: (value: any) => (
+                    <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
+                )
+            },
+            {
+                title: 'Date',
+                dataIndex: 'date',
+                key: 'date',
+                render: (value:any) => (
+                    <span>
+                        {moment(value).format('MM/DD/YYYY')}
+                    </span>
+                ),
+            },
+        ]
+    }
+
+    /**
+     * Creates columns for reports based on metric-subtype
+     * 
+     * @returns Array of Objects
+     */
+    const determineColumns = (columnOptions: any, metricSubtype: string | null) => {
+        const columnExists = metricSubtype ? columnOptions.hasOwnProperty(metricSubtype) : false;
+        
+        if (columnExists && metricSubtype) {
+            return columnOptions[metricSubtype];
+        } else {
+            const checkIfDiscussion = metricSubtype?.includes('Discussion');
+            if (checkIfDiscussion) {
+                // Return Discussion Columns
+                return [{
+                    title: searchParams.get("metric_subtype") || '',
+                    dataIndex: 'value',
+                    key: 'value',
+                    render: (value:any) => (
+                        <span>
+                            {value > 0 ? 'Policy in place' : 'No policy'}
+                        </span>
+                    ),
+                },
+                {
+                    title: 'Timeframe',
+                    dataIndex: '',
+                    key: '',
+                    render: (value: any) => (
+                        <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
+                    )
+                },
+                {
+                    title: 'Date',
+                    dataIndex: 'date',
+                    key: 'date',
+                }]
+            } else {
+                // Returns Base Columns
+                return [{
+                        title: metricSubtype || '',
+                        dataIndex: 'value',
+                        key: 'value'
+                    },
+                    // We've got a side effect here.
+                    {
+                        title: 'Timeframe',
+                        dataIndex: '',
+                        key: '',
+                        render: (value: any) => (
+                            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
+                        )
+                    },
+                    {
+                        title: 'Date',
+                        dataIndex: 'date',
+                        key: 'date',
+                }]
+            }
+        }
+    }
+
     /**
      * Determines which columns to generate based on metric-subtype.
      * 
      * @returns Array of Objects
      */
-    const getColumns = () => {
-        // Placing this column allows me to place it on every table.
-        const actionsColumn = [{
+    const getColumns = (objectOfColumns: any, metricSubtype: string | null) => {
+        let baseColumns = determineColumns(objectOfColumns, metricSubtype)
+        // Columns that every option shares in common.
+        const additionalColumns = [{
+            title: 'Resources',
+            dataIndex: 'resources',
+            key: 'resources',
+            render: (value: any) => (
+                <>
+                {value?.map((link:string, idx:number) => {
+                  return (
+                      <a key={link} href={link}>Resource {idx +1} </a>
+                  );
+                })}
+              </>
+            ),
+        },
+        {
+            title: 'User',
+            dataIndex: 'user_name',
+            key: 'user_name',
+        },
+        {
+            title: 'Submitted on',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            render: (value:any) => (
+                <span>
+                    {moment(value).format('MM/DD/YYYY h:mm')}
+                </span>
+            ),
+        },
+        {
             title: 'Actions',
             // Gives access to ID for deleting the value.
             dataIndex: 'id',
@@ -719,6 +511,7 @@ const MetricSubtype = () => {
                 <Popconfirm
                     title="Delete This Row?"
                     okText="Delete"
+                    // Another side effect
                     onConfirm={(e: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => {
                         handleDelete(e, value)
                     }}
@@ -732,25 +525,7 @@ const MetricSubtype = () => {
             )
         }]
 
-        if (searchParams.get("metric_subtype") === 'GHG Emissions') return ghgColumns.concat(actionsColumn)
-        if (searchParams.get("metric_subtype")?.includes('Discussion')) return discussionColumns.concat(actionsColumn)
-
-        switch (searchParams.get("metric_subtype")) {
-            case 'Volunteering - Community':
-                return hoursColumns.concat(actionsColumn)
-            case 'Social Investment':
-                return donationColumns.concat(actionsColumn)
-            case 'Workforce Demographics - Gender':
-                return genderColumns.concat(actionsColumn)
-            case 'Workforce Demographics - Ethnicity':
-                return ethnicityColumns.concat(actionsColumn)
-            case 'TRIR - Employees':
-                return trirColumns.concat(actionsColumn)
-            case 'Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas':
-                return productionsColumns.concat(actionsColumn)
-            default:
-                return columns.concat(actionsColumn)
-        }
+        return baseColumns.concat(additionalColumns)
     }
 
     /**
@@ -830,7 +605,7 @@ const MetricSubtype = () => {
                                     <Table
                                         title={() => `${searchParams.get("metric_name")} - ${searchParams.get("metric_subtype")}`}
                                         pagination={false}
-                                        columns={getColumns()} 
+                                        columns={getColumns(subMetricColumns, searchParams.get("metric_subtype"))}
                                         dataSource={sortBy(reportData?.esg_metrics, [function(o) { return o.date; }])} 
                                         rowKey={'id'} 
                                     />
