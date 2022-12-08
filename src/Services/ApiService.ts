@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import AuthService from "./AuthService";
+// import AuthService from "./AuthService";
 
 const APIClient = axios.create({
     baseURL: process.env.API_URL || 'http://localhost',
@@ -24,10 +24,11 @@ APIClient.interceptors.response.use(
             if (
                 [401].includes(error.response.status)
             ) {
-                AuthService.logout().finally(() => {
-                    localStorage.removeItem('_U')
-                    window.location.replace("/login");
-                })
+                // AuthService.logout().finally(() => {
+                //     localStorage.removeItem('_U')
+                //     window.location.replace("/login");
+                // })
+                console.log(error)
             }
         }
         return Promise.reject(error);
