@@ -25,7 +25,7 @@ const ContentWrapper = styled.div`
 `
 
 const DataMetricNames = () => {
-    const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app'
+    const baseUrl = process.env.API_URL || 'http://localhost'
     const [standards, setStandards] = useState<any>()
     let token = Cookies.get('XSRF-TOKEN')
     const headers = {

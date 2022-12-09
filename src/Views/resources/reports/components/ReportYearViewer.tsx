@@ -33,7 +33,7 @@ import GoalViewer from "./GoalViewer";
 import Cookies from 'js-cookie';
 
 const {Panel} = Collapse;
-const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://api.litico.app';
+const baseUrl = process.env.API_URL || 'http://localhost'
 const {Title} = Typography
 
 type TReportYearViewer = {

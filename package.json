@@ -21,6 +21,8 @@
     "@types/react-dom": "^17.0.11",
     "antd": "4.23.3",
     "axios": "0.27.2",
+    "cross-env": "^7.0.3",
+    "dotenv-webpack": "^8.0.1",
     "escape-html": "^1.0.3",
     "html-dom-parser": "^1.0.3",
     "js-cookie": "^3.0.1",
@@ -40,9 +42,9 @@
     "styled-components": "^5.3.3"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
-    "test": "craco test"
+    "start": "cross-env craco start",
+    "build": "cross-env craco build",
+    "test": "cross-env craco test"
   },
   "eslintConfig": {
     "extends": [
