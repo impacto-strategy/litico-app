@@ -9,7 +9,7 @@ import {
     UnderlineOutlined,
     UnorderedListOutlined
 } from '@ant-design/icons';
-import {getQuarterFromDate} from "../utils";
+import {getQuarterFromDate} from "../utils/utils";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import ResourceService from "../Services/ResourceService";
 import Cookies from 'js-cookie';
