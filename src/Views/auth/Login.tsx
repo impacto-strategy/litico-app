@@ -5,6 +5,7 @@ import styled from "styled-components";
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {useEffect, useState} from "react";
 import {AxiosResponse} from "axios";
+import StagingBanner from '../../Components/StagingBanner';
 
 const Wrapper = styled.div`
   padding: 70px 0;
@@ -79,6 +80,7 @@ const Login = () => {
 
     return (
         <Wrapper>
+            <StagingBanner />
             <Container>
                 <div>
                     <Row>
