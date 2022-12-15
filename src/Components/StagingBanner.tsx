@@ -3,7 +3,7 @@ import { Alert } from "antd";
 const StagingBanner = () => {
   return (
     <div>
-      {(process.env.NODE_ENV === 'staging') &&
+      {(process.env.APP_ENV === 'staging') &&
         <Alert
           style={{
             height: '64px',
