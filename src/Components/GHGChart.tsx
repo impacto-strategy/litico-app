@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { DualAxes } from '@ant-design/plots';
 
 /* IMPORT INTERNAL MODULES */
-import {formatValue} from "../utils";
+import {formatValue} from "../utils/utils";
 
 // Will need to adjust interface.
 interface GHGChartProps {

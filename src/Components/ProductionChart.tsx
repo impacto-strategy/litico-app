@@ -4,7 +4,7 @@ import { DualAxes} from "@ant-design/charts";
 import styled from "styled-components";
 
 /* IMPORT INTERNAL MODULES */
-import { formatValue } from '../utils';
+import { formatValue } from '../utils/utils';
 import { ArrOfObj } from '../../global';
 
 interface ProductionChartProps {
