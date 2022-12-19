@@ -1,10 +1,39 @@
 import { Button, Col, Card, Input, Modal, Row, Space, Tag } from "antd";
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
+import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { filter, flatten, map } from "lodash";
 
-const MetricSubtypeTabs = ({ standards, report, showReport }:any) => {
+const MetricSubtypeTabs = ({ standards, report, showReport }: any) => {
+  const Overlay = styled.div `
+    position: absolute;
+    height: 100%;
+    width: 85%;
+    @media only screen and (min-width: 1024px) {
+      width: 95%;
+    }
+    background-color: lightgray;
+    z-index: 100;
+    opacity: .5;
+    span {
+      transform: rotate(300deg);
+      -webkit-transform: rotate(300deg);
+      -moz-transform: rotate(300deg);
+      -ms-transform: rotate(300deg);
+      -o-transform: rotate(300deg);
+      position: absolute;
+      top: 35%;
+      left:40%;
+      font-size: 18px;
+      color: #000000;
+      @media only screen and (min-width: 1024px) {
+        top: 35%;
+        left: 50%;
+        font-size: 22px;
+      }
+    }
+  `
   const [search, setSearch] = useState("");
   const [metricDescription, setMetricDescription] = useState("");
   const [showDescription, setShowDescription] = useState<any>([]);
@@ -78,7 +107,12 @@ const MetricSubtypeTabs = ({ standards, report, showReport }:any) => {
             <p>No results</p>
         }
         {modStandards?.map((item: any, idx:string) => (
-          <Col sm={{span: 24}} lg={{span: 8}} key={idx} style={{ marginBottom: 32 }}>
+          <Col sm={{ span: 24 }} lg={{ span: 8 }} key={idx} style={{ marginBottom: 32 }}>
+            {item[0].is_active !== 1 &&
+              <Link to={getLink(item[0])}>
+                <Overlay><span>Coming Soon</span></Overlay>
+              </Link>
+            }
             <Card
               title={item[0].metric_subtype}
               key={idx}
