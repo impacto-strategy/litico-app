@@ -488,6 +488,11 @@ const MetricSubtype = () => {
             ),
         },
         {
+            title: 'Source',
+            dataIndex: 'source',
+            key: 'source',
+        },
+        {
             title: 'User',
             dataIndex: 'user_name',
             key: 'user_name',
