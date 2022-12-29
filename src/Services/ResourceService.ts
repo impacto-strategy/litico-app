@@ -25,3 +25,13 @@ const ResourceService = {
 };
 
 export default ResourceService
+
+export const APICallAndAct = (name: string, callBack: Function) => {
+    ResourceService['index']({
+        resourceName: name
+    }).then(({data}: any) => {
+        callBack(data);
+    }).catch((err) => {
+        console.log(err)
+    })
+}
