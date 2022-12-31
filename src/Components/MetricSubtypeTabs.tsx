@@ -1,39 +1,12 @@
-import { Button, Col, Card, Input, Modal, Row, Space, Tag } from "antd";
-import { DownOutlined, UpOutlined } from '@ant-design/icons';
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+/* IMPORT EXTERNAL MODULES */
+import { Col, Input, Modal, Row } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { filter, flatten, map } from "lodash";
 
+/* IMPORT INTERNAL MODULES */
+import MetricSubtypeCards from "./MetricSubtypeCards";
+
 const MetricSubtypeTabs = ({ standards, report, showReport }: any) => {
-  const Overlay = styled.div `
-    position: absolute;
-    height: 100%;
-    width: 85%;
-    @media only screen and (min-width: 1024px) {
-      width: 95%;
-    }
-    background-color: lightgray;
-    z-index: 100;
-    opacity: .5;
-    span {
-      transform: rotate(300deg);
-      -webkit-transform: rotate(300deg);
-      -moz-transform: rotate(300deg);
-      -ms-transform: rotate(300deg);
-      -o-transform: rotate(300deg);
-      position: absolute;
-      top: 35%;
-      left:40%;
-      font-size: 18px;
-      color: #000000;
-      @media only screen and (min-width: 1024px) {
-        top: 35%;
-        left: 50%;
-        font-size: 22px;
-      }
-    }
-  `
   const [search, setSearch] = useState("");
   const [metricDescription, setMetricDescription] = useState("");
   const [showDescription, setShowDescription] = useState<any>([]);
@@ -85,7 +58,7 @@ const MetricSubtypeTabs = ({ standards, report, showReport }: any) => {
       return `/reports/${report.id}/metric-subtype?metric_name=${item.metric_name}&metric_subtype=${item.metric_subtype}`
     } else {
       return `/metric-subtype?metric_name=${item.metric_name}&metric_subtype=${item.metric_subtype}`
-    } 
+    }
   }
 
   useEffect(() => {
@@ -106,54 +79,20 @@ const MetricSubtypeTabs = ({ standards, report, showReport }: any) => {
         {(modStandards && modStandards?.length < 1) &&
             <p>No results</p>
         }
+        {/* Generates Metric Cards */}
         {modStandards?.map((item: any, idx:string) => (
-          <Col sm={{ span: 24 }} lg={{ span: 8 }} key={idx} style={{ marginBottom: 32 }}>
-            {item[0].is_active !== 1 &&
-              <Link to={getLink(item[0])}>
-                <Overlay><span>Coming Soon</span></Overlay>
-              </Link>
-            }
-            <Card
-              title={item[0].metric_subtype}
-              key={idx}
-              type='inner'
-              extra={<Link
-                  to={getLink(item[0])}>View</Link>}
-                  actions={[
-                      <div>{showReport && getReportEntries(item[0].metric_subtype)}</div>,
-                      <div>{showReport && '0 Pending Approval'}</div>,
-                  ]}
-              >
-              <Space direction={'vertical'}>
-                  {metricCodes(item).map((code: any) => (
-                      <Tag key={code}>{code}</Tag>
-                    )
-                  )}
-              </Space>
-              {(item[0].description && !showReport && !showDescription.includes(idx)) &&
-                <DownOutlined style={{
-                  float: 'right'
-                }} onClick={(() => displayDescription(idx))} />
-              }
-              {(item[0].description && !showReport && showDescription.includes(idx)) &&
-                <UpOutlined style={{
-                  float: 'right'
-                }} onClick={(() => hideDescription(idx))} />
-              }
-              {(!showReport && showDescription.includes(idx)) &&
-                <Row style={{ paddingTop: '20px' }}>
-                  {(item?.description && item[0].description.length > 500) ?
-                    <div>
-                      <p>{`${item[0].description.substring(0, 500)}...`}</p>
-                      <p><Button type="link" onClick={() => showModal(item[0].description)}>Read more</Button></p>
-                    </div>
-                    :
-                    <p>{item[0].description}</p>
-                  }
-                </Row>
-              }
-            </Card>
-          </Col>
+          <MetricSubtypeCards
+            displayDescription={displayDescription}
+            getLink={getLink}
+            getReportEntries={getReportEntries}
+            hideDescription={hideDescription}
+            idx={idx}
+            item={item}
+            metricCodes={metricCodes}
+            showDescription={showDescription}
+            showModal={showModal}
+            showReport={showReport}
+          />
         ))}
       </Row>
       <Modal title="Metric Description" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
