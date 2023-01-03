@@ -75,22 +75,7 @@ const Dashboard: FC = () => {
             console.log(err)
         })
     }, [setSpills])
-
-    const getMetricsByYear = useCallback((year: number, basin: string, metricSubtype: string) => {
-        let data = filter(metrics.esg_metrics, { 'metric_subtype': metricSubtype })
-
-        let metricByYear = find(data, (em) => {
-            if (basin) {
-                return new Date(em.date).getFullYear() === year && em.basin === basin
-            } else {
-                return new Date(em.date).getFullYear() === year
-            }
-        })
-
-        if (!metricByYear?.value) return null
-        return metricByYear
-    }, [metrics])
-
+    
     const getOilProduction = useCallback(() => {
         ResourceService.index({
             resourceName: 'productions'
@@ -111,6 +96,22 @@ const Dashboard: FC = () => {
             console.log(err)
         })
     }, [])
+
+    /* NEEDS REFACTORING STILL */
+    const getMetricsByYear = useCallback((year: number, basin: string, metricSubtype: string) => {
+        let data = filter(metrics.esg_metrics, { 'metric_subtype': metricSubtype })
+
+        let metricByYear = find(data, (em) => {
+            if (basin) {
+                return new Date(em.date).getFullYear() === year && em.basin === basin
+            } else {
+                return new Date(em.date).getFullYear() === year
+            }
+        })
+
+        if (!metricByYear?.value) return null
+        return metricByYear
+    }, [metrics])
 
     const getDonationData = useMemo(() => {
         return flatten(map(groupBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => extractYear(o.date)), (year: any) => ([

@@ -30,12 +30,15 @@ import {
 import ColumnWidget from "../Components/ColumnWidget";
 import DonationsVolunteerCharts from "../Components/DonationsVolunteerCharts";
 import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
-import StackedBarWidget from "../Components/StackedBarWidget";
+import Environment from "../Components/Dashboard/Environment";
 import GHGChart from "../Components/GHGChart";
-import LDAR from "../Components/LDAR";
-import SafetyMetrics from "../Components/SafetyMetrics";
-import ProductionChart from "../Components/ProductionChart"
+import Governance from "../Components/Dashboard/Governance";
 import GovernanceCheckList from "../Components/GovernanceCheckList";
+import LDAR from "../Components/LDAR";
+import ProductionChart from "../Components/ProductionChart";
+import SafetyMetrics from "../Components/SafetyMetrics";
+import Social from "../Components/Dashboard/Social";
+import StackedBarWidget from "../Components/StackedBarWidget";
 // MISC INTERNAL MODULES
 import ResourceService, {APICallAndAct} from "../Services/ResourceService";
 import useAuth from "../Providers/Auth/useAuth";
@@ -57,7 +60,8 @@ const NEWDashboard: FC = () => {
     const [production, setProduction] = useState<ArrOfObj>([])
     const [spills, setSpills] = useState<ArrOfObj>([])
 
-    /* API Function Calls */
+    /* React Context */
+    const {user} = useAuth();
 
     /* UseEffect Calls*/
     useEffect(() => {
@@ -80,11 +84,12 @@ const NEWDashboard: FC = () => {
         APICallAndAct('complaints', ((data: any) => setComplaints(data)))
     }, [])
 
-    // testing function calls
-    console.log("This is emissions: ", emissions)
-    console.log("This is spills: ", spills)
     return (
-        <div>TESTING</div>
+        <div className="site-layout-background">
+            <Environment />
+            <Social />
+            <Governance />
+        </div>
     )
 }
 
