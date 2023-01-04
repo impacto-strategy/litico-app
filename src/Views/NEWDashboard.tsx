@@ -87,7 +87,7 @@ const NEWDashboard: FC = () => {
     return (
         <div className="site-layout-background">
             <Environment />
-            <Social />
+            <Social incidentData={filter(metrics.esg_metrics, { 'metric_subtype': 'TRIR - All Workers' })}/>
             <Governance />
         </div>
     )

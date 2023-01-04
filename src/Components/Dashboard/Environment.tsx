@@ -1,7 +1,18 @@
 import {Divider} from "antd";
-import React from "react";
+import React, {FC} from "react";
 
-const Environment = () => {
+interface SectionProps {
+
+}
+
+const Environment: FC = (props: SectionProps): JSX.Element => {
+    // GET EMISSIONS DATA FUNCTION
+
+    // GET SPILLS DATA FUNCTION
+
+    // GET COMPLAINTS DATA FUNCTION
+
+    // GET PRODUCTION DATA
     return (
         <div>
             <div>

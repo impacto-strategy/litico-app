@@ -1,6 +1,6 @@
 /* INTERNAL MODULES */
 // Utilities
-import { groupByFactors } from "../utils/arrayUtils";
+import { groupByMultiple } from "../utils/arrayUtils";
 
 // Interfaces and Types
 import { ArrOfObj } from "../../global";
@@ -37,7 +37,7 @@ export const calcSpillsTotals = (data: ArrOfObj): {[key: string]: number} => {
  */
 export const calcProductionTotal = (data: ArrOfObj): {[key: string]: number} => {
     // Helps handle timeframe and year.
-    const sortedData: any = groupByFactors(data, "year", "timeframe")
+    const sortedData: any = groupByMultiple(data, "year", "timeframe")
     let result: {[key: string]: number} = {}
     for (const key of Object.keys(sortedData)) {
         // Handles only yearly data scenarios.

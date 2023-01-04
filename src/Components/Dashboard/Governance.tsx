@@ -1,7 +1,11 @@
 import {Divider} from "antd";
-import React from "react";
+import React, {FC} from "react";
 
-const Governance = () => {
+interface SectionProps {
+
+}
+
+const Governance: FC = (props: SectionProps): JSX.Element => {
     return (
         <div>
             <div>
