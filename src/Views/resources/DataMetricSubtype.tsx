@@ -23,7 +23,7 @@ const ContentWrapper = styled.div`
 `
 
 const DataMetricSubtype = () => {
-    const baseUrl = process.env.API_URL || 'http://localhost'
+    const baseUrl = process.env.API_URL || 'http://localhost:8000'
     const [searchParams] = useSearchParams();
     // React State
     const [timeframeSelected, setTimeFrame] = useState<"date" | "month" | "quarter" | "year">("date")
