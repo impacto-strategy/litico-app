@@ -62,9 +62,9 @@ export const calcSpillIntensity = (productionData: ArrOfObj, spillData: ArrOfObj
     // We need to calculate totals for oil, gas, water, and spills
     const dataByProduct = groupBy(productionData, o => o.product);
     for (const key of Object.keys(dataByProduct)) {
-            totals[key] = calcProductionTotal(dataByProduct[key])
+            totals[key] = calcProductionTotal(dataByProduct[key].filter((obj: any) => obj.basin === "DJ Basin"))
     }
-    totals["spills"] = calcSpillsTotals(spillData)
+    totals["spills"] = calcSpillsTotals(spillData.filter((obj: any) => obj.basin === "DJ Basin"))
     // Might move into own function.
     for (const key of Object.keys(totals.spills)) {
         let liquidProduced = 0;
@@ -77,7 +77,8 @@ export const calcSpillIntensity = (productionData: ArrOfObj, spillData: ArrOfObj
         if (liquidProduced <= 0) {
             continue;
         } else {
-            result[key] =totals.spills[key] / (liquidProduced / 1000)
+            console.log("What is liquidProduced: ",liquidProduced);
+            result[key] = totals.spills[key] / (liquidProduced / 1000)
         }
     }
     return result;
