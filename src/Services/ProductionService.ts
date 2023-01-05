@@ -77,8 +77,7 @@ export const calcSpillIntensity = (productionData: ArrOfObj, spillData: ArrOfObj
         if (liquidProduced <= 0) {
             continue;
         } else {
-            console.log("What is liquidProduced: ",liquidProduced);
-            result[key] = totals.spills[key] / (liquidProduced / 1000)
+            result[key] = totals.spills[key] / (liquidProduced / 1000);
         }
     }
     return result;

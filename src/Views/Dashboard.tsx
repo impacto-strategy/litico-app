@@ -190,7 +190,6 @@ const Dashboard: FC = () => {
             return year
         });
         const intensityCalc: any = calcSpillIntensity(production, spills);
-        console.log("what does spills count look like?", intensityCalc);
         return flatten(map(spillsCountByYear, (e, key) => ([
             { name: "Spills Count", type: key, value: e.length, intensity: intensityCalc[key], items: e }
         ])))
