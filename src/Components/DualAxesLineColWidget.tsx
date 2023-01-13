@@ -81,7 +81,7 @@ const DualAxesLineColWidget: FC<PropsInterface> = props => {
 
   const config = {
     data: [props.data, props.data],
-    animation: false,
+    // animation: false,
     point: {
       style: () => {
         let config = {
