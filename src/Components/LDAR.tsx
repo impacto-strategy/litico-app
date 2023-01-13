@@ -53,13 +53,25 @@ const LDAR = () => {
                 label: {
                     formatter: (v: string) => formatValue(+v),
                 },
+                title: {
+                    style: {
+                      fontSize: 12,
+                    },
+                    text: 'Count of Leaks Detected'
+                },
             },
             inspections: {
                 min: 0,
                 max: 125,
                 label: {
                     formatter: (v: string) => formatValue(+v),
-                }
+                },
+                title: {
+                    style: {
+                      fontSize: 12,
+                    },
+                    text: 'Inspection Count'
+                },
             }
         },
         legend: {
