@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import Cookies from 'js-cookie';
 import AuthService from "./AuthService";
 
 const APIClient = axios.create({
@@ -27,6 +27,7 @@ APIClient.interceptors.response.use(
                 AuthService.logout().finally(() => {
                     localStorage.removeItem('_U')
                     window.location.replace("/login");
+                    Cookies.remove('laravel_session');
                 })
             }
         }
