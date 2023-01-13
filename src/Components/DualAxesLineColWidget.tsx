@@ -71,6 +71,15 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
   const config = {
     data: [props.data, props.data],
     animation: false,
+    point: {
+      style: () => {
+        let config = {
+            fill: 'white',
+            lineWidth: 3
+        }
+        return config;
+      },
+    },
     color: ['#477EB7', '#5AC5BF', '#46AD75'],
     xField: 'type',
     yField: ['value', 'intensity'],
@@ -112,10 +121,8 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
       },
       {
         geometry: 'line',
-        point: {
-          lineWidth: 2,
-          shape: 'dot',
-          size: 5,
+        lineStyle: {
+          lineWidth: 3,
         },
       },
     ],
@@ -133,7 +140,6 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
         alias: props.lineLabel,
       },
     },
-    limitInPlot: false,
     onReady: (plot: any) => {
       if (props.includeModal) {
         plot.on('interval:click', (args: any) => {
