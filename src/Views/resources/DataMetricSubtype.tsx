@@ -406,6 +406,11 @@ const DataMetricSubtype = () => {
                         </Row>
                         <Row gutter={24}>
                             <Col lg={{span: 12}} sm={{span: 24}}>
+                                <Form.Item name="source" label="Source">
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                            <Col lg={{span: 12}} sm={{span: 24}}>
                                 <Form.Item name="risk" label="Risk">
                                     <Select>
                                         {riskOptions.map((option: any) => (

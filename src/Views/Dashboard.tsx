@@ -1,7 +1,18 @@
 /* IMPORT EXTERNAL MODULES */
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import {Divider} from "antd";
-import {filter, find, flatten, forOwn, groupBy, isEmpty, map, sortBy, sumBy, uniq} from "lodash";
+import {
+    filter, 
+    find, 
+    flatten, 
+    forOwn, 
+    groupBy, 
+    isEmpty, 
+    map, 
+    sortBy, 
+    sumBy, 
+    uniq
+} from "lodash";
 
 /* IMPORT INTERNAL MODULES */
 // UNUSED COMPONENTS
@@ -26,16 +37,16 @@ import SafetyMetrics from "../Components/SafetyMetrics";
 import ProductionChart from "../Components/ProductionChart"
 import GovernanceCheckList from "../Components/GovernanceCheckList";
 // MISC INTERNAL MODULES
+import { calcSpillIntensity } from "../Services/ProductionService";
 import ResourceService from "../Services/ResourceService";
 import useAuth from "../Providers/Auth/useAuth";
 import {ArrOfObj} from "../../global"
-import { extractYear } from "../utils";
+import { extractYear } from "../utils/utils";
 
 const Dashboard: FC = () => {
     // React State
     const [complaints, setComplaints] = useState<ArrOfObj>([])
     const [emissions, setEmissions] = useState<ArrOfObj>([])
-    const [emissionsIntensity, setEmissionsIntensity] = useState<ArrOfObj>([])
     const [metrics, setMetrics] = useState<any>({})
     const [production, setProductionData] = useState<ArrOfObj>([])
     const [spills, setSpills] = useState<ArrOfObj>([])
@@ -50,7 +61,6 @@ const Dashboard: FC = () => {
         }).then(({ data }) => {
             setMetrics(data)
             setEmissions(sortBy(filter(data.esg_metrics, { metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Emissions' }), 'date'))
-            setEmissionsIntensity(sortBy(filter(data.esg_metrics, { metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Intensity - BOE' }), 'date'))
         }).catch((err) =>{
             console.log(err)
         })
@@ -66,22 +76,6 @@ const Dashboard: FC = () => {
         })
     }, [setSpills])
 
-    /**
-     * Generates collection of company incidents and total hours worked.
-     * Utilized for TRIR chart.
-     * 
-     * @params - None
-     * 
-     * @returns - Undefined
-     */
-    const spillsIntensity = useMemo(() => {
-        let data = filter(metrics.esg_metrics, { 'metric_subtype': 'Spill Intensity - Liquids' })
-
-        return sortBy(flatten(map(data, (m: any) => ([
-            { date: m.date, value: m.value }
-        ]))), ['year'])
-    }, [metrics])
-
     const getMetricsByYear = useCallback((year: number, basin: string, metricSubtype: string) => {
         let data = filter(metrics.esg_metrics, { 'metric_subtype': metricSubtype })
 
@@ -96,28 +90,6 @@ const Dashboard: FC = () => {
         if (!metricByYear?.value) return null
         return metricByYear
     }, [metrics])
-
-    const getIntensityByDate = useCallback((date: string, basin: string, intensityType: string) => {
-        let data = []
-        if (intensityType === 'ghg') {
-            data = emissionsIntensity
-        } else {
-            data = spillsIntensity
-        }
-
-        if (data.length < 1) return 0
-        let year = new Date(date).getFullYear()
-        let intensityByYear = find(data, (em) => {
-            if (intensityType === 'ghg') {
-                return new Date(em.date).getFullYear() === year && em.basin === basin
-            } else {
-                return new Date(em.date).getFullYear() === year
-            }
-        })
-
-        if (!intensityByYear?.value) return 0
-        return intensityByYear.value
-    }, [emissionsIntensity, spillsIntensity])
 
     const getOilProduction = useCallback(() => {
         ResourceService.index({
@@ -217,10 +189,11 @@ const Dashboard: FC = () => {
             let year = date.getFullYear();
             return year
         });
+        const intensityCalc: any = calcSpillIntensity(production, spills);
         return flatten(map(spillsCountByYear, (e, key) => ([
-            { name: "Spills Count", type: key, value: e.length, intensity: getIntensityByDate(e[0]?.date, '', ''), items: e }
+            { name: "Spills Count", type: key, value: e.length, intensity: intensityCalc[key], items: e }
         ])))
-    }, [spills, getIntensityByDate])
+    }, [production, spills])
 
     /**
      * Sums total production for Gas, Water, and Oil by year.

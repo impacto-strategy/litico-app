@@ -1,5 +1,5 @@
 import {Button, Form, InputNumber, notification, Select} from 'antd';
-import {getQuarterFromDate} from "../utils";
+import {getQuarterFromDate} from "../utils/utils";
 import {FC, useCallback, useEffect, useMemo, useState} from "react";
 import ResourceService from "../Services/ResourceService";
 import Cookies from 'js-cookie';

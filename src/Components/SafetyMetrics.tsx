@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { DualAxes } from '@ant-design/plots';
 
 /* IMPORT INTERNAL MODULES */
-import { formatValue } from '../utils';
+import { formatValue } from '../utils/utils';
 
 const Wrapper = styled.div`
 background: #fff;

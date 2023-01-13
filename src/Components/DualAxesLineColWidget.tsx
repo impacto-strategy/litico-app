@@ -5,7 +5,18 @@ import { DualAxes } from '@ant-design/plots';
 import { Modal, Table } from 'antd';
 import {sortBy} from 'lodash'
 
-const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string, title: string, gridColumns: string, y1Lablel: string, y2Lablel: string, includeModal: boolean}> = props => {
+interface PropsInterface { 
+  data: any, 
+  colLabel:string, 
+  lineLabel: string, 
+  title: string, 
+  gridColumns: string,
+  y1Lablel: string, 
+  y2Lablel: string, 
+  includeModal: boolean
+}
+
+const DualAxesLineColWidget: FC<PropsInterface> = props => {
   const Wrapper = styled.div`
     background: #fff;
     padding: 20px;
@@ -71,6 +82,15 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
   const config = {
     data: [props.data, props.data],
     animation: false,
+    point: {
+      style: () => {
+        let config = {
+            fill: 'white',
+            lineWidth: 3
+        }
+        return config;
+      },
+    },
     color: ['#477EB7', '#5AC5BF', '#46AD75'],
     xField: 'type',
     yField: ['value', 'intensity'],
@@ -102,9 +122,9 @@ const DualAxesLineColWidget: FC<{ data: any, colLabel:string, lineLabel: string,
       flipPage: false,
       itemName: {
         formatter: (text: string, item: any, index: number) => {
-          return text.replace('(bbl spill/kbbl produced)', '') + ' - DJ Basin';
+          return text.replace('(bbl spill/kbbl produced)', '') + ' - DJ Basin'
         }
-    }
+      }
     },
     geometryOptions: [
       {
