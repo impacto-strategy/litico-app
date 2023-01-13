@@ -132,8 +132,10 @@ const DualAxesLineColWidget: FC<PropsInterface> = props => {
       },
       {
         geometry: 'line',
-        lineStyle: {
-          lineWidth: 3,
+        point: {
+          lineWidth: 2,
+          shape: 'dot',
+          size: 5,
         },
       },
     ],
@@ -151,6 +153,7 @@ const DualAxesLineColWidget: FC<PropsInterface> = props => {
         alias: props.lineLabel,
       },
     },
+    limitInPlot: false,
     onReady: (plot: any) => {
       if (props.includeModal) {
         plot.on('interval:click', (args: any) => {
