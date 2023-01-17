@@ -1,13 +1,77 @@
+/* EXTERNAL MODULES */
+import { 
+    filter,
+    forOwn,
+    groupBy,
+    isEmpty,
+    sumBy 
+} from "lodash";
+import moment from 'moment';
+
 /* INTERNAL MODULES */
 // Utilities
 import { groupByMultiple } from "../utils/arrayUtils";
 
 // Interfaces and Types
 import { ArrOfObj } from "../../global";
+interface productionData {
+    date: any,
+    gas?: any,
+    oil?: any,
+    water?: any
+}
 
-/* EXTERNAL MODULES */
-import { groupBy, sumBy } from "lodash";
-import moment from 'moment';
+/**
+ * Handles data where each year might be in a different timeframe only.
+ * For example, 2020 might only be in monthly, while 2021 might only be in yearly.
+ * 
+ * @param objByTimeFrame - Object with various properties representing data in different time
+ * time frames.
+ * @param timeframe - String representing the timeframe of data.
+ * @returns 
+ */
+const sumByTimeframe = (objByTimeFrame: any, timeframe: string) => {
+    if (isEmpty(objByTimeFrame)) {
+        return;
+    }
+    if (objByTimeFrame[timeframe][0].product === "gas") {
+        return sumBy(objByTimeFrame[timeframe], 'amount') / 1000
+    } else {
+        return sumBy(objByTimeFrame[timeframe], 'amount')
+    }
+}
+
+/**
+ * Transform production data in yearly data for production graph on dashboard.
+ * 
+ * @param data - Array of Objects representing raw production data.
+ * @returns Array of objects representing yearly production data.
+ */
+export const getYearlyProductionData = (data: any): productionData[] => {
+    let yearlyData: any = [];
+    // Each value is a year of production data
+    forOwn(groupBy(data, 'year'), (value: any, key: any) => {
+        let dataObj: {[key: string]: any} = {
+            date: key
+        }
+        for (const product of ['gas', 'oil', 'water']) {
+            // Retrieves the relevant product than groups the data by timeframe.
+            const productByTimeframe = groupBy(filter(value, (o: any) => {
+                return o.product === product
+            }), "timeframe")
+            if (productByTimeframe.hasOwnProperty('yearly')) {
+                dataObj[product] = sumByTimeframe(productByTimeframe, 'yearly');
+            } else if (productByTimeframe.hasOwnProperty('quarterly')) {
+                dataObj[product] = sumByTimeframe(productByTimeframe, 'quarterly');
+            } else {
+                dataObj[product] = sumByTimeframe(productByTimeframe, 'monthly');
+            }
+        }
+        yearlyData.push(dataObj);
+    })
+    return yearlyData
+}
+
 
 /**
  * Transforms an array of spills data into yearly totals.
@@ -17,7 +81,7 @@ import moment from 'moment';
  */
 export const calcSpillsTotals = (data: ArrOfObj): {[key: string]: number} => {
     let result: {[key: string]: number} = {};
-    for(let entry of data) {
+    for (let entry of data) {
         // Handles possible null entries
         const spillVol = (entry.vol_released_oil || 0) + (entry.vol_released_water || 0)
         if (result.hasOwnProperty(moment(entry.date).format('YYYY'))) {

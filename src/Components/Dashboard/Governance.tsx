@@ -1,13 +1,17 @@
+/* IMPORT EXTERNAL MODULES */
 import {Divider} from "antd";
 import React, {FC} from "react";
 
-interface SectionProps {
+/* IMPORT INTERNAL MODULES */
+import GovernanceCheckList from "../GovernanceCheckList";
 
+interface SectionProps {
+    esgMetrics: any
 }
 
-const Governance: FC = (props: SectionProps): JSX.Element => {
+const Governance: FC<SectionProps> = (props): JSX.Element => {
     return (
-        <div>
+        <>
             <div>
                 <Divider>
                     Governance
@@ -20,9 +24,12 @@ const Governance: FC = (props: SectionProps): JSX.Element => {
                 gridTemplateColumns: 'repeat(4, 1fr)',
                 gap: '2em'
             }}>
-                {/* ALL CHARTS WILL GO HERE. */}
+                {props?.esgMetrics?.esg_metrics && props?.esgMetrics?.esg_metrics.length > 0 &&
+                    <GovernanceCheckList esgMetrics={props?.esgMetrics.esg_metrics} />
+                }
             </div>
-        </div>
+            <div style={{paddingBottom: 40}}/>
+        </>
     )
 }
 

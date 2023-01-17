@@ -86,9 +86,23 @@ const NEWDashboard: FC = () => {
 
     return (
         <div className="site-layout-background">
-            <Environment />
-            <Social incidentData={filter(metrics.esg_metrics, { 'metric_subtype': 'TRIR - All Workers' })}/>
-            <Governance />
+            {/* <Environment 
+                emissions={emissions}
+                production={production}
+                spills={spills}    
+            /> */}
+            <Social
+                donation={filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' })}
+                ethnicity={filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Ethnicity' })}
+                gender={filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Gender' })}
+                incidentData={filter(metrics.esg_metrics, { 'metric_subtype': 'TRIR - All Workers' })}
+                volunteer={filter(metrics.esg_metrics, (o: any) => {
+                    return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Volunteering - Community'
+                })}
+            />
+            <Governance 
+                esgMetrics={metrics.esg_metrics}
+            />
         </div>
     )
 }
