@@ -47,7 +47,7 @@ const sumByTimeframe = (objByTimeFrame: any, timeframe: string) => {
  * @param data - Array of Objects representing raw production data.
  * @returns Array of objects representing yearly production data.
  */
-export const getYearlyProductionData = (data: any): productionData[] => {
+export const getYearlyProductionData = (data: any): any => {
     let yearlyData: any = [];
     // Each value is a year of production data
     forOwn(groupBy(data, 'year'), (value: any, key: any) => {

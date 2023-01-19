@@ -9,10 +9,6 @@ import {
 /* IMPORT INTERNAL MODULES */
 import { groupByMultiple } from "../utils/arrayUtils";
 
-/**
- * 
- * @param gender Array of Objects representing raw gender data.
- */
 export const getGenderData = (gender: any) => {
     let result: any = [];
     const organizedData = groupByMultiple(gender, (obj: any) => new Date(obj.date).getFullYear(), 'timeframe');

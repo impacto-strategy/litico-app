@@ -1,11 +1,16 @@
 /* IMPORT EXTERNAL MODULES */
 import {Divider} from "antd";
-import { chunk, flatten, map, filter, sortBy, sumBy } from "lodash";
+import { chunk, filter, sortBy, sumBy } from "lodash";
 import moment from 'moment';
-import React, {FC} from "react";
+import {FC} from "react";
 
 /* IMPORT INTERNAL MODULES */
+// Components
+import DonationsVolunteerCharts from "../DonationsVolunteerCharts";
 import SafetyMetrics from "../SafetyMetrics";
+import StackedBarWidget from "../StackedBarWidget";
+
+// Services
 import { getDonationData, getVolunteerHours } from "../../Services/DonationVolunteerService";
 import { getEthnicityData } from "../../Services/EthnicityService";
 import { getGenderData } from "../../Services/GenderService";
@@ -60,18 +65,6 @@ const Social: FC<SectionProps> = (props): JSX.Element => {
         return result;
     }
 
-    // GENDER DATA FUNCTION
-    // getGenderData(props.gender);
-
-    // ETHNICITY DATA FUNCTION
-    // getEthnicityData(props.ethnicity);
-
-    // DONATION DATA FUNCITON
-    // getDonationData(props.donation);
-
-    // VOLUNTEER DATA FUNCTION
-    // getVolunteerHours(props.volunteer);
-
     return (
         <div>
             <div>
@@ -86,15 +79,56 @@ const Social: FC<SectionProps> = (props): JSX.Element => {
                 gridTemplateColumns: 'repeat(4, 1fr)',
                 gap: '2em'
             }}>
-                {/* ALL CHARTS WILL GO HERE. */}
                 {/* <Staff/> */}
                 {/*<Donations/>*/}
                 {/* <DonationsDrilldown /> */}
-                {/* {getIncidentDataNEW(props.incidentData).length > 0 &&
+
+                {props.incidentData.length > 0 &&
                     <SafetyMetrics
-                        data={getIncidentDataNEW(props.incidentData)}
+                        data={getIncidentData(props.incidentData)}
                     />
-                } */}
+                }
+
+                {props.gender.length > 0 &&
+                    <StackedBarWidget 
+                        isGroup={false} 
+                        isPercentage={true} 
+                        data={getGenderData(props.gender)} 
+                        label={'percentage'} 
+                        gridColumns="1/3" 
+                        title="Employees by Gender" 
+                        subTitle="" 
+                    />
+                }
+                {props.ethnicity.length > 0 &&
+                    <StackedBarWidget 
+                        isGroup={false} 
+                        isPercentage={true} 
+                        data={getEthnicityData(props.ethnicity)} 
+                        label={'percentage'} 
+                        gridColumns='3/5' 
+                        title='Employee Diversity' 
+                        subTitle="" 
+                    />
+                }
+                {props.donation.length > 0 && 
+                    <DonationsVolunteerCharts
+                        title={"Charitable Contributions"}
+                        data={getDonationData(props.donation)}
+                        gridCol={"1/3"}
+                        type="Donations"
+                        tableData={sortBy(props.donation, (o: any) => o.organization)}
+                    />
+                }
+                {props.volunteer.length > 0 &&
+                    <DonationsVolunteerCharts
+                        title={"Volunteer Hours"}
+                        data={getVolunteerHours(props.volunteer)}
+                        gridCol={"3/5"}
+                        type="Volunter"
+                        tableData={sortBy(props.volunteer, (o: any) => o.organization)}
+                    />
+                }
             </div>
         </div>
     )

@@ -33,14 +33,11 @@ import MetricSubtypes from "./Views/resources/reports/MetricSubtypes";
 import ReportMetricType from "./Views/resources/reports/ReportMetricType";
 import CompaniesNew from "./Views/resources/companies/CompaniesNew";
 
-// REMOVE ONCE COMPLETED
-import NEWDashboard from "./Views/NEWDashboard";
-
 const App: FC = () => {
     return (
         <Routes>
             <Route element={<RequireAuth><Home/></RequireAuth>}>
-                <Route path="dashboard" element={<NEWDashboard/>}/>
+                <Route path="dashboard" element={<Dashboard/>}/>
                 <Route path=":resourceName" element={<ResourceIndex/>}/>
                 <Route path="equipments" element={<EquipmentIndex/>}/>
                 <Route path="locations/new" element={<NewLocation/>}/>

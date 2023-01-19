@@ -10,7 +10,7 @@ import {
 import { groupByMultiple } from "../utils/arrayUtils";
 
 export const getEthnicityData = (ethnicity: any) => {
-    const result = [];
+    const result: any = [];
     const organizedData = groupByMultiple(ethnicity, (obj: any) => new Date(obj.date).getFullYear(), 'timeframe');
     forOwn(organizedData, (value: any, key: any) => {
         if (value.hasOwnProperty('yearly')) {
@@ -42,4 +42,5 @@ export const getEthnicityData = (ethnicity: any) => {
             )
         }
     })
+    return result;
 }
