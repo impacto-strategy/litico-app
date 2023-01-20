@@ -104,18 +104,22 @@ const DataMetricSubtype = () => {
             subMetricName === "Production - Gas" ||
             subMetricName === "Production - Oil" ||
             subMetricName === "Community Grievances" ||
-            subMetricName === "Social Investment" ||
-            subMetricName === "Volunteering - Community" ||
             subMetricName === "Workforce Demographics - Ethnicity" ||
             subMetricName === "Workforce Demographics - Gender" ||
-            subMetricName === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas"
-        ){
-            return [ {name: 'Yearly', value: 'yearly'} ]
-        } else if (
+            subMetricName === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas" ||
             subMetricName === "TRIR - Employees" ||
             subMetricName === "TRIR - All Workers"
+        ){
+            return [ 
+                {name: 'Yearly', value: 'yearly'},
+                {name: 'Quarterly', value: 'quarterly'},
+                {name: 'Monthly', value: 'monthly'}
+            ]
+        } else if (
+            subMetricName === "Social Investment" ||
+            subMetricName === "Volunteering - Community"
         ) {
-            return [ {name: 'Quarterly', value: 'quarterly'} ]
+            return [ {name: 'Daily', value: 'daily'} ]
         }
         else {
             return [
