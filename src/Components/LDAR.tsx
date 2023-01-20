@@ -38,16 +38,6 @@ const LDAR = () => {
         data: [dataSource, dataSource],
         xField: 'period',
         yField: ['leaks', 'inspections'],
-        color: ['#477EB7', '#5AC5BF', '#46AD75'],
-        point: {
-            style: () => {
-                let config = {
-                    fill: 'white',
-                    lineWidth: 3
-                }
-                return config;
-            },
-        },
         yAxis: {
             leaks: {
                 label: {
@@ -87,14 +77,21 @@ const LDAR = () => {
             },
             {
                 geometry: 'line',
-                point: {
+                lineStyle: {
                     lineWidth: 2,
-                    shape: 'dot',
-                    size: 5,
                 },
+                point: {
+                    size: 5,
+                    shape: 'dot',
+                    style: {
+                        fill: '#f05b72',
+                        stroke: '#f05b72',
+                        lineWidth: 2,
+                    },
+                },
+                color: '#f05b72'
             },
         ],
-        limitInPlot: false,
         tooltip: {
             formatter: (data: any) => {
                 let val = data.hasOwnProperty('leaks') ? data.leaks : data.inspections

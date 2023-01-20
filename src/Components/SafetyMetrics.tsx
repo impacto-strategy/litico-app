@@ -29,15 +29,6 @@ const SafetyMetrics: FC<{data: any}> = (props) => {
         animation: false,
         color: ['#477EB7', '#5AC5BF', '#46AD75'],
         xField: 'date',
-        point: {
-            style: () => {
-                let config = {
-                    fill: 'white',
-                    lineWidth: 3
-                }
-                return config;
-            },
-        },
         // First is column, second is line.
         yField: ['incidents', 'trir'],
         yAxis: {
@@ -82,10 +73,18 @@ const SafetyMetrics: FC<{data: any}> = (props) => {
             },
             {
                 geometry: 'line',
+                lineStyle: {
+                    lineWidth: 3,
+                },
                 point: {
-                    lineWidth: 2,
-                    shape: 'dot',
-                    size: 5,
+                    style: () => {
+                    let config = {
+                        fill: '#5AC5BF',
+                        lineWidth: 2,
+                        stroke: '#5AC5BF'
+                    }
+                    return config;
+                    },
                 },
             },
         ],

@@ -1,7 +1,6 @@
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import AuthService from '../../Services/AuthService'
 import ApiService from "../../Services/ApiService";
-import Cookies from 'js-cookie';
 
 type TAuthContext = {
     user?: any,
@@ -56,7 +55,6 @@ export function AuthProvider({children}: any) {
                 localStorage.removeItem('_U')
                 setUser(undefined)
                 res(0);
-                Cookies.remove('laravel_session');
             })
         });
     }
