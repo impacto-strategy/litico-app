@@ -6,7 +6,7 @@ import { Modal, Table } from 'antd';
 import { filter } from "lodash";
 
 /* IMPORT INTERNAL MODULES */
-import { formatValue, extractYear } from "../utils";
+import { formatValue, extractYear } from "../utils/utils";
 
 /**
  * Side by side charts highlighting volunteer hours/charitable donations by year.

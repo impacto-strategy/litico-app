@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { DualAxes } from '@ant-design/plots';
 
 /* IMPORT INTERNAL MODULES */
-import { formatValue } from "../utils";
+import { formatValue } from "../utils/utils";
 
 const dataSource = [
     {
@@ -43,13 +43,25 @@ const LDAR = () => {
                 label: {
                     formatter: (v: string) => formatValue(+v),
                 },
+                title: {
+                    style: {
+                      fontSize: 12,
+                    },
+                    text: 'Count of Leaks Detected'
+                },
             },
             inspections: {
                 min: 0,
                 max: 125,
                 label: {
                     formatter: (v: string) => formatValue(+v),
-                }
+                },
+                title: {
+                    style: {
+                      fontSize: 12,
+                    },
+                    text: 'Inspection Count'
+                },
             }
         },
         legend: {

@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import {Col, Dropdown, Layout, Menu, Row} from 'antd';
 import ResourceService from "../Services/ResourceService";
+import StagingBanner from "../Components/StagingBanner";
 
 const {Header, Content, Sider} = Layout;
 
@@ -65,6 +66,7 @@ const Home: FC = () => {
 
     return (
         <Layout id={"components-layout-demo-fixed-sider"}>
+            <StagingBanner />
             <Sider
                 breakpoint="lg"
                 collapsible
