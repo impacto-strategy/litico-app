@@ -5,9 +5,10 @@ import styled from "styled-components";
 
 /* IMPORT INTERNAL MODULES */
 import { formatValue } from '../utils/utils';
+import { ArrOfObj } from '../../global';
 
 interface ProductionChartProps {
-    data: any,
+    data: ArrOfObj
     gridColumns: string,
     title: string
 }
