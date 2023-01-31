@@ -42,5 +42,5 @@ export const getEthnicityData = (ethnicity: any) => {
             )
         }
     })
-    return result;
+    return flatten(result);
 }

@@ -10,6 +10,7 @@ interface SectionProps {
 }
 
 const Governance: FC<SectionProps> = (props): JSX.Element => {
+    console.log("What is esg metric: ", props.esgMetrics);
     return (
         <>
             <div>
@@ -18,16 +19,16 @@ const Governance: FC<SectionProps> = (props): JSX.Element => {
                 </Divider>
             </div>
 
-            <div style={{
+            {/* <div style={{
                 display: 'grid',
                 textAlign: 'center',
                 gridTemplateColumns: 'repeat(4, 1fr)',
                 gap: '2em'
             }}>
-                {props?.esgMetrics?.esg_metrics && props?.esgMetrics?.esg_metrics.length > 0 &&
-                    <GovernanceCheckList esgMetrics={props?.esgMetrics.esg_metrics} />
+                {props?.esgMetrics?.esg_Metrics && props?.esgMetrics?.esg_metrics.length > 0 &&
+                    <GovernanceCheckList esgMetrics={props?.esgMetrics.esgMetrics} />
                 }
-            </div>
+            </div> */}
             <div style={{paddingBottom: 40}}/>
         </>
     )

@@ -36,5 +36,5 @@ export const getGenderData = (gender: any) => {
             )
         }
     })
-    return result;
+    return flatten(result);
 }
