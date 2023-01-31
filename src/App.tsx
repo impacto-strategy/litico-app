@@ -1,29 +1,17 @@
-/* IMPORT EXTERNAL MODULES */
 import React, {FC} from "react";
 import {Route, Routes} from "react-router-dom";
-/* IMPORT INTERNAL MODULES */
-// REACT COMPONENTS
+import Login from "./Views/auth/Login";
 import RequireAuth from "./Components/Utility/PrivateRoute";
-// REACT VIEWS
-import AddMetric from "./Views/AddMetric";
 import Dashboard from "./Views/Dashboard";
 import Home from "./Views/Home";
-import Landing from "./Views/Landing";
-import Login from "./Views/auth/Login";
-import Metrics from "./Views/Metrics";
-import MetricsPeriodSelector from "./Views/MetricsPeriodSelector";
-import PerformanceDashboard from "./Views/PerformanceDashboard";
-
-// REACT VIEWS/AUTH
-import ForgotPassword from "./Views/auth/ForgotPassword";
-import ResetPassword from "./Views/auth/ResetPassword";
-
-// REACT VIEWS/RESOURCES
 import ResourceIndex from "./Views/resources/ResourceIndex";
 import NewLocation from "./Views/resources/location/NewLocation";
+import MetricsPeriodSelector from "./Views/MetricsPeriodSelector";
+import Metrics from "./Views/Metrics";
 import EquipmentIndex from "./Views/resources/equipment/EquipmentIndex";
 import ReportsIndex from "./Views/resources/reports/ReportsIndex";
 import ReportsNew from "./Views/resources/reports/ReportsNew";
+import AddMetric from "./Views/AddMetric";
 import DataMetricNames from "./Views/resources/DataMetricNames";
 import DataMetricSubtype from "./Views/resources/DataMetricSubtype";
 import DataMetricSubtypes from "./Views/resources/DataMetricSubtypes";
@@ -32,6 +20,10 @@ import MetricSubtype from "./Views/resources/reports/MetricSubtype";
 import MetricSubtypes from "./Views/resources/reports/MetricSubtypes";
 import ReportMetricType from "./Views/resources/reports/ReportMetricType";
 import CompaniesNew from "./Views/resources/companies/CompaniesNew";
+import PerformanceDashboard from "./Views/PerformanceDashboard";
+import Landing from "./Views/Landing";
+import ForgotPassword from "./Views/auth/ForgotPassword";
+import ResetPassword from "./Views/auth/ResetPassword";
 
 const App: FC = () => {
     return (
