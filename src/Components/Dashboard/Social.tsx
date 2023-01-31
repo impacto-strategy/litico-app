@@ -65,6 +65,9 @@ const Social: FC<SectionProps> = (props): JSX.Element => {
         return result;
     }
 
+    console.log("What does gender data look like?", props.gender)
+    console.log("What does the gender function return?", getGenderData(props.gender));
+
     return (
         <div>
             <div>
@@ -83,11 +86,13 @@ const Social: FC<SectionProps> = (props): JSX.Element => {
                 {/*<Donations/>*/}
                 {/* <DonationsDrilldown /> */}
 
-                {props.incidentData.length > 0 &&
+
+                {/* UNCOMMENT WHEN DONE */}
+                {/* {props.incidentData.length > 0 &&
                     <SafetyMetrics
                         data={getIncidentData(props.incidentData)}
                     />
-                }
+                } */}
 
                 {props.gender.length > 0 &&
                     <StackedBarWidget 
@@ -111,7 +116,9 @@ const Social: FC<SectionProps> = (props): JSX.Element => {
                         subTitle="" 
                     />
                 }
-                {props.donation.length > 0 && 
+
+                {/* UNCOMMENT WHEN DONE */}
+                {/* {props.donation.length > 0 && 
                     <DonationsVolunteerCharts
                         title={"Charitable Contributions"}
                         data={getDonationData(props.donation)}
@@ -128,7 +135,7 @@ const Social: FC<SectionProps> = (props): JSX.Element => {
                         type="Volunter"
                         tableData={sortBy(props.volunteer, (o: any) => o.organization)}
                     />
-                }
+                } */}
             </div>
         </div>
     )

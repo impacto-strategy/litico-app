@@ -1,17 +1,8 @@
 /* IMPORT EXTERNAL MODULES */
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
-import {Divider} from "antd";
+import { FC, useEffect, useState } from "react";
 import {
     filter, 
-    find, 
-    flatten, 
-    forOwn, 
-    groupBy, 
-    isEmpty, 
-    map, 
     sortBy, 
-    sumBy, 
-    uniq
 } from "lodash";
 
 /* IMPORT INTERNAL MODULES */
@@ -27,24 +18,12 @@ import {
 // import PieWidget from "../Components/PieWidget";
 // import DonationsDrilldown from "../DonationsDrilldown";
 // REACT COMPONENTS
-import ColumnWidget from "../Components/ColumnWidget";
-import DonationsVolunteerCharts from "../Components/DonationsVolunteerCharts";
-import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
 import Environment from "../Components/Dashboard/Environment";
-import GHGChart from "../Components/GHGChart";
 import Governance from "../Components/Dashboard/Governance";
-import GovernanceCheckList from "../Components/GovernanceCheckList";
-import LDAR from "../Components/LDAR";
-import ProductionChart from "../Components/ProductionChart";
-import SafetyMetrics from "../Components/SafetyMetrics";
 import Social from "../Components/Dashboard/Social";
-import StackedBarWidget from "../Components/StackedBarWidget";
 // MISC INTERNAL MODULES
-import ResourceService, {APICallAndAct} from "../Services/ResourceService";
-import useAuth from "../Providers/Auth/useAuth";
-import { calcSpillIntensity } from "../Services/ProductionService";
+import {APICallAndAct} from "../Services/ResourceService";
 import { ArrOfObj } from "../../global"
-import { extractYear } from "../utils/utils";
 
 /**
  * React component that renders out the part of the application that shows various charts,
@@ -59,9 +38,6 @@ const Dashboard: FC = () => {
     const [metrics, setMetrics] = useState<any>({})
     const [production, setProduction] = useState<ArrOfObj>([])
     const [spills, setSpills] = useState<ArrOfObj>([])
-
-    /* React Context */
-    const {user} = useAuth();
 
     /* UseEffect Calls*/
     useEffect(() => {
@@ -86,12 +62,12 @@ const Dashboard: FC = () => {
 
     return (
         <div className="site-layout-background">
-            <Environment
+            {/* <Environment
                 complaints={complaints}
                 emissions={emissions}
                 production={production}
                 spills={spills}    
-            />
+            /> */}
             <Social
                 donation={filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' })}
                 ethnicity={filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Ethnicity' })}
