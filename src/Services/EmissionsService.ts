@@ -15,8 +15,18 @@ import { getPossibleDates } from '../utils/dateUtils';
  * 
  * @param data - An object representing emission data for a year and specifc basin organized by timeframe.
  */
-export const handleDataTimeFrame = (data: any, production: any, date: string) => {
-    if (data.hasOwnProperty('yearly')) {
+export const handleDataTimeFrame = (data: any, production: any, date: string, basin: string) => {
+    if (data == null) {
+        return {
+            basin: basin,
+            intensity: 0,
+            label: `${basin} Emissions Intensity (mt/BoE)`,
+            name: "GHG Emissions (CO2e)",
+            type: date,
+            value: 0
+        }
+    }
+    else if (data.hasOwnProperty('yearly')) {
         return {
             basin: data['yearly'][0].basin,
             intensity: (data['yearly'][0].denominator || 0) / (production.water || 0 + (production.gas || 0) / 6) || 0,
@@ -57,7 +67,7 @@ export const handleDataTimeFrame = (data: any, production: any, date: string) =>
  * @returns An array of objects representing transformed emissions data.
  */
 export const getYearlyEmissionsData = (emissionsData: any, productionData: any) => {
-    if (emissionsData.length === 0 || productionData.length === 0) {
+    if (emissionsData?.length === 0 || productionData?.length === 0) {
         return []
     }
 
@@ -78,7 +88,7 @@ export const getYearlyEmissionsData = (emissionsData: any, productionData: any) 
     dates.forEach((date: any) => {
         if (groupedData.hasOwnProperty(date)) {
             basins.forEach((basin: any) => {
-                result.push(handleDataTimeFrame(groupedData[date][basin], totalProductionByBasin[basin][date][0], date));
+                result.push(handleDataTimeFrame(groupedData[date][basin], totalProductionByBasin[basin][date][0], date, basin));
             })
         } 
         // Handles scenario data for that specific year is missing

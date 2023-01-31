@@ -62,13 +62,13 @@ const Dashboard: FC = () => {
 
     return (
         <div className="site-layout-background">
-            {/* <Environment
+            <Environment
                 complaints={complaints}
                 emissions={emissions}
                 production={production}
                 spills={spills}    
-            /> */}
-            {/* <Social
+            />
+            <Social
                 donation={filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' })}
                 ethnicity={filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Ethnicity' })}
                 gender={filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Gender' })}
@@ -76,7 +76,7 @@ const Dashboard: FC = () => {
                 volunteer={filter(metrics.esg_metrics, (o: any) => {
                     return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Volunteering - Community'
                 })}
-            /> */}
+            />
             <Governance 
                 esgMetrics={metrics.esg_metrics}
             />
