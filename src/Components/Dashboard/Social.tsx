@@ -1,6 +1,6 @@
 /* IMPORT EXTERNAL MODULES */
 import {Divider} from "antd";
-import { chunk, filter, sortBy, sumBy } from "lodash";
+import { chunk, sortBy, sumBy } from "lodash";
 import moment from 'moment';
 import {FC} from "react";
 

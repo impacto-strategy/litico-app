@@ -1,5 +1,4 @@
 /* IMPORT EXTERNAL MODULES */
-import moment from 'moment';
 
 /**
  * creates an array of dates in the timeframe provided in the data.
