@@ -35,8 +35,9 @@ const GHGChart: FC<GHGChartProps> = props => {
         background: #fff;
         padding: 20px;
         grid-column: 1 /5;
+        min-height: 500px;
         @media (min-width: 767px) {
-            grid-column: 1/5
+            grid-column: 1/5;
         }
     `
 

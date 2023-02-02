@@ -21,8 +21,9 @@ const DualAxesLineColWidget: FC<PropsInterface> = props => {
     background: #fff;
     padding: 20px;
     grid-column: 1 /5;
+    min-height: 500px;
     @media (min-width: 767px) {
-      grid-column: ${props.gridColumns}
+      grid-column: ${props.gridColumns};
     }
   `
 
@@ -81,7 +82,7 @@ const DualAxesLineColWidget: FC<PropsInterface> = props => {
 
   const config = {
     data: [props.data, props.data],
-    // animation: false,
+    animate: false,
     point: {
       style: () => {
         let config = {
@@ -140,7 +141,7 @@ const DualAxesLineColWidget: FC<PropsInterface> = props => {
     tooltip: {
       formatter: (data: any) => {
         let name = (data.intensity || data.intensity === 0) ? props.lineLabel : props.colLabel
-        return { name: name.replace('(bbl spill/kbbl produced)', '') + ' - DJ Basin', value: (data.value || data.intensity).toLocaleString() };
+        return { name: name.replace('(bbl spill/kbbl produced)', '') + ' - DJ Basin', value: (data.value || data.intensity)?.toLocaleString() };
       },
     },
     meta: {
