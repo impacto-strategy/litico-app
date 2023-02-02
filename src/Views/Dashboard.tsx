@@ -50,31 +50,10 @@ const Dashboard: FC = () => {
     const [metrics, setMetrics] = useState<any>({})
     const [production, setProductionData] = useState<ArrOfObj>([])
     const [spills, setSpills] = useState<ArrOfObj>([])
+    const [hasLoaded, setLoader] = useState<Boolean>(false)
 
     // React Context
-    const {user} = useAuth();
-
-    /* API Function Calls */
-    const getAllMetrics = useCallback(() => {
-        ResourceService.index({
-            resourceName: 'esg-metrics'
-        }).then(({ data }) => {
-            setMetrics(data)
-            setEmissions(sortBy(filter(data.esg_metrics, { metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Emissions' }), 'date'))
-        }).catch((err) =>{
-            console.log(err)
-        })
-    }, [setMetrics])
-
-    const getAllSpills = useCallback(() => {
-        ResourceService.index({
-            resourceName: 'spills'
-        }).then(({ data }) => {
-            setSpills(data)
-        }).catch((err) => {
-            console.log(err)
-        })
-    }, [setSpills])
+    const { user } = useAuth();
 
     const getMetricsByYear = useCallback((year: number, basin: string, metricSubtype: string) => {
         let data = filter(metrics.esg_metrics, { 'metric_subtype': metricSubtype })
@@ -91,38 +70,33 @@ const Dashboard: FC = () => {
         return metricByYear
     }, [metrics])
 
-    const getOilProduction = useCallback(() => {
-        ResourceService.index({
-            resourceName: 'productions'
-        }).then(({ data }) => {
-            let sortedData = sortBy(data, 'year')
-            setProductionData(sortedData)
-        }).catch((err) =>{
-            console.log(err)
-        })
-    }, [])
-
-    const getComplaints = useCallback(() => {
-        ResourceService.index({
-            resourceName: 'complaints'
-        }).then(({ data }) => {
-            setComplaints(data)
-        }).catch((err) =>{
-            console.log(err)
-        })
+    const getDashboardData = useCallback(() => {
+        Promise.all([
+            ResourceService.index({ resourceName: 'esg-metrics' }),
+            ResourceService.index({ resourceName: 'spills' }),
+            ResourceService.index({ resourceName: 'productions' }),
+            ResourceService.index({ resourceName: 'complaints' }),
+        ]).then((res: any) => {
+            setMetrics(res[0].data)
+            setEmissions(sortBy(filter(res[0].data.esg_metrics, { metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Emissions' }), 'date'))
+            setSpills(res[1].data)
+            setProductionData(sortBy(res[2].data, 'year'))
+            setComplaints(res[3].data)
+            setLoader(true)
+        });
     }, [])
 
     const getDonationData = useMemo(() => {
         return flatten(map(groupBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => extractYear(o.date)), (year: any) => ([
-            {label: extractYear(year[0].date), value: sumBy(year, (obj: any) => obj.value)}
+            { label: extractYear(year[0].date), value: sumBy(year, (obj: any) => obj.value) }
         ]))).reverse()
     }, [metrics])
 
     const getVolunteerHoursData = useMemo(() => {
         return flatten(map(groupBy(filter(metrics.esg_metrics, (o: any) => {
-             return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Volunteering - Community'
+            return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Volunteering - Community'
         }), (o: any) => extractYear(o.date)), (year: any) => ([
-            {label: extractYear(year[0].date), value: sumBy(year, (obj: any) => obj.value)}
+            { label: extractYear(year[0].date), value: sumBy(year, (obj: any) => obj.value) }
         ]))).reverse()
     }, [metrics.esg_metrics])
 
@@ -154,7 +128,7 @@ const Dashboard: FC = () => {
                 let data = []
                 let ghg = getMetricsByYear(date, basin, 'GHG Emissions')
                 let intensity = getMetricsByYear(date, basin, 'GHG Intensity - BOE')
-                data.push({ 
+                data.push({
                     name: "GHG Emissions (CO2e)",
                     type: date,
                     value: ghg?.value || 0,
@@ -177,7 +151,7 @@ const Dashboard: FC = () => {
                 return year === e
             })
             return [
-                {name: "Complaints Count", type: e, value: comps.length, items: comps }
+                { name: "Complaints Count", type: e, value: comps.length, items: comps }
             ]
         }
         ))
@@ -205,7 +179,7 @@ const Dashboard: FC = () => {
         let yearlyData: ArrOfObj = [];
         // Outerloop iterates based on year
         forOwn(groupBy(production, 'year'), (value: any, key: any) => {
-            const tmp: {[key: string]: any} = {
+            const tmp: { [key: string]: any } = {
                 date: key
             }
             // Inner loop iterates based on product
@@ -263,7 +237,7 @@ const Dashboard: FC = () => {
             data.push({
                 date: displayedDate,
                 incidents: organizedData[i].num_1,
-                trir:  organizedData[i].value
+                trir: organizedData[i].value
             })
         }
 
@@ -271,148 +245,150 @@ const Dashboard: FC = () => {
     }, [metrics])
 
     useEffect(() => {
-        getAllMetrics()
-        getOilProduction()
-        getAllSpills()
-        getComplaints()
-    }, [getAllMetrics, getOilProduction, getAllSpills, getComplaints])
+        getDashboardData()
+    }, [getDashboardData])
 
     return (
         <div className="site-layout-background">
-            {/* ENVIRONMENT CHARTS AND GRAPHS SECTION */}
-            <div>
-                <Divider>
-                    Environment
-                </Divider>
-            </div>
+            {hasLoaded &&
+                <div>
+                    {/* ENVIRONMENT CHARTS AND GRAPHS SECTION */}
 
-            <div style={{
-                display: 'grid',
-                textAlign: 'center',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '2em'
-            }}>
+                    <div>
+                        <Divider>
+                            Environment
+                        </Divider>
+                    </div>
 
-                {emissions.length > 0 &&
-                    <GHGChart
-                        data={getYearlyEmissionData}
-                    />
-                }
+                    <div style={{
+                        display: 'grid',
+                        textAlign: 'center',
+                        gridTemplateColumns: 'repeat(4, 1fr)',
+                        gap: '2em'
+                    }}>
 
-                {/* <WhitingAllData /> */}
+                        {emissions.length > 0 &&
+                            <GHGChart
+                                data={getYearlyEmissionData}
+                            />
+                        }
 
-                {spills.length > 0 &&
-                  <DualAxesLineColWidget
-                      data={getYearlySpillsData}
-                      colLabel="Spill Incident Count"
-                      lineLabel="Spills Intensity (bbl spill/kbbl produced)"
-                      title="Spill Incident Count & Intensity"
-                      gridColumns="1 / 3"
-                      y1Lablel="Spill Incident Count"
-                      y2Lablel="Spill Intensity (bbl spill/kbbl produced)"
-                      includeModal={true}
-                  />
-                }
+                        {/* <WhitingAllData /> */}
 
-                {complaints.length > 0 &&
-                    <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
-                }
+                        {spills.length > 0 &&
+                            <DualAxesLineColWidget
+                                data={getYearlySpillsData}
+                                colLabel="Spill Incident Count"
+                                lineLabel="Spills Intensity (bbl spill/kbbl produced)"
+                                title="Spill Incident Count & Intensity"
+                                gridColumns="1 / 3"
+                                y1Lablel="Spill Incident Count"
+                                y2Lablel="Spill Intensity (bbl spill/kbbl produced)"
+                                includeModal={true}
+                            />
+                        }
 
-                {/* Charts/Graphs that are currently beyond MVP. */}
-                {/* {user.selectedCompany.name === 'Demo Energy' &&
-                    <MethaneEmissions/>
-                }
-                { user.selectedCompany.name === 'Demo Energy' &&
-                    <Flaring/>
-                } */}
-                {/* { user.selectedCompany.name === 'Demo Energy' &&
-                    <OilSpills/>
-                } */}
-                {/* { user.selectedCompany.name === 'Demo Energy' &&
-                    <Emissions2020/>
-                } */}
-                {/* <Emissions2020CO2 data={co2Emission} units="mt CO2" title="Carbon Dioxide Emissions for Production" />
-                <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
-                <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
+                        {complaints.length > 0 &&
+                            <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
+                        }
 
-                {production.length > 0 &&
-                    <ProductionChart
-                        data={getYearlyProductionData}
-                        gridColumns={'1/5'}
-                        title={'Total Oil & Gas Production'}
-                    />
-                }
+                        {/* Charts/Graphs that are currently beyond MVP. */}
+                        {/* {user.selectedCompany.name === 'Demo Energy' &&
+                            <MethaneEmissions/>
+                        }
+                        { user.selectedCompany.name === 'Demo Energy' &&
+                            <Flaring/>
+                        } */}
+                        {/* { user.selectedCompany.name === 'Demo Energy' &&
+                            <OilSpills/>
+                        } */}
+                        {/* { user.selectedCompany.name === 'Demo Energy' &&
+                            <Emissions2020/>
+                        } */}
+                        {/* <Emissions2020CO2 data={co2Emission} units="mt CO2" title="Carbon Dioxide Emissions for Production" />
+                        <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
+                        <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
 
-                {user.selectedCompany.name === 'Demo Energy' &&
-                    <LDAR />
-                }
-            </div>
-            {/* SOCIAL CHARTS AND GRAPHS SECTION */}
-            <div>
-                <Divider>
-                    Social
-                </Divider>
-            </div>
-            <div style={{
-                display: 'grid',
-                textAlign: 'center',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '2em'
-            }}>
-                {/* <Staff/> */}
-                {/*<Donations/>*/}
-                {/* <DonationsDrilldown /> */}
+                        {production.length > 0 &&
+                            <ProductionChart
+                                data={getYearlyProductionData}
+                                gridColumns={'1/5'}
+                                title={'Total Oil & Gas Production'}
+                            />
+                        }
 
-                {getQuarterlyIncidentData.length > 0 &&
-                    <SafetyMetrics
-                        data={getQuarterlyIncidentData}
-                    />
-                }
+                        {user.selectedCompany.name === 'Demo Energy' &&
+                            <LDAR />
+                        }
+                    </div>
+                    {/* SOCIAL CHARTS AND GRAPHS SECTION */}
+                    <div>
+                        <Divider>
+                            Social
+                        </Divider>
+                    </div>
+                    <div style={{
+                        display: 'grid',
+                        textAlign: 'center',
+                        gridTemplateColumns: 'repeat(4, 1fr)',
+                        gap: '2em'
+                    }}>
+                        {/* <Staff/> */}
+                        {/*<Donations/>*/}
+                        {/* <DonationsDrilldown /> */}
 
-                {getGenderData.length > 0 &&
-                    <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} gridColumns="1/3" title="Employees by Gender" subTitle="" />
-                }
-                {getEthnicityData.length > 0 &&
-                    <StackedBarWidget isGroup={false} isPercentage={true} data={getEthnicityData} label={'percentage'} gridColumns='3/5' title='Employee Diversity' subTitle="" />
-                }
-                {getDonationData.length > 0 && 
-                    <DonationsVolunteerCharts
-                        title={"Charitable Contributions"}
-                        data={getDonationData}
-                        gridCol={"1/3"}
-                        type="Donations"
-                        tableData={sortBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => o.organization)}
-                    />
-                }
-                {getVolunteerHoursData.length > 0 &&
-                    <DonationsVolunteerCharts
-                        title={"Volunteer Hours"}
-                        data={getVolunteerHoursData}
-                        gridCol={"3/5"}
-                        type="Volunter"
-                        tableData={sortBy(filter(metrics.esg_metrics, (o: any) => {
-                            return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Volunteering - Community'
-                       }), (o: any) => o.organization)}
-                    />
-                }
+                        {getQuarterlyIncidentData.length > 0 &&
+                            <SafetyMetrics
+                                data={getQuarterlyIncidentData}
+                            />
+                        }
 
-            </div>
-            <div>
-                <Divider>
-                    Governance
-                </Divider>
-            </div>
-            <div style={{
-                display: 'grid',
-                textAlign: 'center',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '2em'
-            }}>
-                {metrics?.esg_metrics && metrics?.esg_metrics.length > 0 &&
-                    <GovernanceCheckList esgMetrics={metrics.esg_metrics} />
-                }
-            </div>
-            <div style={{paddingBottom: 40}}/>
+                        {getGenderData.length > 0 &&
+                            <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} gridColumns="1/3" title="Employees by Gender" subTitle="" />
+                        }
+                        {getEthnicityData.length > 0 &&
+                            <StackedBarWidget isGroup={false} isPercentage={true} data={getEthnicityData} label={'percentage'} gridColumns='3/5' title='Employee Diversity' subTitle="" />
+                        }
+                        {getDonationData.length > 0 &&
+                            <DonationsVolunteerCharts
+                                title={"Charitable Contributions"}
+                                data={getDonationData}
+                                gridCol={"1/3"}
+                                type="Donations"
+                                tableData={sortBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => o.organization)}
+                            />
+                        }
+                        {getVolunteerHoursData.length > 0 &&
+                            <DonationsVolunteerCharts
+                                title={"Volunteer Hours"}
+                                data={getVolunteerHoursData}
+                                gridCol={"3/5"}
+                                type="Volunter"
+                                tableData={sortBy(filter(metrics.esg_metrics, (o: any) => {
+                                    return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Volunteering - Community'
+                                }), (o: any) => o.organization)}
+                            />
+                        }
+
+                    </div>
+                    <div>
+                        <Divider>
+                            Governance
+                        </Divider>
+                    </div>
+                    <div style={{
+                        display: 'grid',
+                        textAlign: 'center',
+                        gridTemplateColumns: 'repeat(4, 1fr)',
+                        gap: '2em'
+                    }}>
+                        {metrics?.esg_metrics && metrics?.esg_metrics.length > 0 &&
+                            <GovernanceCheckList esgMetrics={metrics.esg_metrics} />
+                        }
+                    </div>
+                    <div style={{ paddingBottom: 40 }} />
+                </div>
+            }            
         </div>
     )
 }
