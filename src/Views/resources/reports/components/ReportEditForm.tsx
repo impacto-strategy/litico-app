@@ -99,7 +99,6 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
             subMetricName === "Production - Gas" ||
             subMetricName === "Production - Oil" ||
             subMetricName === "Community Grievances" ||
-            subMetricName === "Social Investment" ||
             subMetricName === "Volunteering - Community" ||
             subMetricName === "Workforce Demographics - Ethnicity" ||
             subMetricName === "Workforce Demographics - Gender" ||
@@ -111,8 +110,9 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
             subMetricName === "TRIR - All Workers"
         ) {
             return [ {name: 'Quarterly', value: 'quarterly'} ]
-        }
-        else {
+        } else if (subMetricName === "Social Investment") {
+            return [ {name: 'Daily', value: 'daily'} ]
+        } else {
             return [
                 {name: 'Yearly', value: 'yearly'},
                 {name: 'Quarterly', value: 'quarterly'},
@@ -173,6 +173,8 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
         getStandards();
         updateTimeFrame(getTimeframeOptions(searchParams.get("metric_subtype")!)[0].value, setTimeFrame)
     }, [getTimeframeOptions, searchParams, updateTimeFrame, getFacilities, getStandards])
+
+    console.log("What does data look? ", props.data)
 
     return (
         <>
