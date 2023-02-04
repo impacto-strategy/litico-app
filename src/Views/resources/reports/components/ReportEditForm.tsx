@@ -174,8 +174,6 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
         updateTimeFrame(getTimeframeOptions(searchParams.get("metric_subtype")!)[0].value, setTimeFrame)
     }, [getTimeframeOptions, searchParams, updateTimeFrame, getFacilities, getStandards])
 
-    console.log("What does data look? ", props.data)
-
     return (
         <>
             {(fields.length <= 0) &&
