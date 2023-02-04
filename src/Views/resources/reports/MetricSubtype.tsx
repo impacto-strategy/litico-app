@@ -566,8 +566,8 @@ const MetricSubtype = () => {
                     <Popover content="Edit Report Entry">
                         <LiticoBlue>
                             <EditOutlined
-                            onClick={(e) => openEditDrawer(e, value)}
-                                style={{cursor: 'pointer'}}
+                                onClick={(e) => openEditDrawer(e, value)}
+                                style={{cursor: 'pointer', marginLeft: 20}}
                             />
                         </LiticoBlue>
                     </Popover>
