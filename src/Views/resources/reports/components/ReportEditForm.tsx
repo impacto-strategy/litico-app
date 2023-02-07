@@ -53,6 +53,11 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
         'WI', 'WY'
     ]
 
+    const uniqueFactors = {
+        'employee_id': true,
+        'tax_id': true,
+    }
+
     const getFacilities = useCallback(() => {
         ResourceService.index({
             resourceName: 'facilities'
@@ -75,12 +80,14 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
 
     }, [searchParams, setMetricStandards])
 
-    const checkInitialValue = (val: any, idx: any) => {
-        console.log(`${idx}: ${val}`)
-        if (val === 0) {
+    const checkInitialValue = (val: any, col_label: any, idx: any) => {
+
+        // Handles factors that aren't just num_1, num_2, etc. (e.g., tax_id)
+        if (uniqueFactors.hasOwnProperty(col_label)) {
+            return props.data[col_label];
+        } else if (val === 0) {
             return 0;
-        }
-        else if (searchParams.get("metric_subtype") === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas") {
+        } else if (searchParams.get("metric_subtype") === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas") {
             if (idx === 1 || idx === 4) {
                 return val / 1000;
             }
@@ -122,19 +129,29 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
     }, [])
 
     const updateESGMetric = (values: any) => {
+
         let data: any = JSON.parse(JSON.stringify(props.data));
 
         // Conditionals act as safety nets.
-        data.timeframe = values.timeframe ? values.timeframe : props.data.timeframe
-        data.date = values.date ? values.date : props.data.date
         data.basin = values.basin ? values.basin : props.data.basin
+        data.date = values.date ? values.date : props.data.date
+        data.narrative = values.narrative ? values.narrative : props.data.narrative
+        data.organization = values.organization
+        data.risk = values.risk ? values.risk : props.data.risk
         data.state = values.state ? values.state : props.data.state
         data.source = values.source ? values.source : props.data.source
-        data.risk = values.risk ? values.risk : props.data.risk
+        data.timeframe = values.timeframe ? values.timeframe : props.data.timeframe
 
         let index = 1;
+
         Object.keys(values.factors).map(async (key) => {
-            data[`num_${index}`] = values['factors'][key] ? parseInt(values["factors"][key]) : null
+            // Helps ensure unique ESG Metric columns are updated.
+            if (uniqueFactors.hasOwnProperty(key)) {
+                data[key] = values['factors'][key]
+            } else {
+                data[`num_${index}`] = values['factors'][key] ? parseInt(values["factors"][key]) : null
+            }
+            
             index++;
         })
 
@@ -309,7 +326,7 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
                         <Form.Item label={field.name}>
                             <Input.Group compact>
                                 <Form.Item
-                                    initialValue={checkInitialValue(props.data[`num_${index + 1}`], index)}
+                                    initialValue={checkInitialValue(props.data[`num_${index + 1}`], field.col_label, index)}
                                     name={['factors', field.col_label]}
                                     noStyle
                                 >
@@ -333,8 +350,8 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
                 </Row>
                 <Divider />
                 <Form.Item
-                    initialValue={props.data.narrative ? props.data.narrative : ""}
-                    name="comments"
+                    initialValue={props.data.narrative}
+                    name="narrative"
                     label="Discussion and Analysis"
                 >
                     <Input.TextArea />
