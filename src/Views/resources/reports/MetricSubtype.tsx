@@ -40,6 +40,7 @@ import moment from 'moment';
 import ReportEditForm from "./components/ReportEditForm";
 import ResourceService from "../../../Services/ResourceService";
 
+import { getSignedUrl } from "../../../utils/utils";
 /* STYLED COMPONENTS */
 const Wrapper = styled.section`
   margin: auto;
@@ -516,7 +517,7 @@ const MetricSubtype = () => {
                 <>
                 {value?.map((link:string, idx:number) => {
                   return (
-                      <a key={link} href={link}>Resource {idx +1} </a>
+                      <a key={link} href={getSignedUrl(link)}>Resource {idx +1} </a>
                   );
                 })}
               </>
