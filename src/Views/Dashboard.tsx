@@ -1,5 +1,5 @@
 /* IMPORT EXTERNAL MODULES */
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import {
     filter, 
     sortBy,
@@ -22,7 +22,8 @@ import Environment from "../Components/Dashboard/Environment";
 import Governance from "../Components/Dashboard/Governance";
 import Social from "../Components/Dashboard/Social";
 // MISC INTERNAL MODULES
-import {APICallAndAct} from "../Services/ResourceService";
+import ResourceService from "../Services/ResourceService";
+import { APICallAndAct } from "../Services/ResourceService";
 import { ArrOfObj } from "../../global"
 
 /**
@@ -38,48 +39,57 @@ const Dashboard: FC = () => {
     const [metrics, setMetrics] = useState<any>({})
     const [production, setProduction] = useState<ArrOfObj>([])
     const [spills, setSpills] = useState<ArrOfObj>([])
+    const [hasLoaded, setLoader] = useState<Boolean>(false)
+
+    /**
+     * Retrieves all data from the database. Utilized to prevent graphs from generating
+     * before all data has been successfully retrieved.
+     */
+    const getDashboardData = useCallback(() => {
+        Promise.all([
+            ResourceService.index({ resourceName: 'esg-metrics' }),
+            ResourceService.index({ resourceName: 'spills' }),
+            ResourceService.index({ resourceName: 'productions' }),
+            ResourceService.index({ resourceName: 'complaints' }),
+        ]).then((res: any) => {
+            setMetrics(res[0].data)
+            setEmissions(sortBy(filter(res[0].data.esg_metrics, { metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Emissions' }), 'date'))
+            setSpills(res[1].data)
+            setProduction(sortBy(res[2].data, 'year'))
+            setComplaints(res[3].data)
+            setLoader(true)
+        });
+    }, [])
 
     /* UseEffect Calls*/
     useEffect(() => {
-        // Get ESG Metric
-        APICallAndAct('esg-metrics', (data: any) => {
-            setMetrics(data)
-            setEmissions(sortBy(filter(data.esg_metrics, { metric_name: 'Greenhouse Gas Emissions', metric_subtype: 'GHG Emissions' }), 'date'))
-        })
-
-        // Get Spills
-        APICallAndAct('spills', (data: any) => setSpills(data))
-
-        // Get Production
-        APICallAndAct('productions', ((data: any) => {
-            let sortedData = sortBy(data, 'year')
-            setProduction(sortedData)
-        }))
-
-        // Get Complaints
-        APICallAndAct('complaints', ((data: any) => setComplaints(data)))
-    }, [])
+        getDashboardData()
+    }, [getDashboardData])
 
     return (
         <div className="site-layout-background">
-            <Environment
-                complaints={complaints}
-                emissions={emissions}
-                production={production}
-                spills={spills}    
-            />
-            <Social
-                donation={filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' })}
-                ethnicity={filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Ethnicity' })}
-                gender={filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Gender' })}
-                incidentData={filter(metrics.esg_metrics, { 'metric_subtype': 'TRIR - All Workers' })}
-                volunteer={filter(metrics.esg_metrics, (o: any) => {
-                    return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Volunteering - Community'
-                })}
-            />
-            <Governance 
-                esgMetrics={metrics.esg_metrics}
-            />
+            {hasLoaded &&
+                <>
+                    <Environment
+                        complaints={complaints}
+                        emissions={emissions}
+                        production={production}
+                        spills={spills}    
+                    />
+                    <Social
+                        donation={filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' })}
+                        ethnicity={filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Ethnicity' })}
+                        gender={filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Gender' })}
+                        incidentData={filter(metrics.esg_metrics, { 'metric_subtype': 'TRIR - All Workers' })}
+                        volunteer={filter(metrics.esg_metrics, (o: any) => {
+                            return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Volunteering - Community'
+                        })}
+                    />
+                    <Governance 
+                        esgMetrics={metrics.esg_metrics}
+                    />
+                </>
+            }
         </div>
     )
 }

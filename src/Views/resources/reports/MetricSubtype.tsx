@@ -7,6 +7,7 @@ import {
     Col,
     Descriptions, 
     Divider, 
+    Drawer, 
     List,
     message,
     Modal, 
@@ -19,12 +20,24 @@ import {
     Table, 
     Tag 
 } from "antd";
-import { DeleteOutlined, DownOutlined, UpOutlined } from '@ant-design/icons'
+import {
+    DeleteOutlined,
+    DownOutlined,
+    EditOutlined,
+    UpOutlined
+} from '@ant-design/icons';
 import { useCallback, useEffect, useState } from "react";
-import { flatten, map, sortBy, uniq } from "lodash";
+import {
+    find,
+    flatten,
+    map,
+    sortBy,
+    uniq
+} from "lodash";
 import moment from 'moment';
 
 /* IMPORT INTERNAL MODULES */
+import ReportEditForm from "./components/ReportEditForm";
 import ResourceService from "../../../Services/ResourceService";
 
 /* STYLED COMPONENTS */
@@ -42,16 +55,22 @@ const ContentWrapper = styled.section`
 
 `
 
+const LiticoBlue = styled.span`
+    color: rgb(46, 67, 117)
+`
+
 const MetricSubtype = () => {
     const { reportID } = useParams()
     const [searchParams] = useSearchParams();
     /* REACT STATE */
+    const [id, setId] = useState(0) // Prevents multiple forms from rendering (more efficient)
     const [initLoading, setInitLoading] = useState(true)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [metricDescription, setMetricDescription] = useState("")
     const [metricStandards, setMetricStandards] = useState<any>()
     const [reportData, setReportData] = useState<any>({year: '', period: '', esg_metrics: [], report: {}})
     const [showDescription, setShowDescription] = useState<any>([])
+    const [visible, setVisibility] = useState(false);
 
     const displayDescription = (idx: any) => {
         let arr = [...showDescription]
@@ -88,6 +107,22 @@ const MetricSubtype = () => {
             .finally(() => setInitLoading(false))
 
     }, [setMetricStandards])
+
+    const openEditDrawer = (e: any, value: number) => {
+        if (e) {
+            e.preventDefault()
+        }
+        setId(value);
+        setVisibility(true);
+    }
+
+    const closeEditDrawer = (e: any) => {
+        if (e) {
+            e.preventDefault()
+        }
+        setId(0);
+        setVisibility(false);
+    }
 
     // DATA STORAGE
     const subMetricColumns = {
@@ -513,20 +548,45 @@ const MetricSubtype = () => {
             dataIndex: 'id',
             key: 'id',
             render: (value: any) => (
-                <Popconfirm
-                    title="Delete This Row?"
-                    okText="Delete"
-                    // Another side effect
-                    onConfirm={(e: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => {
-                        handleDelete(e, value)
-                    }}
-                >
-                    <Popover content="Delete Datapoint">
-                        <DeleteOutlined 
-                            style={{color: 'red'}}
-                        />
+                <>
+                    <Popconfirm
+                        title="Delete This Row?"
+                        okText="Delete"
+                        // Another side effect
+                        onConfirm={(e: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => {
+                            handleDelete(e, value)
+                        }}
+                    >
+                        <Popover content="Delete Datapoint">
+                            <DeleteOutlined
+                                style={{color: 'red'}}
+                            />
+                        </Popover>
+                    </Popconfirm>
+                    <Popover content="Edit Report Entry">
+                        <LiticoBlue>
+                            <EditOutlined
+                                onClick={(e) => openEditDrawer(e, value)}
+                                style={{cursor: 'pointer', marginLeft: 20}}
+                            />
+                        </LiticoBlue>
                     </Popover>
-                </Popconfirm>
+                    {id === value &&
+                        <Drawer
+                            placement={"right"}
+                            open={visible}
+                            onClose={(e) => closeEditDrawer(e)}
+                            size={"large"}
+                            title={"Edit Form for Report Entry"}
+                        >
+                            <ReportEditForm 
+                                close={closeEditDrawer}
+                                refresh={getMetric}
+                                data={find(reportData.esg_metrics, (o) => o.id === value)}
+                            />
+                        </ Drawer>
+                    }
+                </>
             )
         }]
 
@@ -599,7 +659,7 @@ const MetricSubtype = () => {
                             <Button type="primary">
                                 Add Data
                             </Button>
-                        </Link>,
+                        </Link>
                     ]}
                 ><Divider />
                     <ContentWrapper>
@@ -612,7 +672,7 @@ const MetricSubtype = () => {
                                         pagination={false}
                                         columns={getColumns(subMetricColumns, searchParams.get("metric_subtype"))}
                                         dataSource={sortBy(reportData?.esg_metrics, [function(o) { return o.date; }])} 
-                                        rowKey={'id'} 
+                                        rowKey={'id'}
                                     />
                                 </Col>
                             </Row>}
