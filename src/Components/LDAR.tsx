@@ -71,6 +71,7 @@ const LDAR = () => {
                 }
             }
         },
+        limitInPlot: false,
         geometryOptions: [
             {
               geometry: 'column',
@@ -81,6 +82,7 @@ const LDAR = () => {
                     lineWidth: 2,
                 },
                 point: {
+                    lineWidth: 2,
                     size: 5,
                     shape: 'dot',
                 },
