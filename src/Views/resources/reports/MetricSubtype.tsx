@@ -23,6 +23,7 @@ import { DeleteOutlined, DownOutlined, UpOutlined } from '@ant-design/icons'
 import { useCallback, useEffect, useState } from "react";
 import { flatten, map, sortBy, uniq } from "lodash";
 import moment from 'moment';
+import { getSignedUrl } from "../../../utils/utils";
 
 /* IMPORT INTERNAL MODULES */
 import ResourceService from "../../../Services/ResourceService";
@@ -481,7 +482,7 @@ const MetricSubtype = () => {
                 <>
                 {value?.map((link:string, idx:number) => {
                   return (
-                      <a key={link} href={link}>Resource {idx +1} </a>
+                      <a key={link} href={getSignedUrl(link)}>Resource {idx +1} </a>
                   );
                 })}
               </>
