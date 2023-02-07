@@ -6,6 +6,7 @@ import {Button, Checkbox, Input, Space, Table, Drawer, Popconfirm, message} from
 import {DeleteOutlined, EditOutlined, SearchOutlined} from "@ant-design/icons";
 import Highlighter from 'react-highlight-words';
 import { DrawerProps } from "antd";
+import { getSignedUrl } from "../../utils/utils";
 
 /* IMPORT INTERNAL MODULES */
 import ResourceService from "../../Services/ResourceService";
@@ -361,7 +362,7 @@ const ResourceIndex: FC = () => {
             }
 
             if (_field.external_ref) {
-                _field.render = (text: any, record: any, index: any) => <a href={`${record[_field.external_ref.key]}`} target='blank'>{`${record[_field.external_ref.valueIndex] || record[_field.external_ref.key]}`}</a>
+                _field.render = (text: any, record: any, index: any) => <a href={getSignedUrl(`${record[_field.external_ref.key]}`)} target='blank'>{`${record[_field.external_ref.valueIndex] || record[_field.external_ref.key]}`}</a>
             }
 
             if (_field.date) {
