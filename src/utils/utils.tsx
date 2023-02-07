@@ -2,9 +2,10 @@ import parse from "html-dom-parser";
 import {jsx} from "slate-hyperscript";
 import AWS from 'aws-sdk'
 
+// cannot use AWS_ACCESS_KEY_ID or AWS_SECRET_KEY with vercel
 const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
 })
 
 const {Text} = require("slate");
