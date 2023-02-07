@@ -23,7 +23,6 @@ import Governance from "../Components/Dashboard/Governance";
 import Social from "../Components/Dashboard/Social";
 // MISC INTERNAL MODULES
 import ResourceService from "../Services/ResourceService";
-import { APICallAndAct } from "../Services/ResourceService";
 import { ArrOfObj } from "../../global"
 
 /**

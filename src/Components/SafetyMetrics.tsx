@@ -7,12 +7,12 @@ import { DualAxes } from '@ant-design/plots';
 import { formatValue } from '../utils/utils';
 
 const Wrapper = styled.div`
-background: #fff;
-padding: 20px;
-grid-column: 1 /5;
-@media (min-width: 767px) {
-  grid-column: 1/5
-}
+    background: #fff;
+    padding: 20px;
+    grid-column: 1 /5;
+    @media (min-width: 767px) {
+    grid-column: 1/5
+    }
 `
 
 /**
@@ -74,17 +74,12 @@ const SafetyMetrics: FC<{data: any}> = (props) => {
             {
                 geometry: 'line',
                 lineStyle: {
-                    lineWidth: 3,
+                    lineWidth: 2,
                 },
                 point: {
-                    style: () => {
-                    let config = {
-                        fill: '#5AC5BF',
-                        lineWidth: 2,
-                        stroke: '#5AC5BF'
-                    }
-                    return config;
-                    },
+                    lineWidth: 2,
+                    shape: 'dot',
+                    size: 5,
                 },
             },
         ],

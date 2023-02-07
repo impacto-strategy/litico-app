@@ -1,9 +1,9 @@
-// IMPORT EXTERNAL MODULES
-import { FC, useState, useEffect } from 'react';
-import styled from "styled-components";
+/* IMPORT EXTERNAL MODULES */
 import { DualAxes } from '@ant-design/plots';
 import { Modal, Table } from 'antd';
 import {sortBy} from 'lodash'
+import { FC, useState, useEffect } from 'react';
+import styled from "styled-components";
 
 interface PropsInterface { 
   data: any, 
@@ -30,6 +30,7 @@ const DualAxesLineColWidget: FC<PropsInterface> = props => {
   // React State
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [drillDownData, setDrillDownData] = useState<any>([]);
+
   const columns = [
     {
       title: 'Date',
@@ -127,6 +128,7 @@ const DualAxesLineColWidget: FC<PropsInterface> = props => {
         }
       }
     },
+    limitInPlot: false,
     geometryOptions: [
       {
         geometry: 'column',
@@ -135,6 +137,11 @@ const DualAxesLineColWidget: FC<PropsInterface> = props => {
         geometry: 'line',
         lineStyle: {
           lineWidth: 3,
+        },
+        point: {
+          lineWidth: 2,
+          shape: 'dot',
+          size: 5,
         },
       },
     ],

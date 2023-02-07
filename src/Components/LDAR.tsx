@@ -83,11 +83,6 @@ const LDAR = () => {
                 point: {
                     size: 5,
                     shape: 'dot',
-                    style: {
-                        fill: '#f05b72',
-                        stroke: '#f05b72',
-                        lineWidth: 2,
-                    },
                 },
                 color: '#f05b72'
             },
