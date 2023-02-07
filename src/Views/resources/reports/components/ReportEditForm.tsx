@@ -21,12 +21,12 @@ import ResourceService from '../../../../Services/ResourceService';
 
 interface EditFormProps {
     close: any,
-    data: any,
-    refresh: any
+    data: any, // Original ESG Metric data to be updated.
+    refresh: any // used to help update report table once data has been edited.
 }
 
 /**
- * Component for form when user wants to edit a data point on the reports section.
+ * React Component that renders UI and handles logic for updating ESG Metric data.
  * 
  * @returns JSX Element that renders to edit form for single data point in reports section.
  */
@@ -53,6 +53,15 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
         'WI', 'WY'
     ]
 
+    // Helps with metrics that have unique factors.
+    const uniqueFactors = {
+        'employee_id': true,
+        'tax_id': true,
+    }
+
+    /**
+     * Retrieves all facilities from database. Note: contains side effect.
+     */
     const getFacilities = useCallback(() => {
         ResourceService.index({
             resourceName: 'facilities'
@@ -63,6 +72,9 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
         })
     }, [])
 
+    /**
+     * Retrieves all standards from database. Note: contains side effect.
+     */
     const getStandards = useCallback(() => {
         ResourceService.index({
             resourceName: 'standards',
@@ -75,11 +87,25 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
 
     }, [searchParams, setMetricStandards])
 
-    const checkInitialValue = (val: any, idx: any) => {
-        console.log(`${idx}: ${val}`)
-        if (val === 0) {
+    /**
+     * Determines what the initial value should be for factor fields.
+     * 
+     * TODO: Think of potentially better name for function.
+     * 
+     * @param val - The original data's initial value
+     * @param col_label - The column name in the database corresponding to the factor.
+     * @param idx - index of input.
+     * @returns What the form's value should be.
+     */
+    const checkInitialValue = (val: any, col_label: any, idx: any) => {
+
+        // Handles factors that aren't just num_1, num_2, etc. (e.g., tax_id)
+        if (uniqueFactors.hasOwnProperty(col_label)) {
+            return props.data[col_label];
+        } else if (val === 0) {
             return 0;
-        }
+        } 
+        // Helps with gas which is stored as MCF in the database, but the form suppports mmscf
         else if (searchParams.get("metric_subtype") === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas") {
             if (idx === 1 || idx === 4) {
                 return val / 1000;
@@ -92,18 +118,15 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
         return null;
     }
     
+    /**
+     * Determines which timeframe options a submetric is able to support.
+     */
     const getTimeframeOptions = useCallback((subMetricName: string): any => {
-        if (
-            subMetricName === "GHG Emissions" ||
-            subMetricName === "Spils- Volume" ||
-            subMetricName === "Production - Gas" ||
-            subMetricName === "Production - Oil" ||
-            subMetricName === "Community Grievances" ||
-            subMetricName === "Volunteering - Community" ||
-            subMetricName === "Workforce Demographics - Ethnicity" ||
-            subMetricName === "Workforce Demographics - Gender" ||
-            subMetricName === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas"
-        ){
+        if ([
+            'Community Grievances', 'GHG Emissions', 'Production - Gas', 
+            'Production - Oil', 'Spills- Volume', 'Volunteering - Community',
+            'Workforce Demographics - Ethnicity', 'Workforce Demographics - Gender', 'Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas'
+        ].includes(subMetricName)) {
             return [ {name: 'Yearly', value: 'yearly'} ]
         } else if (
             subMetricName === "TRIR - Employees" ||
@@ -121,24 +144,34 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
         }
     }, [])
 
+    /**
+     * Prepares form data to be sent to the backend and updated.
+     * 
+     * @param values - Form Data
+     */
     const updateESGMetric = (values: any) => {
+
         let data: any = JSON.parse(JSON.stringify(props.data));
 
-        // Conditionals act as safety nets.
-        data.timeframe = values.timeframe ? values.timeframe : props.data.timeframe
-        data.date = values.date ? values.date : props.data.date
-        data.basin = values.basin ? values.basin : props.data.basin
-        data.state = values.state ? values.state : props.data.state
-        data.source = values.source ? values.source : props.data.source
-        data.risk = values.risk ? values.risk : props.data.risk
+        // Updates each column based on what's in the input field.
+        ['basin', 'date', 'narrative', 'organization', 'risk', 'state', 'source', 'timeframe'].forEach((item) => {
+            data[item] = values[item]
+        })
 
         let index = 1;
+
         Object.keys(values.factors).map(async (key) => {
-            data[`num_${index}`] = values['factors'][key] ? parseInt(values["factors"][key]) : null
+            // Helps ensure unique ESG Metric columns are updated properly.
+            if (uniqueFactors.hasOwnProperty(key)) {
+                data[key] = values['factors'][key]
+            } else {
+                data[`num_${index}`] = values['factors'][key] ? parseInt(values["factors"][key]) : null
+            }
+            
             index++;
         })
 
-        // Now send information to backend
+        // Now form data is sent to backend.
         ResourceService.update({
             fields: data,
             resourceName: 'esg-metrics',
@@ -147,7 +180,9 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
             if (res.data) {
                 message.success('Data was added successfully');
                 form.resetFields();
+                // Refresh report component to show updated data.
                 props.refresh();
+                // Closes form
                 props.close();
             }
         }).catch((err) => {
@@ -156,6 +191,9 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
         })
     }
 
+    /**
+     * Updates state so that the date picker input updates correctly.
+     */
     const updateTimeFrame = useCallback((e: any, setState: any) => {
         if (e === "yearly") {
             setState('year');
@@ -309,7 +347,7 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
                         <Form.Item label={field.name}>
                             <Input.Group compact>
                                 <Form.Item
-                                    initialValue={checkInitialValue(props.data[`num_${index + 1}`], index)}
+                                    initialValue={checkInitialValue(props.data[`num_${index + 1}`], field.col_label, index)}
                                     name={['factors', field.col_label]}
                                     noStyle
                                 >
@@ -333,8 +371,8 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
                 </Row>
                 <Divider />
                 <Form.Item
-                    initialValue={props.data.narrative ? props.data.narrative : ""}
-                    name="comments"
+                    initialValue={props.data.narrative}
+                    name="narrative"
                     label="Discussion and Analysis"
                 >
                     <Input.TextArea />
