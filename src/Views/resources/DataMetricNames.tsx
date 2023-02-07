@@ -73,14 +73,14 @@ const DataMetricNames = () => {
                         <Col lg={{span: 12}} sm={{span: 24}}>
                             <h2>Add Data to your LITICO Database</h2>
                         </Col>
-                        <Col lg={{ span: 10 }} sm={{ span: 24 }}>
+                        <Col lg={{ span: 9 }} sm={{ span: 24 }}>
                             <div style={{ float: 'right' }} >
                                 <Upload name="file" onChange={(normFile)} action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers} accept=".csv,.pdf,.doc,.docx,.jpeg,.png,.jpg,.svg">
                                     <Button icon={<UploadOutlined />}>Raw Data File Upload</Button>
                                 </Upload>
                             </div>
                         </Col>
-                        <Col lg={{ span: 2 }} sm={{ span: 24 }}>
+                        <Col lg={{ span: 3 }} sm={{ span: 24 }}>
                             <Button style={{ float: 'right' }}><Link to="/company-uploads">Upload History</Link></Button>
                         </Col>
                     </Row>

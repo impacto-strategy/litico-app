@@ -1,5 +1,11 @@
 import parse from "html-dom-parser";
 import {jsx} from "slate-hyperscript";
+import AWS from 'aws-sdk'
+
+const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+})
 
 const {Text} = require("slate");
 const escapeHtml = require("escape-html");
@@ -191,6 +197,13 @@ const deserializeHtml = (html = "") => {
     }, []);
 
     return patchDeserializedHtml;
+};
+
+export const getSignedUrl = (url: string) => {
+    if (!url.includes('litico')) return ''
+    let params = { Bucket: 'litico', Key: url.split('.com/')[1], Expires: 300 };
+    let signedUrl = s3.getSignedUrl('getObject', params);
+    return signedUrl;
 };
 
 const serializeReducer = (acc = [], node: any) => {
