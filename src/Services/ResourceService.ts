@@ -25,3 +25,19 @@ const ResourceService = {
 };
 
 export default ResourceService
+
+/**
+ * Interface for Resource Service API.
+ * 
+ * @param name - String representing name of resource to call API for.
+ * @param callBack - Function representing action to take on data sent back from API call.
+ */
+export const APICallAndAct = (name: string, callBack: Function) => {
+    ResourceService['index']({
+        resourceName: name
+    }).then(({data}: any) => {
+        callBack(data);
+    }).catch((err) => {
+        console.log(err)
+    })
+}
