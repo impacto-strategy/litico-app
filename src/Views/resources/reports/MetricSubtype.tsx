@@ -35,7 +35,6 @@ import {
     uniq
 } from "lodash";
 import moment from 'moment';
-import { getSignedUrl } from "../../../utils/utils";
 
 /* IMPORT INTERNAL MODULES */
 import ReportEditForm from "./components/ReportEditForm";
