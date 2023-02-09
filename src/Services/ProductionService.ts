@@ -14,12 +14,6 @@ import { groupByMultiple } from "../utils/arrayUtils";
 
 // Interfaces and Types
 import { ArrOfObj } from "../../global";
-// interface productionData {
-//     date: any,
-//     gas?: any,
-//     oil?: any,
-//     water?: any
-// }
 
 /**
  * Handles data where each year might be in a different timeframe only.
