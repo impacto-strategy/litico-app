@@ -78,12 +78,10 @@ const Hero: FC = () => {
       <Row justify="center" align="middle">
         <Col xs={18} md={16}>
           <div>
-            <HeroHeading>ESG reporting shouldn't be so hard</HeroHeading>
-            <HeroHeading2>It's time to simplify ESG for good.</HeroHeading2>
+            <HeroHeading>Litico&trade;  Regulatory Compliance & ESG Analytics</HeroHeading>
+            <HeroHeading2>A business intelligence platform that empowers operators to navigate a complex regulatory landscape.</HeroHeading2>
             <HeroHeading3>
-              A purpose-built SaaS platform that simplifies how oil and gas companies
-              integrate, manage, visualize, report, and amplify their
-              sustainability performance.
+              Litico™ is an analytics, risk-management platform that tracks oil and gas regulatory compliance and ESG performance simplifying how oil and gas companies integrate, manage, visualize and report data.
             </HeroHeading3>
           </div>
         </Col>

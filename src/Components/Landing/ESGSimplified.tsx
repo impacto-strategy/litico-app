@@ -36,7 +36,9 @@ const SimplifiedContentCard = styled.div`
     font-weight: 800;
     margin-bottom: 0;
 
-    &:first-child {
+    // 3n + 1
+
+    &:nth-child(2n+1), &:nth-child(2n+2) {
       span {
         &:first-child {
           color: var(--landing-primary-300);
@@ -48,7 +50,7 @@ const SimplifiedContentCard = styled.div`
       }
     }
 
-    &:nth-child(2) {
+    &:nth-child(2n+3), &:nth-child(2n+4) {
       span {
         &:first-child {
           color: var(--landing-secondary-300);
@@ -60,7 +62,7 @@ const SimplifiedContentCard = styled.div`
       }
     }
 
-    &:nth-child(3) {
+    &:nth-child(2n+5), &:nth-child(2n+6) {
       span {
         &:first-child {
           color: var(--landing-accent-300);
@@ -89,17 +91,20 @@ const ESGSimplified: FC = () => {
     <ESGSimplifiedSection>
       <Row justify="end" align="middle">
         {/* Initially 12 for span */}
-        <Col span={24} order={1} sm={{span: 12, order: 0}} md={8} style={{zIndex: 1}}>
+        <Col span={26} order={1} sm={{span: 12, order: 0}} md={9} style={{zIndex: 1}}>
           <SimplifiedContentCard>
             <h2>ESG Simplified</h2>
             <div>
-              <h3><span>Build</span> <span>Trust</span></h3>
-              <h3><span>Drive</span> <span>Growth</span></h3>
-              <h3><span>Bring</span> <span>Change</span></h3>
+              <h3><span>Risk</span> <span>mitigation</span></h3>
+              <h3><span>Regulatory</span> <span>preparedness</span></h3>
+              <h3><span>Competitor</span> <span>surveillance</span></h3>
+              <h3><span>Compliance</span> <span>risk management</span></h3>
+              <h3><span>Real-time</span> <span>reporting</span></h3>
+              <h3><span>ESG</span> <span>integration & reporting</span></h3>
             </div>
           </SimplifiedContentCard>
         </Col>
-        <Col xs={24} sm={{span: 12, order: 0}} md={14} order={0}>
+        <Col xs={22} sm={{span: 12, order: 0}} md={12} order={0}>
           <LaptopDemoImgSection>
             <img src={LaptopDemoImg} alt="Dashboard on a laptop screen" />
           </LaptopDemoImgSection>

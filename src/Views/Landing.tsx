@@ -50,7 +50,7 @@ const Landing: FC = () => {
     <LandingLayout id={"components-landing-page-layout"}>
       <Header />
       <main>
-        <Hero />
+        <Hero /> 
         <ESGSimplified />
         <BetaGroupCTA visible={visible} setVisible={setVisible}/>
         <SignupForm visible={visible} setVisible={setVisible}/>
