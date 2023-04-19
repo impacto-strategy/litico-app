@@ -91,9 +91,9 @@ const ESGSimplified: FC = () => {
     <ESGSimplifiedSection>
       <Row justify="end" align="middle">
         {/* Initially 12 for span */}
-        <Col span={26} order={1} sm={{span: 12, order: 0}} md={9} style={{zIndex: 1}}>
+        <Col span={30} order={1} sm={{span: 14, order: 0}} md={10} style={{zIndex: 1}}>
           <SimplifiedContentCard>
-            <h2>ESG Simplified</h2>
+            <h2>Business Intelligence</h2>
             <div>
               <h3><span>Risk</span> <span>mitigation</span></h3>
               <h3><span>Regulatory</span> <span>preparedness</span></h3>

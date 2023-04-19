@@ -1,14 +1,17 @@
+/* IMPORT EXTERNAL MODULES */
 import { Layout } from "antd";
 import { FC, useState } from "react";
-
 import styled from "styled-components";
-import BetaGroupCTA from "../Components/Landing/BetaGroupCTA";
-import ESGSimplified from "../Components/Landing/ESGSimplified";
 
+/* IMPORT INTERNAL MODULE */
+import BetaGroupCTA from "../Components/Landing/BetaGroupCTA";
+import BodyCopyOne from "../Components/Landing/BodyCopyOne";
+import BodyCopyTwo from "../Components/Landing/BodyCopyTwo";
+import ESGSimplified from "../Components/Landing/ESGSimplified";
+import Footer from "../Components/Landing/Footer";
 import Header from "../Components/Landing/Header";
 import Hero from "../Components/Landing/Hero";
 import SignupForm from "../Components/Landing/SignupForm";
-import Footer from "../Components/Landing/Footer";
 
 const LandingLayout = styled(Layout)`
   --landing-primary-300: #acdabb;
@@ -50,8 +53,10 @@ const Landing: FC = () => {
     <LandingLayout id={"components-landing-page-layout"}>
       <Header />
       <main>
-        <Hero /> 
+        <Hero />
+        <BodyCopyOne />
         <ESGSimplified />
+        <BodyCopyTwo />
         <BetaGroupCTA visible={visible} setVisible={setVisible}/>
         <SignupForm visible={visible} setVisible={setVisible}/>
       </main>

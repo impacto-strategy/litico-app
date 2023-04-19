@@ -66,9 +66,12 @@ const HeroHeading2 = styled.h2`
   font-weight: 500;
 `;
 
-const HeroHeading3 = styled.h3`
-  font-size 1.5rem;
-  white-space: pre-line; 
+const Trademark = styled.span`
+  display: inline-block;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  height: 3rem;
+  vertical-align: middle;
 `;
 
 const Hero: FC = () => {
@@ -78,11 +81,8 @@ const Hero: FC = () => {
       <Row justify="center" align="middle">
         <Col xs={18} md={16}>
           <div>
-            <HeroHeading>Litico&trade;  Regulatory Compliance & ESG Analytics</HeroHeading>
+            <HeroHeading>Litico<Trademark>™</Trademark> Regulatory Compliance & ESG Analytics</HeroHeading>
             <HeroHeading2>A business intelligence platform that empowers operators to navigate a complex regulatory landscape.</HeroHeading2>
-            <HeroHeading3>
-              Litico™ is an analytics, risk-management platform that tracks oil and gas regulatory compliance and ESG performance simplifying how oil and gas companies integrate, manage, visualize and report data.
-            </HeroHeading3>
           </div>
         </Col>
       </Row>
