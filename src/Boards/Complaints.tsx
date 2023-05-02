@@ -48,6 +48,8 @@ const Complaints = () => {
                         return row
 
                     })
+
+
                     setByOperator(orderBy(Object.values(_data), 'receive_date'))
 
 
@@ -173,7 +175,6 @@ const Complaints = () => {
             marginTop: 40,
             marginLeft: 'auto',
             marginRight: 'auto',
-
         }}>
             <h2>Complaints Intensity Histogram</h2>
             <br/>
