@@ -15,13 +15,13 @@ import StagingBanner from "../Components/StagingBanner";
 
 const {Header, Content, Sider} = Layout;
 
-const CompanyMenu = ({companies, onClick} : {companies: any[], onClick: (ev: any) => void}) => {
+const CompanyMenu = ({companies, onClick}: { companies: any[], onClick: (ev: any) => void }) => {
 
     return (
         <Menu onClick={onClick}>
             {companies.map(company => <Menu.Item key={company.id}>
-                {company.name}
-            </Menu.Item>
+                    {company.name}
+                </Menu.Item>
             )}
         </Menu>
     )
@@ -45,8 +45,8 @@ const Home: FC = () => {
 
     useEffect(() => {
         ResourceService.index({
-            resourceName:'companies'
-        }).then(({ data }) => {
+            resourceName: 'companies'
+        }).then(({data}) => {
             setCompanies(data)
         }).catch((err) => {
             console.log(err)
@@ -59,14 +59,14 @@ const Home: FC = () => {
     }, [user.email])
 
     const handleCompanyChange = useCallback((ev) => {
-      switchCompany(ev.key).finally(() => {
-          window.location.reload()
-      })
+        switchCompany(ev.key).finally(() => {
+            window.location.reload()
+        })
     }, [switchCompany])
 
     return (
         <Layout id={"components-layout-demo-fixed-sider"}>
-            <StagingBanner />
+            <StagingBanner/>
             <Sider
                 breakpoint="lg"
                 collapsible
@@ -82,11 +82,17 @@ const Home: FC = () => {
                 <>
                     <div className="logo">
                         L<span hidden={collapsed}>itico</span>
+                        <b>BETA</b>
                     </div>
                     <Menu theme="light" mode="inline" defaultSelectedKeys={['0']}>
                         <Menu.Item key="0" icon={<BarChartOutlined/>}>
                             <Link to={`/dashboard`}>
                                 Dashboard
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="9" icon={<BarChartOutlined/>}>
+                            <Link to={`/beta`}>
+                                Regulatory Surveillance
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="1" icon={<ContainerOutlined/>}>
@@ -115,8 +121,8 @@ const Home: FC = () => {
                                 Facilities
                             </Link>
                         </Menu.Item> */}
-                        {admin && 
-                            <Menu.Item key="6" icon={<SwitcherOutlined />}>
+                        {admin &&
+                            <Menu.Item key="6" icon={<SwitcherOutlined/>}>
                                 <Link to={`/standards`}>
                                     Standards
                                 </Link>
@@ -127,17 +133,19 @@ const Home: FC = () => {
                                 Complaints
                             </Link>
                         </Menu.Item> */}
-                        <Menu.Item key="8" icon={<DatabaseOutlined />}>
+                        <Menu.Item key="8" icon={<DatabaseOutlined/>}>
                             <Link to={`/metric-names`}>
                                 Add Data
                             </Link>
                         </Menu.Item>
                     </Menu>
                     <div className="hidden-mobile" style={{position: 'absolute', bottom: '50px', paddingLeft: '24px'}}>
-                        <a href="https://forms.clickup.com/10638937/f/a4njt-2500/6FUYOTTMDN0H7VQY35" target="blank">Send Feedback</a>
+                        <a href="https://forms.clickup.com/10638937/f/a4njt-2500/6FUYOTTMDN0H7VQY35" target="blank">Send
+                            Feedback</a>
                     </div>
                     <div className="hidden-desktop" style={{position: 'absolute', bottom: '50px', paddingLeft: '6px'}}>
-                        <a href="https://forms.clickup.com/10638937/f/a4njt-2500/6FUYOTTMDN0H7VQY35" target="blank">Feedback</a>
+                        <a href="https://forms.clickup.com/10638937/f/a4njt-2500/6FUYOTTMDN0H7VQY35"
+                           target="blank">Feedback</a>
                     </div>
                 </>
             </Sider>
@@ -145,13 +153,14 @@ const Home: FC = () => {
                 <Header className="site-layout-background" style={{padding: 0}}>
 
                     <Row>
-                        <Col lg={{ span: 8 }} md={{ span: 4}} className="hidden-mobile"  sm={4}>
+                        <Col lg={{span: 8}} md={{span: 4}} className="hidden-mobile" sm={4}>
                             <div onClick={() => setCollapsed(!collapsed)} className={"trigger"}>
                                 {collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}</div>
                         </Col>
-                        <Col sm={24} md={{ span: 16, offset: 4 }} lg={{ span: 8, offset: 8 }}>
+                        <Col sm={24} md={{span: 16, offset: 4}} lg={{span: 8, offset: 8}}>
                             <div className={"companySelector"}>
-                                <Dropdown overlay={<CompanyMenu onClick={handleCompanyChange} companies={companies}/>} trigger={['click']}>
+                                <Dropdown overlay={<CompanyMenu onClick={handleCompanyChange} companies={companies}/>}
+                                          trigger={['click']}>
                                     <div style={{
                                         cursor: 'pointer',
                                         display: 'flex',
@@ -164,7 +173,7 @@ const Home: FC = () => {
                                         <div>{user.selectedCompany.name}</div>
                                     </div>
                                 </Dropdown>
-                                <span >{user.name}</span>
+                                <span>{user.name}</span>
                                 {user && (
                                     <span style={{cursor: 'pointer'}} onClick={handleLogout}>
                                         Logout

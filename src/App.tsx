@@ -32,12 +32,14 @@ import MetricSubtype from "./Views/resources/reports/MetricSubtype";
 import MetricSubtypes from "./Views/resources/reports/MetricSubtypes";
 import ReportMetricType from "./Views/resources/reports/ReportMetricType";
 import CompaniesNew from "./Views/resources/companies/CompaniesNew";
+import Beta from "./Views/Beta";
 
 const App: FC = () => {
     return (
         <Routes>
             <Route element={<RequireAuth><Home/></RequireAuth>}>
                 <Route path="dashboard" element={<Dashboard/>}/>
+                <Route path="beta" element={<Beta/>}/>
                 <Route path=":resourceName" element={<ResourceIndex/>}/>
                 <Route path="equipments" element={<EquipmentIndex/>}/>
                 <Route path="locations/new" element={<NewLocation/>}/>
