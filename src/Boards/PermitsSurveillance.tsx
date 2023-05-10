@@ -127,24 +127,17 @@ const PermitSurveillance = () => {
         },
         label: {
             visible: false,
-            // 是否显示标签图层
             field: 'operator_name',
             style: {
                 fill: '#fff',
                 opacity: 0.6,
                 fontSize: 12,
                 textAnchor: 'top',
-                // 文本相对锚点的位置 center|left|right|top|bottom|top-left
                 textOffset: [0, 20],
-                // 文本相对锚点的偏移量 [水平, 垂直]
                 spacing: 1,
-                // 字符间距
                 padding: [5, 5],
-                // 文本包围盒 padding [水平，垂直]，影响碰撞检测结果，避免相邻文本靠的太近
                 stroke: '#ffffff',
-                // 描边颜色
                 strokeWidth: 0.3,
-                // 描边宽度
                 strokeOpacity: 1.0,
             },
         },
