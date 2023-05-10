@@ -2,13 +2,15 @@ import {GeographicHeatmap, GeographicHeatmapConfig} from "@ant-design/maps";
 import {useEffect, useState} from "react";
 import {orderBy, remove, snakeCase} from "lodash";
 import {getQuarter, getYear} from "date-fns";
-import {Line, LineConfig} from "@ant-design/charts";
+import {Column, ColumnConfig, Line, LineConfig} from "@ant-design/charts";
+import {Card, Col, Row} from "antd";
 
 const Spills = () => {
 
 
     const [data, setData] = useState<any[]>([]);
     const [operatorData, setOperatorData] = useState<any[]>([]);
+    const [operatorYoY, setOperatorYoY] = useState<any[]>([]);
 
     useEffect(() => {
         asyncFetch();
@@ -19,6 +21,8 @@ const Spills = () => {
             .then((response) => response.json())
             .then((json) => {
                 if (Array.isArray(json)) {
+
+
                     let _data = json
 
                         .map(row => {
@@ -60,7 +64,6 @@ const Spills = () => {
                                 qy: row.qy
                             }
                         } else {
-                            // console.log({n: _data[row.operator_number + row.qy].notices})
                             operatorData[key] = {
                                 ...row,
                                 spills: operatorData[key].spills + 1,
@@ -79,9 +82,40 @@ const Spills = () => {
                     })
 
 
-                    setOperatorData(orderBy(operatorData, ['date_of_discovery', 'spills']))
+                    setOperatorData(orderBy(operatorData, ['date_of_discovery', 'spills'], ['asc', 'desc']))
 
 
+                    let _YoYData: any = {}
+                    json.map(row => {
+                        row.year = getYear(new Date(row.date_of_discovery))
+                        //
+                        // return row
+                        //
+                        const key = snakeCase(`${row.operator_number}-${row.year}`)
+
+
+                        if (!(key in _YoYData)) {
+                            _YoYData[key] = {
+                                ...row,
+                                spills: 1,
+                                year: row.year
+                            }
+                        } else {
+                            // console.log({n: _data[row.operator_number + row.qy].notices})
+                            _YoYData[key] = {
+                                ...row,
+                                spills: _YoYData[key].spills + 1,
+                                year: row.year
+                            }
+                        }
+
+
+                        return row
+
+                    })
+                    _YoYData = Object.values(_YoYData)
+                    console.log({_YoYData})
+                    setOperatorYoY(orderBy(_YoYData, ['date_of_discovery']))
                 }
             })
             .catch((error) => {
@@ -92,7 +126,7 @@ const Spills = () => {
     const config: GeographicHeatmapConfig = {
         map: {
             type: 'mapbox',
-            style: "dark",
+            // style: "dark",
             token: 'pk.eyJ1Ijoic2toYW5uYTEwMDA1IiwiYSI6ImNsaDZjbzBxcDA0cTYza21wejhpZjl6MWMifQ.5sxEGc0Rgl8mwGJDuFpIvg',
             pitch: 43,
             center: [-104.991531, 39.742043],
@@ -139,14 +173,96 @@ const Spills = () => {
         },
     };
 
+
+    let preSelected: any = {}
+
+    orderBy(operatorYoY, 'spills', 'desc').map(op => {
+        if (Object.keys(preSelected).length > 16) {
+            preSelected[op.operator] = false
+
+        } else {
+            preSelected[op.operator] = true
+
+        }
+    })
+
+    const spillConfigYoY: ColumnConfig = {
+        data: operatorYoY,
+        xField: 'year',
+        yField: 'spills',
+        // title: {
+        //     visible: true,
+        // },
+        xAxis: {
+            label: {
+                autoRotate: false,
+            },
+            title: {
+                text: "Years"
+            },
+        },
+        yAxis: {
+            title: {
+                text: "# of Spills"
+            },
+            position: 'left',
+
+            label: {
+                autoRotate: true
+            }
+        },
+
+        isGroup: true,
+        // isStack: false,
+        seriesField: 'operator',
+        legend: {
+            selected: {
+                ...preSelected
+            },
+            layout: "horizontal",
+            position: 'bottom',
+            flipPage: true,
+            maxRow: 3,
+        },
+    };
+
+
     return (
         <div className={"container"}>
-            <div style={{height: 700}}>
-                <GeographicHeatmap {...config} />
-            </div>
-            <div style={{background: '#fff', maxWidth: 1200, margin: '20px auto', padding: 30}}>
-                <Line {...operatorConfig} />
-            </div>
+            <Row gutter={[16, 20]}>
+                <Col span={12}>
+                    <Card title={
+                        <Card.Meta
+                            title="Spills Surveillance (Industry & M&A)"
+                            description="Map Showing Estimated Spill Volume"
+                        />
+                    } bordered={false}>
+                        <div style={{height: 400}}>
+                            <GeographicHeatmap {...config} />
+                        </div>
+                    </Card>
+                </Col>
+
+                <Col span={12}>
+                    <Card title={<Card.Meta
+                        title="Spills Intensity Trend-line"
+                        description="How are the top 25 producers doing"
+                    />} bordered={false}>
+
+                        <Line {...operatorConfig} />
+                    </Card>
+                </Col>
+
+                <Col span={24}>
+                    <Card title={<Card.Meta
+                        title="Spills Surveillance (Industry) $$"
+                        description="Key Competitor Comparison, year-over-year"
+                    />} bordered={false}>
+
+                        <Column {...spillConfigYoY} />
+                    </Card>
+                </Col>
+            </Row>
         </div>
     )
 }
