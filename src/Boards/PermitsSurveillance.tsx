@@ -120,7 +120,7 @@ const PermitSurveillance = () => {
                     },
                     {
                         name: 'Approval Time',
-                        value: data.approvalTime + ' Business Days'
+                        value: data.approvalTime < 90 ? data.approvalTime + ' Business Days' : (data.approvalTime > 900 ? Math.ceil(data.approvalTime / 365) + ' Years' : Math.ceil(data.approvalTime / 30) + ' Months')
                     }
                 ]
             }
