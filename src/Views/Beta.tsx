@@ -5,6 +5,7 @@ import {Tabs} from 'antd';
 import type {SizeType} from 'antd/es/config-provider/SizeContext';
 import Complaints from "../Boards/Complaints";
 import Spills from "../Boards/Spills";
+import PermitSurveillance from "../Boards/PermitsSurveillance";
 
 const Beta: FC = () => {
 
@@ -24,6 +25,11 @@ const Beta: FC = () => {
             label: "Spills",
             key: "spills",
             children: <Spills/>
+        },
+        {
+            label: "Permits Surveillance",
+            key: "permit_surveillance",
+            children: <PermitSurveillance/>
         }
     ]
     return (
