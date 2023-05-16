@@ -42,31 +42,35 @@ const Inspections = () => {
         <div className={"container"}>
             <Row gutter={[16, 20]}>
 
-                <Col span={24}>
+                <Col span={12}>
                     <Card title={
                         <Card.Meta
-                            title="Permit Approval (Industry M&A)*"
-                            description="What’s my permit Intensity?  What are my competitor’s permit intensity?"
+                            title="Inspections"
+                            description="Do we see any changes in inspection frequency?"
                         />
                     } bordered={false}>
-                        <div style={{maxHeight: '60vh'}}>
+                        <div>
                             {data && <Line data={{
                                 labels: [...data.flatMap(o => o.my)],
                                 datasets: [
                                     {
-                                        label: 'K',
-                                        data: [8, 8, 8, 8, 8]
+                                        label: '# of Inspections',
+                                        data: [...data.flatMap(o => o.total_inspections)],
+                                        fill: false,
+                                        borderColor: 'rgb(75, 192, 192)',
+                                        tension: 0.1
                                     }
                                 ]
                             }}
-
                                            options={{
                                                responsive: true,
+
                                                plugins: {
                                                    legend: {
-                                                       position: 'right',
+                                                       position: 'bottom',
                                                    }
                                                },
+
                                                scales: {
                                                    y: {
                                                        beginAtZero: true,
@@ -74,13 +78,13 @@ const Inspections = () => {
                                                            precision: 0
                                                        },
                                                        title: {
-                                                           text: "Count of permits expiring within the year",
+                                                           text: "# of Monthly Inspections",
                                                            display: true
                                                        }
                                                    },
                                                    x: {
                                                        title: {
-                                                           text: "Year of expiry",
+                                                           text: "Year - Month",
                                                            display: true
                                                        }
                                                    }
