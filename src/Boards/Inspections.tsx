@@ -45,7 +45,7 @@ const Inspections = () => {
                 <Col span={12}>
                     <Card title={
                         <Card.Meta
-                            title="Inspections"
+                            title="Bayswater field inspections in the last quarter"
                             description="Do we see any changes in inspection frequency?"
                         />
                     } bordered={false}>

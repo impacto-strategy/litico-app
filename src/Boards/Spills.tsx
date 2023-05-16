@@ -251,6 +251,7 @@ const Spills = () => {
                         />
                     } bordered={false}>
                         <div style={{height: 400}}>
+                            //TODO: make more like prototype
                             <GeographicHeatmap {...config} />
                         </div>
                     </Card>
