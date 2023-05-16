@@ -6,6 +6,9 @@ import type {SizeType} from 'antd/es/config-provider/SizeContext';
 import Complaints from "../Boards/Complaints";
 import Spills from "../Boards/Spills";
 import PermitSurveillance from "../Boards/PermitsSurveillance";
+import Ogdps from "../Boards/ogdps";
+import MergerAcquisition from "../Boards/MergerAcquisition";
+import Inspections from "../Boards/Inspections";
 
 const Beta: FC = () => {
 
@@ -17,6 +20,15 @@ const Beta: FC = () => {
 
     const boards = [
         {
+            label: "Permits Surveillance",
+            key: "ogdp",
+            children: <Ogdps/>
+        }, {
+            label: "Mergers & Acquisition",
+            key: "MergerAcquisition",
+            children: <MergerAcquisition/>
+        },
+        {
             label: "Complaints",
             key: "complaints",
             children: <Complaints/>
@@ -27,16 +39,21 @@ const Beta: FC = () => {
             children: <Spills/>
         },
         {
-            label: "Permits Surveillance",
+            label: "Drilling Permits Surveillance",
             key: "permit_surveillance",
             children: <PermitSurveillance/>
+        },
+        {
+            label: "Inspections",
+            key: "inspections",
+            children: <Inspections/>
         }
     ]
     return (
         <div>
 
             <Tabs
-                defaultActiveKey="complaints"
+                defaultActiveKey="ogdp"
                 size={size}
                 style={{marginBottom: 32}}
                 items={boards}

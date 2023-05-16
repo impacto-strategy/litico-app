@@ -147,6 +147,19 @@ const Spills = () => {
         legend: {
             position: 'bottomleft',
         },
+        style: {
+            intensity: 3,
+            radius: 20,
+            opacity: 1,
+            colorsRamp: [
+                {color: 'rgba(33,102,172,0.0)', position: 0},
+                {color: 'rgb(193,197,255)', position: 0.2},
+                {color: 'rgb(132,139,250)', position: 0.4},
+                {color: 'rgb(79,89,255)', position: 0.6},
+                {color: 'rgb(39,51,255)', position: 0.8},
+                {color: 'rgb(2,12,218)', position: 1},
+            ],
+        }
     };
 
 
