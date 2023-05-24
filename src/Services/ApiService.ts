@@ -24,10 +24,10 @@ APIClient.interceptors.response.use(
             if (
                 [401].includes(error.response.status)
             ) {
-                // AuthService.logout().finally(() => {
-                //     localStorage.removeItem('_U')
-                //     window.location.replace("/login");
-                // })
+                AuthService.logout().finally(() => {
+                    localStorage.removeItem('_U')
+                    window.location.replace("/login");
+                })
             }
         }
         return Promise.reject(error);

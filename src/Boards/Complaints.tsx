@@ -14,7 +14,6 @@ const Complaints = () => {
     useEffect(() => {
         asyncNoavFetch()
         asyncFetch();
-
     }, []);
 
     const asyncNoavFetch = () => {
@@ -94,42 +93,6 @@ const Complaints = () => {
 
                     setByOperator(orderBy(Object.values(_data), 'receive_date'))
 
-
-                    // _data = {}
-                    //
-                    // json
-                    //     .filter(row => row.noav === 'Y')
-                    //     .map(row => {
-                    //         row.qy = `Q${getQuarter(new Date(row.receive_date))} - ${getYear(new Date(row.receive_date))}`
-                    //         //
-                    //         // return row
-                    //         //
-                    //         const key = snakeCase(`${row.operator_number}-${row.qy}`)
-                    //
-                    //         // console.log(row.operator_number + row.qy)
-                    //         // console.log(isEmpty(_data[row.operator_number + row.qy]))
-                    //         if (!(key in _data)) {
-                    //             _data[key] = {
-                    //                 ...row,
-                    //                 notices: 1,
-                    //                 qy: row.qy
-                    //             }
-                    //         } else {
-                    //             // console.log({n: _data[row.operator_number + row.qy].notices})
-                    //             _data[key] = {
-                    //                 ...row,
-                    //                 notices: _data[key].notices + 1,
-                    //                 issue_category: _data[key].issue_category + ', ' + row.issue_category,
-                    //                 qy: row.qy
-                    //             }
-                    //         }
-                    //
-                    //         return row
-                    //
-                    //     })
-                    //
-                    // setData(orderBy(Object.values(_data), 'receive_date'))
-                    //
 
                 }
             })
