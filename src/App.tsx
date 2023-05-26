@@ -25,19 +25,21 @@ import EquipmentIndex from "./Views/resources/equipment/EquipmentIndex";
 import ReportsIndex from "./Views/resources/reports/ReportsIndex";
 import ReportsNew from "./Views/resources/reports/ReportsNew";
 import DataMetricNames from "./Views/resources/DataMetricNames";
-import DataMetricSubtype from "./Views/resources/DataMetricSubtype";
 import DataMetricSubtypes from "./Views/resources/DataMetricSubtypes";
 import MetricNames from "./Views/resources/reports/MetricNames";
 import MetricSubtype from "./Views/resources/reports/MetricSubtype";
 import MetricSubtypes from "./Views/resources/reports/MetricSubtypes";
 import ReportMetricType from "./Views/resources/reports/ReportMetricType";
 import CompaniesNew from "./Views/resources/companies/CompaniesNew";
+import Beta from "./Views/Beta";
+import MetricSubtypesAddData from "./Views/metrics/metricSubtypes/MetricSubtypesAddData";
 
 const App: FC = () => {
     return (
         <Routes>
             <Route element={<RequireAuth><Home/></RequireAuth>}>
                 <Route path="dashboard" element={<Dashboard/>}/>
+                <Route path="beta" element={<Beta/>}/>
                 <Route path=":resourceName" element={<ResourceIndex/>}/>
                 <Route path="equipments" element={<EquipmentIndex/>}/>
                 <Route path="locations/new" element={<NewLocation/>}/>
@@ -48,7 +50,7 @@ const App: FC = () => {
                 <Route path="companies/new" element={<CompaniesNew />} />
                 <Route path="metric-names" element={<DataMetricNames />} />
                 <Route path="metric-subtypes" element={<DataMetricSubtypes />} />
-                <Route path="metric-subtype" element={<DataMetricSubtype />} />
+                <Route path="metric-subtype" element={<MetricSubtypesAddData />} />
                 <Route path="reports/:id/metric-names" element={<MetricNames />} />
                 <Route path="reports/:id/metric-subtypes" element={<MetricSubtypes/>}/>
                 <Route path="reports/:reportID/metrics" element={<ReportMetricType />} />

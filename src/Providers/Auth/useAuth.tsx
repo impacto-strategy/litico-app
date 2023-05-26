@@ -40,6 +40,7 @@ export function AuthProvider({children}: any) {
                 if (data.id) {
                     localStorage.setItem('_U', JSON.stringify(data))
                 }
+                console.log({data})
                 setUser(data)
                 res(0)
             }).catch(e => rej(e.response))
