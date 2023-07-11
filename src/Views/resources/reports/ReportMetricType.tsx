@@ -151,10 +151,14 @@ const ReportMetricType = () => {
                                                 <List.Item>
                                                     <Card
                                                         title={item.metric_name}>
-                                                        <Card.Meta title={<Tag>
-                                                            {item.metric_code}
-                                                        </Tag>} description={item.description}>
-                                                        </Card.Meta>
+                                                        <Card.Meta 
+                                                            title={
+                                                                <Tag>
+                                                                    {item.metric_code}
+                                                                </Tag>
+                                                            }
+                                                            description={item.description}
+                                                        />
                                                         <Divider/>
                                                         <Descriptions column={1} size={"small"} layout={"horizontal"}>
                                                             {item.measurement_units && <Descriptions.Item

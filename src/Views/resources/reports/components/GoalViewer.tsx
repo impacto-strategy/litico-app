@@ -17,7 +17,7 @@ const GoalViewer: FC<GoalViewerProps> = ({metricType, year, onClose = () => null
     const [initLoading, setInitLoading] = useState(false)
 
 
-    const createGoal = useCallback((fields) => {
+    const createGoal = useCallback((fields: any) => {
 
         setInitLoading(true)
         ResourceService.store({
@@ -56,7 +56,7 @@ const GoalViewer: FC<GoalViewerProps> = ({metricType, year, onClose = () => null
 
     }, [form, metricType.name])
 
-    const updateGoal = useCallback((fields, id) => {
+    const updateGoal = useCallback((fields: any, id: any) => {
 
         setInitLoading(true)
         ResourceService.update({

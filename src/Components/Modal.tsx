@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import {createPortal} from "react-dom";
 import ClickAwayListener from "react-click-away-listener";
-import {FC} from "react";
+import {FC, ReactElement} from "react";
 import {CloseCircleOutlined} from '@ant-design/icons'
 
 const portalRoot = document.getElementById('modal-root');
 
 interface IPortal {
+    children: ReactElement,
     onClose: (p: false) => void
     bgColor?: string
 }

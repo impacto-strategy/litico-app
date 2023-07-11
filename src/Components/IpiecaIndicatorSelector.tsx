@@ -68,10 +68,13 @@ const IpiecaIndicatorSelector: FC<{ defaultValue: any[], onUpdate: (ids: any[]) 
                                     title={<div> {selectedIndicators.includes(item.id) &&
                                     <CheckCircleFilled style={{marginRight: 10, color: 'green'}}/>} {item.name}</div>}
                                     hoverable={!selectedIndicators.includes(item.id)}>
-                                    <Card.Meta title={<Tag>
-                                        {item.indicator}
-                                    </Tag>} description={item.module}>
-                                    </Card.Meta>
+                                    <Card.Meta
+                                        title={
+                                            <Tag>
+                                                {item.indicator}
+                                            </Tag>
+                                        }
+                                        description={item.module}/>
                                 </Card>
                             </List.Item>
                             </div>

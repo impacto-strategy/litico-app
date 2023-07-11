@@ -274,7 +274,7 @@ const usersFormatted = useMemo(() => {
     return users.map(user => ({value: user.id, label: user.email}))
 }, [users])
 
-    const submitForm = useCallback((fields) => {
+    const submitForm = useCallback((fields: any) => {
 
 
         ResourceService.store({

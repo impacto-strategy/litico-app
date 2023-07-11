@@ -29,7 +29,7 @@ const EquipmentIndex: FC = () => {
     const searchInput = useRef<any>(null)
 
 
-    const handleSearch = useCallback((selectedKeys, confirm, dataIndex) => {
+    const handleSearch = useCallback((selectedKeys: any, confirm: any, dataIndex: any) => {
         confirm();
 
         setSearchText(selectedKeys[0])
@@ -37,12 +37,12 @@ const EquipmentIndex: FC = () => {
 
     }, [setSearchText, setSearchedColumn]);
 
-    const handleReset = useCallback(clearFilters => {
+    const handleReset = useCallback((clearFilters: any) => {
         clearFilters();
         setSearchText('');
     }, [setSearchText]);
 
-    const getColumnSearchProps = useCallback(dataIndex => ({
+    const getColumnSearchProps = useCallback((dataIndex: any) => ({
         filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}: any) => (
             <div style={{padding: 8}}>
                 <Input

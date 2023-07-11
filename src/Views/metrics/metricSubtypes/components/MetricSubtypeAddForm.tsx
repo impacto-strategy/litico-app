@@ -163,7 +163,7 @@ const MetricSubtypeAddForm: FC<any> = ({fields, form, headers, searchParams, sta
         }
     }
 
-    const updateTimeFrame = useCallback((e, setState) => {
+    const updateTimeFrame = useCallback((e: any, setState: any) => {
         if (e === "yearly") {
             setState('year');
         } else if (e === "quarterly") {

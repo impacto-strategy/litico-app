@@ -16,7 +16,7 @@ const FormWrapper = styled.div`
 const ReportsNew = () => {
     const navigate = useNavigate()
 
-    const submitForm = useCallback((fields) => {
+    const submitForm = useCallback((fields: any) => {
         ResourceService.store({
             resourceName: 'reports',
             fields

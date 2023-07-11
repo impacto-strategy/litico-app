@@ -58,7 +58,7 @@ const Home: FC = () => {
         }
     }, [user.email])
 
-    const handleCompanyChange = useCallback((ev) => {
+    const handleCompanyChange = useCallback((ev: any) => {
         switchCompany(ev.key).finally(() => {
             window.location.reload()
         })

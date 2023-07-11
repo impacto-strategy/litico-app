@@ -1,4 +1,4 @@
-import { FC, Dispatch, SetStateAction } from "react";
+import { FC, Dispatch, MouseEvent, SetStateAction } from "react";
 import { Row, Col } from "antd";
 import styled from "styled-components";
 
@@ -35,7 +35,7 @@ const BetaGroupCTA: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<bo
         <Col>
           <p>
             {/* TODO: where does this need to link to? */}
-            <Button onClick={(e) => handleClick(e)}>LEARN MORE!</Button>
+            <Button onClick={(e: MouseEvent<HTMLButtonElement>) => handleClick(e)}>LEARN MORE!</Button>
           </p>
         </Col>
       </Row>
