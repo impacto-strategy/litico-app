@@ -72,10 +72,14 @@ const SasbIndicatorSelector: FC<{ defaultValue: any[], onUpdate?: (ids: any[]) =
                                     title={<div> {selectedIndicators.includes(item.id) &&
                                     <CheckCircleFilled style={{marginRight: 10, color: 'green'}}/>} {item.topic}</div>}
                                     hoverable={!selectedIndicators.includes(item.id)}>
-                                    <Card.Meta title={<Tag>
-                                        {item.code}
-                                    </Tag>} description={item.accounting_metric}>
-                                    </Card.Meta>
+                                    <Card.Meta 
+                                        title={
+                                            <Tag>
+                                                {item.code}
+                                            </Tag>
+                                        } 
+                                        description={item.accounting_metric} 
+                                    />
                                 </Card>
                             </List.Item>
                             </div>

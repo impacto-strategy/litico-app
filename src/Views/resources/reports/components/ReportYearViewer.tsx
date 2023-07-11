@@ -124,7 +124,7 @@ const ReportYearViewer: FC<TReportYearViewer> = ({ report }) => {
     }, [getMetricTypes])
 
 
-    const createResource = useCallback((fields) => {
+    const createResource = useCallback((fields: any) => {
 
         setInitLoading(true)
         ResourceService.store({
@@ -141,7 +141,7 @@ const ReportYearViewer: FC<TReportYearViewer> = ({ report }) => {
         })
     }, [form, getMetricTypes])
 
-    const updateResource = useCallback((fields, id) => {
+    const updateResource = useCallback((fields: any, id: any) => {
 
         setInitLoading(true)
         ResourceService.update({

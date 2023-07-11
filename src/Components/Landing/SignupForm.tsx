@@ -1,6 +1,6 @@
 // import {useForm, ValidationError} from '@formspree/react';
 import { Modal, Col, Row } from "antd";
-import React, { useState, FC, Dispatch, SetStateAction } from "react";
+import React, { useState, FC, Dispatch, FormEvent, SetStateAction } from "react";
 import styled from "styled-components";
 import { useForm, ValidationError } from '@formspree/react';
 
@@ -87,7 +87,7 @@ const SignupForm: FC<{visible: boolean, setVisible: Dispatch<SetStateAction<bool
       }
       {!state.succeeded&& 
         <Section>
-        <Form onSubmit={(e) => submitForm(e)}>
+        <Form onSubmit={(e: FormEvent<HTMLFormElement>) => submitForm(e)}>
           <Row>
             <Col md={18} lg={10}>
               <input

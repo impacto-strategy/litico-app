@@ -37,7 +37,7 @@ const NewLocation: FC = () => {
             })
     }, [])
 
-    const submitForm = useCallback((fields) => {
+    const submitForm = useCallback((fields: any) => {
         ResourceService.store({
             resourceName: 'locations',
             fields

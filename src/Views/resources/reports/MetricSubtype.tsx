@@ -693,10 +693,12 @@ const MetricSubtype = () => {
                                                 <List.Item>
                                                     <Card
                                                         title={item.metric_name}>
-                                                        <Card.Meta title={<Tag>
-                                                            {item.metric_code}
-                                                        </Tag>}>
-                                                        </Card.Meta>
+                                                        <Card.Meta
+                                                            title={
+                                                                <Tag>
+                                                                    {item.metric_code}
+                                                                </Tag>}
+                                                        />
                                                         {(item.description && !showDescription.includes(idx)) &&
                                                             <DownOutlined style={{
                                                             float: 'right'

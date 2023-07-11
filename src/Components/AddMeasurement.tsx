@@ -189,13 +189,13 @@ const AddMeasurement: FC<{ fields: any}> = props => {
     // editor
 
     const [value, setValue] = useState<Descendant[]>(initialValue)
-    const renderElement = useCallback(props => <Element {...props} />, [])
-    const renderLeaf = useCallback(props => <Leaf {...props} />, [])
+    const renderElement = useCallback((props: any) => <Element {...props} />, [])
+    const renderLeaf = useCallback((props: any) => <Leaf {...props} />, [])
     const editor = useMemo(() => withReact(createEditor()), [])
 
     //...
 
-    const getMetricTypes = useCallback((year) => {
+    const getMetricTypes = useCallback((year: any) => {
         ResourceService.index({
             resourceName: 'metric-types',
             params: {
