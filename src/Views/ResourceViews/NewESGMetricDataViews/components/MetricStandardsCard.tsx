@@ -6,7 +6,7 @@ import { FC, useState } from 'react';
 /**
  * Interface (Card interface specifically) for showing which standards and metric codes are relevant to the metric subtype for which data is being added to.
  */
-const StandardsCard: FC<any> = ({ standards }): JSX.Element => {
+const MetricStandardsCard: FC<any> = ({ standards }): JSX.Element => {
     // React Hooks
     const [showDescription, setShowDescription] = useState<any>(false)
 
@@ -41,4 +41,4 @@ const StandardsCard: FC<any> = ({ standards }): JSX.Element => {
     )
 }
 
-export default StandardsCard;
+export default MetricStandardsCard;

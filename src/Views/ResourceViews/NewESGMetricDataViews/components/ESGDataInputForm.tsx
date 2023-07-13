@@ -22,7 +22,7 @@ import ResourceService from "../../../../Services/ResourceService";
 /**
  * Interface for form where ESG metric data is added pertaining to specific ESG metric.
  */
-const MetricSubtypeAddForm: FC<any> = ({fields, form, headers, searchParams, standards}): JSX.Element => {
+const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standards}): JSX.Element => {
     // COMPONENT HOOKS
     const baseUrl = process.env.API_URL || 'http://localhost'
     const [facilities, setFacilities] = useState<any>();
@@ -395,4 +395,4 @@ const MetricSubtypeAddForm: FC<any> = ({fields, form, headers, searchParams, sta
     )
 }
 
-export default MetricSubtypeAddForm
+export default ESGDataInputForm;

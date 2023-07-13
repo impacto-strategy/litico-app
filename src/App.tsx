@@ -9,30 +9,30 @@ import AddMetric from "./Views/AddMetric";
 import Dashboard from "./Views/Dashboard";
 import Home from "./Views/Home";
 import Landing from "./Views/Landing";
-import Login from "./Views/auth/Login";
+import Login from "./Views/AuthViews/Login";
 import Metrics from "./Views/Metrics";
 import MetricsPeriodSelector from "./Views/MetricsPeriodSelector";
 import PerformanceDashboard from "./Views/PerformanceDashboard";
 
 // REACT VIEWS/AUTH
-import ForgotPassword from "./Views/auth/ForgotPassword";
-import ResetPassword from "./Views/auth/ResetPassword";
+import ForgotPassword from "./Views/AuthViews/ForgotPassword";
+import ResetPassword from "./Views/AuthViews/ResetPassword";
 
 // REACT VIEWS/RESOURCES
-import ResourceIndex from "./Views/resources/ResourceIndex";
-import NewLocation from "./Views/resources/location/NewLocation";
-import EquipmentIndex from "./Views/resources/equipment/EquipmentIndex";
-import ReportsIndex from "./Views/resources/reports/ReportsIndex";
-import ReportsNew from "./Views/resources/reports/ReportsNew";
-import DataMetricNames from "./Views/resources/DataMetricNames";
-import DataMetricSubtypes from "./Views/resources/DataMetricSubtypes";
-import MetricNames from "./Views/resources/reports/MetricNames";
-import MetricSubtype from "./Views/resources/reports/MetricSubtype";
-import MetricSubtypes from "./Views/resources/reports/MetricSubtypes";
-import ReportMetricType from "./Views/resources/reports/ReportMetricType";
-import CompaniesNew from "./Views/resources/companies/CompaniesNew";
+import ResourceIndex from "./Views/ResourceViews/ResourceIndex";
+import NewLocation from "./Views/ResourceViews/location/NewLocation";
+import EquipmentIndex from "./Views/ResourceViews/equipment/EquipmentIndex";
+import ReportsIndex from "./Views/ResourceViews/reports/ReportsIndex";
+import ReportsNew from "./Views/ResourceViews/reports/ReportsNew";
+import MetrictypeDataEntrySelection from "./Views/ResourceViews/NewESGMetricDataViews/MetrictypeDataEntrySelection";
+import MetricSubtypeDataEntrySelection from "./Views/ResourceViews/NewESGMetricDataViews/MetricSubtypeDataEntrySelection";
+import MetricNames from "./Views/ResourceViews/reports/MetricNames";
+import MetricSubtype from "./Views/ResourceViews/reports/MetricSubtype";
+import MetricSubtypes from "./Views/ResourceViews/reports/MetricSubtypes";
+import ReportMetricType from "./Views/ResourceViews/reports/ReportMetricType";
+import CompaniesNew from "./Views/ResourceViews/companies/CompaniesNew";
 import Beta from "./Views/Beta";
-import ESGDataInputForm from "./Views/resources/ESGDataCreationWorkflow/ESGDataInputForm";
+import ESGDataInputPage from "./Views/ResourceViews/NewESGMetricDataViews/ESGDataInputPage";
 
 const App: FC = () => {
     return (
@@ -48,9 +48,9 @@ const App: FC = () => {
                 <Route path="reports" element={<ReportsIndex/>}/>
                 <Route path="reports/new" element={<ReportsNew/>}/>
                 <Route path="companies/new" element={<CompaniesNew />} />
-                <Route path="metric-names" element={<DataMetricNames />} />
-                <Route path="metric-subtypes" element={<DataMetricSubtypes />} />
-                <Route path="metric-subtype" element={<ESGDataInputForm />} />
+                <Route path="metric-names" element={<MetrictypeDataEntrySelection />} />
+                <Route path="metric-subtypes" element={<MetricSubtypeDataEntrySelection />} />
+                <Route path="metric-subtype" element={<ESGDataInputPage />} />
                 <Route path="reports/:id/metric-names" element={<MetricNames />} />
                 <Route path="reports/:id/metric-subtypes" element={<MetricSubtypes/>}/>
                 <Route path="reports/:reportID/metrics" element={<ReportMetricType />} />
