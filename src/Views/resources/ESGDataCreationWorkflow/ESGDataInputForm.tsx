@@ -1,17 +1,13 @@
-/* IMPORT EXTERNAL MODULES */
 import { Divider, Form, PageHeader, Space } from "antd";
 import Cookies from 'js-cookie';
 import { FC, useCallback, useEffect, useState } from "react"
 import {useSearchParams} from "react-router-dom";
 import styled from "styled-components";
 
-/* IMPORT INTERNAL MODULES */
-// COMPONENTS
 import ExcelFormOptions from "./components/ExcelFormOptions";
 import MetricSubtypeAddForm from "./components/MetricSubtypeAddForm";
 import StandardsCard from "./components/StandardsCard";
 
-// MISC
 import ResourceService from "../../../Services/ResourceService";
 
 const Wrapper = styled.section`
@@ -28,7 +24,6 @@ const ContentWrapper = styled.div`
   margin-bottom: 32px;
 `
 
-/* INTERFACES */
 interface ifields {
     id: number,
     name: string,
@@ -39,7 +34,7 @@ interface ifields {
 /**
  * Interface for page where data is added pertaining to a metric subtype.
  */
-const MetricSubtypesAddData: FC = (): JSX.Element => {
+const ESGDataInputForm: FC = (): JSX.Element => {
     // COMPONENT HOOKS
     const [fields, setFields] = useState<ifields>();
     const [form] = Form.useForm();
@@ -105,4 +100,4 @@ const MetricSubtypesAddData: FC = (): JSX.Element => {
     )
 }
 
-export default MetricSubtypesAddData;
+export default ESGDataInputForm;

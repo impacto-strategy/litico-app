@@ -3,7 +3,7 @@ import axios from "axios";
 import AuthService from "./AuthService";
 
 const APIClient = axios.create({
-    baseURL: process.env.API_URL || 'http://localhost',
+    baseURL: process.env.API_URL || 'http://localhost:8000',
     withCredentials: true, // required to handle the CSRF token
 });
 
