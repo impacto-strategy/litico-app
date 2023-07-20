@@ -1,37 +1,29 @@
-/* IMPORT EXTERNAL MODULES */
 import { 
-    Button, 
-    Checkbox,
-    Col, 
-    DatePicker, 
-    Divider, 
-    Form, 
-    Input, 
-    message, 
-    Row, 
-    Select, 
-    Upload 
+    Button,
+    Divider,
+    Form,
+    Input,
+    message,
+    Upload
 } from "antd";
 import { InboxOutlined} from '@ant-design/icons';
-import { find, orderBy } from "lodash";
-import { FC, useCallback, useEffect, useState } from "react";
+import { find } from "lodash";
+import { FC } from "react";
 
-/* IMPORT INTERNAL MODULES */
+import DynamicFieldsSection from "./DynamicFieldsSection";
+import FacilityOrganizationSection from "./FacilityOrganizationSection";
+import TimeframeDateSection from "./TimeframeDateFormSection";
+import SourceRiskSection from "./SourceRiskSection";
+
 import ResourceService from "../../../../Services/ResourceService";
 
 /**
  * Interface for form where ESG metric data is added pertaining to specific ESG metric.
  */
 const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standards}): JSX.Element => {
-    // COMPONENT HOOKS
     const baseUrl = process.env.API_URL || 'http://localhost'
-    const [facilities, setFacilities] = useState<any>();
-    const [timeframeSelected, setTimeFrame] = useState<"date" | "month" | "quarter" | "year">("date");
 
-    // COMPONENT FUNCTIONS
     const createMeasurementMetrics = (measurementIds: any[]) => {
-        console.log("starting request")
-        console.log(form.getFieldValue('factors'))
         ResourceService.store({
             resourceName: 'measurement-esg-metrics',
             fields: {
@@ -47,52 +39,6 @@ const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standar
             form.resetFields()
         })
     }
-
-    const getFacilities = useCallback(() => {
-        ResourceService.index({
-            resourceName: 'facilities'
-        }).then(({ data }) => {
-            let facilities = orderBy(data, 'name')
-            facilities.unshift({ name: "All Facilities" })
-            setFacilities(facilities)
-        })
-    }, [])
-
-    // Commented out temporarily until forms have all options available.
-    // const timeframeOptions = [
-    //     {name: 'Yearly', value: 'yearly'},
-    //     {name: 'Quarterly', value: 'quarterly'},
-    //     {name: 'Monthly', value: 'monthly'}
-    // ]
-
-    // Temporary timeframe options function.
-    const getTimeframeOptions = useCallback((subMetricName: string): any => {
-        if (
-            subMetricName === "GHG Emissions" ||
-            subMetricName === "Spils- Volume" ||
-            subMetricName === "Production - Gas" ||
-            subMetricName === "Production - Oil" ||
-            subMetricName === "Social Investment" ||
-            subMetricName === "Volunteering - Community" ||
-            subMetricName === "Workforce Demographics - Ethnicity" ||
-            subMetricName === "Workforce Demographics - Gender" ||
-            subMetricName === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas"
-        ){
-            return [ {name: 'Yearly', value: 'yearly'} ]
-        } else if (
-            subMetricName === "TRIR - Employees" ||
-            subMetricName === "TRIR - All Workers"
-        ) {
-            return [ {name: 'Quarterly', value: 'quarterly'} ]
-        }
-        else {
-            return [
-                {name: 'Yearly', value: 'yearly'},
-                {name: 'Quarterly', value: 'quarterly'},
-                {name: 'Monthly', value: 'monthly'}
-            ]
-        }
-    }, [])
 
     const normFile = (e: any) => {
         console.log('Upload event:', e)
@@ -163,37 +109,8 @@ const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standar
         }
     }
 
-    const updateTimeFrame = useCallback((e, setState) => {
-        if (e === "yearly") {
-            setState('year');
-        } else if (e === "quarterly") {
-            setState('quarter');
-        } else if (e === "monthly") {
-            setState('month');
-        } else {
-            setState('date');
-        }
-    }, [])
-
     // MISC
     let resources: any[] = [];
-
-    const stateCodes = [
-        'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS',
-        'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY',
-        'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV',
-        'WI', 'WY'
-    ]
-
-    const riskOptions = [
-        {name: 'High', value: 'high'},
-        {name: 'Medium', value: 'medium'},
-        {name: 'Low', value: 'low'}
-    ]
-
-    useEffect(() => {
-        getFacilities()
-    }, [getFacilities])
 
     return (
         <Form
@@ -201,166 +118,16 @@ const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standar
             layout="vertical"
             onFinish={onFinish}
         >
-            {/* Timeframe and Date Section */}
-            <Row gutter={24}>
-                <Col lg={{span: 12}} sm={{span: 24}}>
-                    <Form.Item name="timeframe" label="Timeframe" required tooltip="This is a required field">
-                        <Select
-                            // See if we can improve the e's type later.
-                            onSelect={(e: any) => updateTimeFrame(e, setTimeFrame)}
-                        >
-                            {getTimeframeOptions(searchParams.get("metric_subtype")!).map((option: any) => (
-                                <Select.Option key={option.name} value={option.value} >{option.name}</Select.Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
-                </Col>
-                <Col lg={{span: 12}} sm={{span: 24}}>
-                    <Form.Item name="date" required label="Date" tooltip="This is the end date of the Timeframe indicated">
-                        <DatePicker picker={timeframeSelected} />
-                    </Form.Item>
-                </Col>
-            </Row>
-            {/* Facilities/Organization Section */}
-            <Row gutter={24}>
-                { standards?.[0].location_type && standards?.[0].location_type === 'facility' &&
-                    <Col lg={{span: 12}} sm={{span: 24}}>
-                        <Form.Item name="organization" label="Facility" initialValue={'All Facilities'}>
-                            <Select>
-                                {facilities?.map((facility: any) => (
-                                    <Select.Option 
-                                        key={facility.id} 
-                                        value={facility.name}
-                                    >
-                                        {facility.name}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                }
+            <TimeframeDateSection searchParams={searchParams}/>
+            <FacilityOrganizationSection standards={standards}/>
+            <SourceRiskSection />
 
-                {standards?.[0].location_type && standards?.[0].location_type === 'organization' &&
-                    <Col lg={{span: 12}} sm={{span: 24}}>
-                        <Form.Item name="organization" label="Organization">
-                            <Input/>
-                        </Form.Item>
-                    </Col>
-                }
-                <Col lg={{span: 12}} sm={{span: 24}}>
-                    <Form.Item name="basin" label="Basin">
-                        <Select>
-                                <Select.Option 
-                                    key={"Basin"} 
-                                    value={"DJ Basin"}
-                                >
-                                    DJ Basin
-                                </Select.Option>
-                                <Select.Option 
-                                    key={"Basin"} 
-                                    value={"Permian"}
-                                >
-                                    Permian
-                                </Select.Option>
-                                <Select.Option 
-                                    key={"Basin"} 
-                                    value={""}
-                                >
-                                    N/A
-                                </Select.Option>
-                        </Select>
-                    </Form.Item>
-                </Col>
-                <Col lg={{span: 4}} sm={{span: 24}}>
-                    <Form.Item name="state" label="State">
-                        <Select>
-                            {stateCodes.map((code: string) => (
-                                <Select.Option key={code} value={code} >{code}</Select.Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
-                </Col>
-            </Row>
-            <Row gutter={24}>
-                <Col lg={{span: 12}} sm={{span: 24}}>
-                    <Form.Item name="source" label="Source">
-                        <Input />
-                    </Form.Item>
-                </Col>
-                <Col lg={{span: 12}} sm={{span: 24}}>
-                    <Form.Item name="risk" label="Risk">
-                        <Select>
-                            {riskOptions.map((option: any) => (
-                                <Select.Option 
-                                    key={option.name} 
-                                    value={option.value} 
-                                >
-                                    {option.name}
-                                </Select.Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
-                </Col>
-            </Row>
             <Divider />
-            <Row gutter={24}>
-                {fields?.map((field: any) => (
-                <Col key={field.id} lg={{span: 8}} sm={{span: 24}}>
-                    <Form.Item label={field.name}>
-                        <Input.Group compact>
-                                {field.field_type === "checkbox" && 
-                                    <Form.Item
-                                        name={['factors', field.col_label]}
-                                        noStyle
-                                    >
-                                        <Checkbox.Group style={{width: "50vw"}}>
-                                            {field.factor_form_options.map((choice: any, index: number) => {
-                                                return <Checkbox key={index} name={choice.opion} value={choice.option}>{choice.option}</Checkbox>
-                                            })}
-                                        </Checkbox.Group>
-                                    </Form.Item>
-                                }
-                                {field.field_type === "date_time" &&
-                                    <Form.Item
-                                        name={['factors', field.col_label]}
-                                        noStyle
-                                    >
-                                        <DatePicker showTime={true} />
-                                    </ Form.Item>
-                                }
-                                {field.field_type === "textarea" &&
-                                    <Form.Item
-                                        name={['factors', field.col_label]}
-                                        noStyle
-                                    >
-                                        <Input.TextArea />
-                                    </Form.Item>
-                                }
-                                {!field.field_type &&
-                                    <Form.Item
-                                        name={['factors', field.col_label]}
-                                        noStyle
-                                    >
-                                        <Input style={{ width: '50%' }} />
-                                    </Form.Item>
-                                }
-                            {field.measurement_units[0] &&
-                                <Form.Item
-                                    noStyle
-                                >
-                                    <Select placeholder={field.measurement_units[0]}>
-                                        {field.measurement_units.map((option: string) => (
-                                            <Select.Option key={option} value={option} >{option}</Select.Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
-                            }
-                        </Input.Group>
-                    </Form.Item>
-                </Col>
-                ))}
-            </Row>
+
+            <DynamicFieldsSection fields={fields} />
+
             <Divider />
+
             <Form.Item label="Upload Supporting Documentation" tooltip="Upload any document that compliments this entry.">
                 <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile}  noStyle>
                     <Upload.Dragger name="file" action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers} accept=".csv,.pdf,.doc,.docx,.jpeg,.png,.jpg,.svg">
@@ -376,10 +143,13 @@ const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standar
                     </Upload.Dragger>
                 </Form.Item>
             </Form.Item>
+
             <Divider />
+
             <Form.Item name="comments" label="Discussion and Analysis">
                 <Input.TextArea />
             </Form.Item>
+
             <Form.Item>
                 {(fields?.length > 0) &&
                     <Button type="primary" htmlType="submit">Submit</Button>
