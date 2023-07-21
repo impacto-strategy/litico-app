@@ -1,16 +1,7 @@
-import {
-    Col,
-    DatePicker,
-    Form,
-    Row,
-    Select
-} from 'antd';
-import { useCallback, useState } from 'react';
+import { Col, Form, Select } from 'antd'
+import { useCallback } from 'react';
 
-const TimeframeDateSection = ({searchParams}: any) => {
-
-    const [timeframeSelected, setTimeFrame] = useState<"date" | "month" | "quarter" | "year">("date");
-
+const TimeframeField = ({searchParams, setTimeFrame}: any) => {
     // Commented out temporarily until forms have all options available.
     // const timeframeOptions = [
     //     {name: 'Yearly', value: 'yearly'},
@@ -48,7 +39,7 @@ const TimeframeDateSection = ({searchParams}: any) => {
     }, [])
 
     const updateTimeFrame = useCallback((e, setState) => {
-        if (e === "yearly") {
+        if (e === 'yearly') {
             setState('year');
         } else if (e === "quarterly") {
             setState('quarter');
@@ -60,26 +51,31 @@ const TimeframeDateSection = ({searchParams}: any) => {
     }, [])
 
     return (
-        <Row gutter={24}>
-            <Col lg={{span: 12}} sm={{span: 24}}>
-                <Form.Item name="timeframe" label="Timeframe" required tooltip="This is a required field">
-                    <Select
-                        // See if we can improve the e's type later.
-                        onSelect={(e: any) => updateTimeFrame(e, setTimeFrame)}
-                    >
-                        {getTimeframeOptions(searchParams.get("metric_subtype")!).map((option: any) => (
-                            <Select.Option key={option.name} value={option.value} >{option.name}</Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item>
-            </Col>
-            <Col lg={{span: 12}} sm={{span: 24}}>
-                <Form.Item name="date" required label="Date" tooltip="This is the end date of the Timeframe indicated">
-                    <DatePicker picker={timeframeSelected} />
-                </Form.Item>
-            </Col>
-        </Row>
+        <Col
+            lg={{span: 12}}
+            sm={{span: 24}}
+        >
+            <Form.Item 
+                name="timeframe"
+                label="Timeframe"
+                required tooltip="This is a required field"
+            >
+                <Select
+                    // See if we can improve the e's type later.
+                    onSelect={(e: any) => updateTimeFrame(e, setTimeFrame)}
+                >
+                    {getTimeframeOptions(searchParams.get("metric_subtype")!).map((option: any) => (
+                        <Select.Option 
+                            key={option.name}
+                            value={option.value}
+                        >
+                                {option.name}
+                        </Select.Option>
+                    ))}
+                </Select>
+            </Form.Item>
+        </Col>
     )
 }
 
-export default TimeframeDateSection;
+export default TimeframeField;

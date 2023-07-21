@@ -11,17 +11,15 @@ import { find } from "lodash";
 import { FC } from "react";
 
 import DynamicFieldsSection from "./DynamicFieldsSection";
-import FacilityOrganizationSection from "./FacilityOrganizationSection";
-import TimeframeDateSection from "./TimeframeDateFormSection";
-import SourceRiskSection from "./SourceRiskSection";
+import SharedFieldsSection from "./SharedFieldsSection";
 
 import ResourceService from "../../../../Services/ResourceService";
 
 /**
- * Interface for form where ESG metric data is added pertaining to specific ESG metric.
+ * Interface for form where ESG metric data is added pertaining to specific ESG submetric type.
  */
 const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standards}): JSX.Element => {
-    const baseUrl = process.env.API_URL || 'http://localhost'
+    const baseUrl = process.env.API_URL || 'http://localhost';
 
     const createMeasurementMetrics = (measurementIds: any[]) => {
         ResourceService.store({
@@ -38,7 +36,7 @@ const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standar
             message.success('Data was added successfully');
             form.resetFields()
         })
-    }
+    };
 
     const normFile = (e: any) => {
         console.log('Upload event:', e)
@@ -118,9 +116,10 @@ const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standar
             layout="vertical"
             onFinish={onFinish}
         >
-            <TimeframeDateSection searchParams={searchParams}/>
-            <FacilityOrganizationSection standards={standards}/>
-            <SourceRiskSection />
+            <SharedFieldsSection 
+                searchParams={searchParams}
+                standards={standards}
+            />
 
             <Divider />
 
