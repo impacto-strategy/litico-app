@@ -17,7 +17,7 @@ const SharedFieldsSection = ({ searchParams, standards }: any) => {
         {
             component: TimeframeField,
             props: { searchParams, setTimeFrame },
-            excludeFrom: ['Social Investment']
+            excludeFrom: ['Employee Matching', 'Social Investment', 'Volunteering - Community']
         },
         {
             component: DateField,
@@ -31,7 +31,7 @@ const SharedFieldsSection = ({ searchParams, standards }: any) => {
         },
         {
             component: BasinField,
-            excludeFrom: ['Social Investment']
+            excludeFrom: ['Employee Matching', 'Social Investment', 'Volunteering - Community']
         },
         {
             component: StateField,
@@ -39,11 +39,11 @@ const SharedFieldsSection = ({ searchParams, standards }: any) => {
         },
         {
             component: SourceField,
-            excludeFrom: ['Social Investment']
+            excludeFrom: ['Employee Matching', 'Social Investment', 'Volunteering - Community']
         },
         {
             component: RiskField,
-            excludeFrom: ['Social Investment']
+            excludeFrom: ['Employee Matching', 'Social Investment', 'Volunteering - Community']
         },
     ]);
 
