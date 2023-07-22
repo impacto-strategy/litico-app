@@ -8,6 +8,9 @@ import {
     Select
 } from 'antd';
 
+/**
+ * Handles both UI and logic for fields specific to an ESG Metric subtype. Seperation from shared fields allows for better maintainability and readibility.
+ */
 const DynamicFieldsSection = ({ fields }: any) => {
     return (
         <Row gutter={24}>
@@ -22,7 +25,7 @@ const DynamicFieldsSection = ({ fields }: any) => {
                                     >
                                         <Checkbox.Group style={{width: "50vw"}}>
                                             {field.factor_form_options.map((choice: any, index: number) => {
-                                                return <Checkbox key={index} name={choice.opion} value={choice.option}>{choice.option}</Checkbox>
+                                                return <Checkbox key={index} name={choice.option} value={choice.option}>{choice.option}</Checkbox>
                                             })}
                                         </Checkbox.Group>
                                     </Form.Item>
@@ -41,6 +44,18 @@ const DynamicFieldsSection = ({ fields }: any) => {
                                         noStyle
                                     >
                                         <Input.TextArea />
+                                    </Form.Item>
+                                }
+                                {field.field_type === "select" &&
+                                    <Form.Item
+                                        name={['factors', field.col_label]}
+                                        noStyle
+                                    >
+                                        <Select defaultValue={field.factor_form_options.length > 0 ? field.factor_form_options[0].option : undefined}>
+                                            {field.factor_form_options.map((choice: any, index: number) => (
+                                                <Select.Option key={index} value={choice.option} >{choice.option}</Select.Option>
+                                            ))}
+                                        </Select>
                                     </Form.Item>
                                 }
                                 {!field.field_type &&
