@@ -19,7 +19,7 @@ const ContentWrapper = styled.div`
   margin-bottom: 32px;
 `
 
-const MetricNames = () => {
+const ESGMetricReportSelector = () => {
 
     const {id} = useParams()
 
@@ -66,4 +66,4 @@ const MetricNames = () => {
     )
 }
 
-export default MetricNames
+export default ESGMetricReportSelector

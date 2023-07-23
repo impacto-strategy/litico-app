@@ -15,7 +15,7 @@ const DynamicFieldsSection = ({ fields }: any) => {
     return (
         <Row gutter={24}>
             {fields?.map((field: any) => (
-                <Col key={field.id} lg={{span: 8}} sm={{span: 24}}>
+                <Col key={field.id} lg={{span: 12}} sm={{span: 36}}>
                     <Form.Item label={field.name}>
                         <Input.Group compact>
                                 {field.field_type === "checkbox" && 

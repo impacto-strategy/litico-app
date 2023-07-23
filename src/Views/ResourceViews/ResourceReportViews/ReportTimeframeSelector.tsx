@@ -1,18 +1,29 @@
-import {FC, useCallback, useEffect, useMemo, useState} from "react";
+import {
+    FC,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState
+} from "react";
 import styled from "styled-components";
 import ResourceService from "../../../Services/ResourceService";
-import {Divider, PageHeader, Skeleton, Space, Tabs} from "antd";
-import {groupBy, map, orderBy} from "lodash";
+import {
+    Divider, 
+    PageHeader, 
+    Skeleton, 
+    Space, 
+    Tabs
+} from "antd";
+import { groupBy, map, orderBy } from "lodash";
 import ReportsViewer from "./components/ReportsViewer";
 
-const {TabPane} = Tabs;
+const { TabPane } = Tabs;
 
 const Wrapper = styled.section`
   margin: auto;
   max-width: none;
   padding-top: 20px;
   padding-bottom: 40px;
-
 `
 
 
@@ -20,7 +31,11 @@ const ContentWrapper = styled.div`
   background: #fff;
   padding: 60px 30px;
 `
-const ReportsIndex: FC = () => {
+
+/**
+ * Renders UI that allows user to decide what year and timeframe they want to view data for.
+ */
+const ReportTimeframeSelector: FC = () => {
 
     const [reports, setReports] = useState([])
     const [initLoading, setInitLoading] = useState(true)
@@ -63,13 +78,14 @@ const ReportsIndex: FC = () => {
                     <Skeleton active loading={initLoading}>
                         <Space style={{fontSize: '16px'}}>Year</Space>
                         {organizedReports.length > 0 &&
-                        <Tabs defaultActiveKey={organizedReports[0].year} tabPosition={'left'}>
-                            {organizedReports.map(report => (
-                                <TabPane tab={`${report.year}`} key={report.year}>
-                                    <ReportsViewer key={report.year} report={report}/>
-                                </TabPane>
-                            ))}
-                        </Tabs>}
+                            <Tabs defaultActiveKey={organizedReports[0].year} tabPosition={'left'}>
+                                {organizedReports.map(report => (
+                                    <TabPane tab={`${report.year}`} key={report.year}>
+                                        <ReportsViewer key={report.year} report={report}/>
+                                    </TabPane>
+                                ))}
+                            </Tabs>
+                        }
                     </Skeleton>
 
                 </ContentWrapper>
@@ -78,4 +94,4 @@ const ReportsIndex: FC = () => {
     )
 }
 
-export default ReportsIndex
+export default ReportTimeframeSelector;

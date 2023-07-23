@@ -1,131 +1,37 @@
-/* IMPORT EXTERNAL MODULES */
-import {Link, useParams, useSearchParams} from "react-router-dom";
-import styled from "styled-components";
 import {
-    Button, 
-    Card, 
     Col,
-    Descriptions, 
-    Divider, 
-    Drawer, 
-    List,
+    Drawer,
     message,
-    Modal, 
-    PageHeader,
     Popconfirm,
     Popover,
-    Row, 
-    Skeleton, 
-    Space, 
-    Table, 
-    Tag 
-} from "antd";
+    Row,
+    Table
+} from 'antd';
 import {
     DeleteOutlined,
-    DownOutlined,
     EditOutlined,
-    UpOutlined
 } from '@ant-design/icons';
-import { useCallback, useEffect, useState } from "react";
-import {
+import { 
     find,
-    flatten,
-    map,
-    sortBy,
-    uniq
-} from "lodash";
+    sortBy
+} from 'lodash';
 import moment from 'moment';
+import { FC, useCallback, useState } from 'react';
+import ResourceService from '../../../../Services/ResourceService';
+import styled from "styled-components";
 
-/* IMPORT INTERNAL MODULES */
-import ReportEditForm from "./components/ReportEditForm";
-import ResourceService from "../../../Services/ResourceService";
-
-import { getSignedUrl } from "../../../utils/utils";
-/* STYLED COMPONENTS */
-const Wrapper = styled.section`
-  margin: auto;
-  max-width: none;
-  padding-top: 20px;
-  padding-bottom: 40px;
-`
-const ContentWrapper = styled.section`
-  margin: auto;
-  max-width: none;
-  padding-top: 20px;
-  padding-bottom: 40px;
-
-`
+import ReportEditForm from './ReportEditForm';
+import { getSignedUrl } from '../../../../utils/utils';
 
 const LiticoBlue = styled.span`
     color: rgb(46, 67, 117)
 `
 
-const MetricSubtype = () => {
-    const { reportID } = useParams()
-    const [searchParams] = useSearchParams();
-    /* REACT STATE */
+const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) => {
     const [id, setId] = useState(0) // Prevents multiple forms from rendering (more efficient)
-    const [initLoading, setInitLoading] = useState(true)
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const [metricDescription, setMetricDescription] = useState("")
-    const [metricStandards, setMetricStandards] = useState<any>()
-    const [reportData, setReportData] = useState<any>({year: '', period: '', esg_metrics: [], report: {}})
-    const [showDescription, setShowDescription] = useState<any>([])
     const [visible, setVisibility] = useState(false);
 
-    const displayDescription = (idx: any) => {
-        let arr = [...showDescription]
-        arr.push(idx)
-        setShowDescription(arr)
-    }
 
-    const hideDescription = (idx: any) => {
-        let arr = [...showDescription]
-        setShowDescription(arr.filter(x => x !== idx))
-    }
-
-    const showModal = (description:string) => {
-        setMetricDescription(description)
-        setIsModalOpen(true);
-    }
-
-    const handleOk = () => {
-        setIsModalOpen(false);
-    }
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    }
-
-    const getStandards = useCallback((metricCodes: any) =>{
-        ResourceService.index({
-            resourceName: 'standards',
-            params: {metric_codes: JSON.stringify(metricCodes).replaceAll(" ", "").replaceAll("n/a", "")}
-        })
-            .then(({ data }) => {
-                setMetricStandards(data);
-            })
-            .finally(() => setInitLoading(false))
-
-    }, [setMetricStandards])
-
-    const openEditDrawer = (e: any, value: number) => {
-        if (e) {
-            e.preventDefault()
-        }
-        setId(value);
-        setVisibility(true);
-    }
-
-    const closeEditDrawer = (e: any) => {
-        if (e) {
-            e.preventDefault()
-        }
-        setId(0);
-        setVisibility(false);
-    }
-
-    // DATA STORAGE
     const subMetricColumns = {
         "GHG Emissions": [
             {
@@ -297,7 +203,7 @@ const MetricSubtype = () => {
                 ),
             },
         ],
-        "Volunteering - Community": [
+        "Employee Volunteering Match": [
             {
                 title: 'Organization',
                 dataIndex: 'organization',
@@ -439,6 +345,7 @@ const MetricSubtype = () => {
         ]
     }
 
+
     /**
      * Creates columns for reports based on metric-subtype
      * 
@@ -502,9 +409,9 @@ const MetricSubtype = () => {
     }
 
     /**
-     * Determines which columns to generate based on metric-subtype.
+     * Determines which columns to generate based on metric-subtype. This function helps when dealing with a component that's dynamic.
      * 
-     * @returns Array of Objects
+     * @returns Array of Objects representing meta data about columns to render.
      */
     const getColumns = (objectOfColumns: any, metricSubtype: string | null) => {
         let baseColumns = determineColumns(objectOfColumns, metricSubtype)
@@ -516,11 +423,11 @@ const MetricSubtype = () => {
             render: (value: any) => (
                 <>
                 {value?.map((link:string, idx:number) => {
-                  return (
-                      <a key={link} href={getSignedUrl(link)}>Resource {idx +1} </a>
-                  );
+                    return (
+                        <a key={link} href={getSignedUrl(link)}>Resource {idx +1} </a>
+                    );
                 })}
-              </>
+                </>
             ),
         },
         {
@@ -595,30 +502,6 @@ const MetricSubtype = () => {
     }
 
     /**
-     * Gets esg metric data based on metric-subtype.
-     * 
-     * @returns Object - includes property with array of objects representing
-     * esg metric data.
-     */
-    const getMetric = useCallback(() => {
-        ResourceService.index({
-            resourceName: 'esg-metrics',
-            params: {
-                metric_name: searchParams.get("metric_name"),
-                metric_subtype: searchParams.get("metric_subtype"),
-                report_id: reportID
-            }
-        })
-            .then(({ data }) => {
-                setReportData(data)
-                let codes = map(data.esg_metrics, 'metric_code').map((m) => m.split(';'))
-                getStandards(uniq(flatten(codes)).filter(c => c !== 'n/a'))
-            })
-            .finally(() => setInitLoading(false))
-
-    }, [reportID, searchParams, getStandards])
-
-    /**
      * Removes selected row of data from database.
      * 
      * @params e - Event Object.
@@ -643,110 +526,40 @@ const MetricSubtype = () => {
         }
     }, [getMetric])
 
+    const openEditDrawer = (e: any, value: number) => {
+        if (e) {
+            e.preventDefault()
+        }
+        setId(value);
+        setVisibility(true);
+    }
 
-    useEffect(() => {
-        getMetric()
-    }, [getMetric])
+    const closeEditDrawer = (e: any) => {
+        if (e) {
+            e.preventDefault()
+        }
+        setId(0);
+        setVisibility(false);
+    }
+
 
     return (
-        <Wrapper>
-            <Space direction="vertical" style={{width: '100%'}} size={"large"}>
-                <PageHeader
-                    ghost={false}
-                    onBack={() => window.history.back()}
-                    title={`Edit Report | ${reportData?.year}`}
-                    extra={[
-                        <Link key="1" to={`/metric-subtype?metric_name=${searchParams.get("metric_name")}&metric_subtype=${searchParams.get("metric_subtype")}`}>
-                            <Button type="primary">
-                                Add Data
-                            </Button>
-                        </Link>
-                    ]}
-                ><Divider />
-                    <ContentWrapper>
-                        <Skeleton active loading={initLoading}>
-
-                            {reportData && <Row>
-                                <Col span={24}>
-                                    <Table
-                                        title={() => `${searchParams.get("metric_name")} - ${searchParams.get("metric_subtype")}`}
-                                        pagination={false}
-                                        columns={getColumns(subMetricColumns, searchParams.get("metric_subtype"))}
-                                        dataSource={sortBy(reportData?.esg_metrics, [function(o) { return o.date; }])} 
-                                        rowKey={'id'}
-                                    />
-                                </Col>
-                            </Row>}
-                            <Row>
-                                
-                            </Row>
-                            <Row>
-                            <Col span={24}>
-                                </Col>
-                                <Col span={24}>
-                                    <Space direction={'vertical'}>
-                                        <Divider>Standards</Divider>
-                                        <List
-                                            grid={{gutter: 16, column: 2}}
-                                            dataSource={metricStandards}
-                                            renderItem={(item: any, idx) => (
-                                                <List.Item>
-                                                    <Card
-                                                        title={item.metric_name}>
-                                                        <Card.Meta title={<Tag>
-                                                            {item.metric_code}
-                                                        </Tag>}>
-                                                        </Card.Meta>
-                                                        {(item.description && !showDescription.includes(idx)) &&
-                                                            <DownOutlined style={{
-                                                            float: 'right'
-                                                            }} onClick={(() => displayDescription(idx))} />
-                                                        }
-                                                        {(item.description && showDescription.includes(idx)) &&
-                                                            <UpOutlined style={{
-                                                            float: 'right'
-                                                            }} onClick={(() => hideDescription(idx))} />
-                                                        }
-                                                        {showDescription.includes(idx) &&
-                                                            <Row style={{ paddingTop: '20px' }}>
-                                                            {(item?.description && item.description.length > 500) ?
-                                                                <div>
-                                                                <p>{`${item.description.substring(0, 500)}...`}</p>
-                                                                <p><Button type="link" onClick={() => showModal(item.description)}>Read more</Button></p>
-                                                                </div>
-                                                                :
-                                                                <p>{item.description}</p>
-                                                            }
-                                                            </Row>
-                                                        }
-                                                        <Divider/>
-                                                        <Descriptions column={1} size={"small"} layout={"horizontal"}>
-                                                            {item.measurement_units && <Descriptions.Item
-                                                                label={"Unit Of Measure"}>
-                                                                <Tag>{item.measurement_units}</Tag>
-                                                            </Descriptions.Item>}
-                                                            <Descriptions.Item
-                                                                label={"Category"}>
-                                                                <Tag>{item.category}</Tag>
-                                                            </Descriptions.Item>
-                                                        </Descriptions>
-                                                    </Card>
-                                                </List.Item>
-                                            )}
-                                        />
-                                    </Space>
-                                </Col>
-                            </Row>
-                        </Skeleton>
-                    </ContentWrapper>
-
-                </PageHeader>
-            </Space>
-            <Modal title="Metric Description" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <p>{metricDescription}</p>
-            </Modal>
-        </Wrapper>
+        <>
+            {reportData && 
+                <Row>
+                    <Col span={24}>
+                        <Table
+                            title={() => `${searchParams.get("metric_name")} - ${searchParams.get("metric_subtype")}`}
+                            pagination={false}
+                            columns={getColumns(subMetricColumns, searchParams.get("metric_subtype"))}
+                            dataSource={sortBy(reportData?.esg_metrics, [function(o) { return o.date; }])} 
+                            rowKey={'id'}
+                        />
+                    </Col>
+                </Row>
+            }
+        </>
     )
 }
 
-export default MetricSubtype
+export default ESGMetricReportTable;

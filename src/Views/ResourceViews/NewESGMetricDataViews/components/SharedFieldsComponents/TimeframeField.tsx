@@ -16,8 +16,6 @@ const TimeframeField = ({searchParams, setTimeFrame}: any) => {
             subMetricName === "Spils- Volume" ||
             subMetricName === "Production - Gas" ||
             subMetricName === "Production - Oil" ||
-            subMetricName === "Social Investment" ||
-            subMetricName === "Volunteering - Community" ||
             subMetricName === "Workforce Demographics - Ethnicity" ||
             subMetricName === "Workforce Demographics - Gender" ||
             subMetricName === "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas"

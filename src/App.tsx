@@ -22,14 +22,14 @@ import ResetPassword from "./Views/AuthViews/ResetPassword";
 import ResourceIndex from "./Views/ResourceViews/ResourceIndex";
 import NewLocation from "./Views/ResourceViews/location/NewLocation";
 import EquipmentIndex from "./Views/ResourceViews/equipment/EquipmentIndex";
-import ReportsIndex from "./Views/ResourceViews/reports/ReportsIndex";
-import ReportsNew from "./Views/ResourceViews/reports/ReportsNew";
+import ReportTimeframeSelector from "./Views/ResourceViews/ResourceReportViews/ReportTimeframeSelector";
+import ReportsNew from "./Views/ResourceViews/ResourceReportViews/ReportsNew";
 import MetrictypeDataEntrySelection from "./Views/ResourceViews/NewESGMetricDataViews/MetrictypeDataEntrySelection";
 import MetricSubtypeDataEntrySelection from "./Views/ResourceViews/NewESGMetricDataViews/MetricSubtypeDataEntrySelection";
-import MetricNames from "./Views/ResourceViews/reports/MetricNames";
-import MetricSubtype from "./Views/ResourceViews/reports/MetricSubtype";
-import MetricSubtypes from "./Views/ResourceViews/reports/MetricSubtypes";
-import ReportMetricType from "./Views/ResourceViews/reports/ReportMetricType";
+import ESGMetricReportSelector from "./Views/ResourceViews/ResourceReportViews/ESGMetricReportSelector";
+import ESGMetricDataReportView from "./Views/ResourceViews/ResourceReportViews/ESGMetricDataReportView";
+import ESGMetricSubtypeReportSelector from "./Views/ResourceViews/ResourceReportViews/ESGMetricSubtypeReportSelector";
+import ReportMetricType from "./Views/ResourceViews/ResourceReportViews/ReportMetricType";
 import CompaniesNew from "./Views/ResourceViews/companies/CompaniesNew";
 import Beta from "./Views/Beta";
 import ESGDataInputPage from "./Views/ResourceViews/NewESGMetricDataViews/ESGDataInputPage";
@@ -45,16 +45,16 @@ const App: FC = () => {
                 <Route path="locations/new" element={<NewLocation/>}/>
                 <Route path="metrics" element={<MetricsPeriodSelector/>}/>
                 <Route path="metrics/:year" element={<Metrics/>}/>
-                <Route path="reports" element={<ReportsIndex/>}/>
+                <Route path="reports" element={<ReportTimeframeSelector/>}/>
                 <Route path="reports/new" element={<ReportsNew/>}/>
                 <Route path="companies/new" element={<CompaniesNew />} />
                 <Route path="metric-names" element={<MetrictypeDataEntrySelection />} />
                 <Route path="metric-subtypes" element={<MetricSubtypeDataEntrySelection />} />
                 <Route path="metric-subtype" element={<ESGDataInputPage />} />
-                <Route path="reports/:id/metric-names" element={<MetricNames />} />
-                <Route path="reports/:id/metric-subtypes" element={<MetricSubtypes/>}/>
+                <Route path="reports/:id/metric-names" element={<ESGMetricReportSelector />} />
+                <Route path="reports/:id/metric-subtypes" element={<ESGMetricSubtypeReportSelector/>}/>
                 <Route path="reports/:reportID/metrics" element={<ReportMetricType />} />
-                <Route path="reports/:reportID/metric-subtype" element={<MetricSubtype/>}/>
+                <Route path="reports/:reportID/metric-subtype" element={<ESGMetricDataReportView />}/>
                 <Route path="add-metric" element={<AddMetric/>}/>
                 <Route path="performance" element={<PerformanceDashboard/>}/>
             </Route>
