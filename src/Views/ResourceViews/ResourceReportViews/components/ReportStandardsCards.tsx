@@ -14,6 +14,9 @@ import {
 } from '@ant-design/icons';
 import { FC, useState } from 'react';
 
+/**
+ * Renders UI showing what standards pertain to the submetric type using card format. Note, this doesn't include description code (which is in parent component).
+ */
 const ReportStandardsCards: FC<any> = ({ 
     metricStandards,
     setMetricDescription,
@@ -21,6 +24,7 @@ const ReportStandardsCards: FC<any> = ({
 }): JSX.Element => {
     const [showDescription, setShowDescription] = useState<any>([]);
 
+    // The hide/display description is utilized by Modal component on ESGMetricDataReportView for the metric's description.
     const displayDescription = (idx: any) => {
         let arr = [...showDescription]
         arr.push(idx)

@@ -9,6 +9,9 @@ import SourceField from './SharedFieldsComponents/SourceField';
 import StateField from './SharedFieldsComponents/StateField';
 import TimeframeField from './SharedFieldsComponents/TimeframeField';
 
+/**
+ * Renders the fields on the ESG Metric form which mainly shared by all ESG metric subtypes. Each field was given it's own component to make conditional rendering easier since some shared fields are changing now.
+ */
 const SharedFieldsSection = ({ searchParams, standards }: any) => {
     const [timeframeSelected, setTimeFrame] = useState<"date" | "month" | "quarter" | "year">("date");
     

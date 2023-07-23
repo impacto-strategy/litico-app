@@ -43,6 +43,9 @@ const ContentWrapper = styled.section`
 
 `
 
+/**
+ * A container component that shows the report for a specific selected metric subtype.
+ */
 const ESGMetricDataReportView = () => {
     const { reportID } = useParams()
     const [searchParams] = useSearchParams();

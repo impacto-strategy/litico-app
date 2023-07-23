@@ -79,6 +79,7 @@ const ESGDataInputPage: FC = (): JSX.Element => {
                     title={searchParams.get("metric_subtype")}
                 />
                 <ContentWrapper>
+                    {/* These are the excel buttons near the top of the page. */}
                     <BulkDataFormOptions
                         headers={headers}
                         searchParams={searchParams}

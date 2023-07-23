@@ -27,11 +27,16 @@ const LiticoBlue = styled.span`
     color: rgb(46, 67, 117)
 `
 
+/**
+ * Handles logic and UI for report table of metric data. Seperated into separate component for better readibility and maintainability.
+ * NOTE: It's worth exploring later how to refactor to have drawer component separated into it's own component for better maintainibility.
+ */
 const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) => {
     const [id, setId] = useState(0) // Prevents multiple forms from rendering (more efficient)
     const [visible, setVisibility] = useState(false);
 
 
+    // the format______ functions were created since many columns use the same UI for data.
     const formatCurrency = (value: any) => (
         <span>
             {value.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}
@@ -73,7 +78,7 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
         render: render ? render : undefined
     });
   
-    // Updated subMetricColumns
+    // Here is the list of most columns (for others used by all metric types, see getColumns function) that the metric table will.
     const subMetricColumns = {
         "Employee Volunteering Match": [
             getColumn('Organization', 'organization'),
@@ -139,7 +144,7 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
 
 
     /**
-     * Creates columns for reports based on metric-subtype
+     * Creates data for what columns will be rendered for the metric subtype selected.
      * 
      * @returns Array of Objects
      */
