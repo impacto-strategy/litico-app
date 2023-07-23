@@ -51,16 +51,22 @@ const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standar
         delete values.factors.employee_id
         delete values.factors.tax_id
 
-        console.log("What are values?", values)
         let requests = Object.keys(values.factors).map(async (key) => {
             let formValues = Object.assign({}, values);
             let factor = find(fields, { 'col_label': key });
+
             formValues['value'] = values['factors'][key];
             formValues['value'] = values['factors'][key];
             formValues['esg_metric_factor_id'] = factor.id;
             formValues['esg_metric_factor_name'] = factor.name;
             formValues['measurement_unit'] = factor.measurement_units[0];
             formValues['resources'] = resources;
+
+            // The database expects timeframe to be added, so we add a value for those that don't use timeframe.
+            if (typeof formValues['timeframe'] === "undefined") {
+                formValues['timeframe'] = 'daily';
+            }
+
             let request  = ResourceService.store({
                 resourceName: 'measurements',
                 fields: {...formValues}
@@ -77,7 +83,6 @@ const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standar
         }
 
         Promise.all(requests).then(() => {
-            console.log("create measurement metrics")
             return createMeasurementMetrics(measurementIds);
         });
     };

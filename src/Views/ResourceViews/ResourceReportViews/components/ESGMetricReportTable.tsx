@@ -80,12 +80,21 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
   
     // Here is the list of most columns (for others used by all metric types, see getColumns function) that the metric table will.
     const subMetricColumns = {
+        "Community Grievances": [
+            getColumn('Name', 'contact_name'),
+            getColumn('Date Reported', 'type_b'),
+            getColumn('Resolution Date', 'type_a'),
+            getColumn('Reason for Call', 'description'),
+            getColumn('Resolution', 'narrative'),
+            timeframeColumn,
+            dateColumn
+        ],
         "Employee Volunteering Match": [
             getColumn('Organization', 'organization'),
-            getColumn('Hours', 'num_1'),
+            getColumn('Hours Volunteered', 'num_1'),
             getColumn('Employee ID', 'employee_id'),
+            getColumn("Employee's Office", 'type_a'),
             getColumn('Tax ID', 'tax_id'),
-            timeframeColumn,
             dateColumn
         ],
         "GHG Emissions": [
@@ -93,6 +102,7 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             getColumn('CO2 Emissions (mt CO2)', 'num_1'),
             getColumn('CH4 Emissions (mt CH4)', 'num_2'),
             getColumn('N2O Emissions (mt N2O)', 'num_3'),
+            getColumn('Source', 'source'),
             timeframeColumn,
             dateColumn
         ],
@@ -102,6 +112,7 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             getColumn('Produced Water Production', 'num_3'),
             getColumn('Synthetic Oil Production', 'num_4'),
             getColumn('Synthetic Gas Production', 'num_5'),
+            getColumn('Source', 'source'),
             timeframeColumn,
             dateColumn
         ],
@@ -111,13 +122,16 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             getColumn('Number of Employee Fatalities', 'num_2'),
             getColumn('Number of Employee Lost Time Incidents', 'num_3'),
             getColumn('Employee Hours Worked', 'denominator'),
+            getColumn('Source', 'source'),
             timeframeColumn,
             dateColumn
         ],
         "Social Investment": [
             getColumn('Organization', 'organization'),
             getColumn('Amount Donated', 'denominator', formatCurrency),
-            timeframeColumn,
+            getColumn('Employee ID', 'employee_id'),
+            getColumn("Employee's Office", 'type_a'),
+            getColumn('Tax ID', 'tax_id'),
             dateColumn
         ],
         "Workforce Demographics - Ethnicity": [
@@ -128,6 +142,7 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             getColumn('Latino/Hispanics', 'num_4'),
             getColumn('Native American', 'num_5'),
             getColumn('Other', 'num_6'),
+            getColumn('Source', 'source'),
             timeframeColumn,
             dateColumn
         ],
@@ -137,6 +152,7 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             getColumn('Female', 'num_2'),
             getColumn('Non-Binary', 'num_3'),
             getColumn('No Response', 'num_4'),
+            getColumn('Source', 'source'),
             timeframeColumn,
             dateColumn
         ],
@@ -226,11 +242,6 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
                 })}
                 </>
             ),
-        },
-        {
-            title: 'Source',
-            dataIndex: 'source',
-            key: 'source',
         },
         {
             title: 'User',
