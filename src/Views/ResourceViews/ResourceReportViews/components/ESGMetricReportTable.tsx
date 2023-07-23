@@ -32,317 +32,109 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
     const [visible, setVisibility] = useState(false);
 
 
+    const formatCurrency = (value: any) => (
+        <span>
+            {value.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}
+        </span>
+    );
+  
+    const formatDate = (value: any) => (
+        <span>
+            {moment(value).format('MM/DD/YYYY')}
+        </span>
+    );
+  
+    const formatValue = (value: any) => (
+        <span>
+            {value.toLocaleString()}
+        </span>
+    );
+  
+    const timeframeColumn = {
+        title: 'Timeframe',
+        dataIndex: '',
+        key: '',
+        render: (value: any) => (
+            <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
+        )
+    };
+  
+    const dateColumn = {
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date',
+        render: formatDate,
+    };
+  
+    const getColumn = (title: string, dataIndex: string, render?: (value: any) => JSX.Element) => ({
+        title,
+        dataIndex,
+        key: dataIndex,
+        render: render ? render : undefined
+    });
+  
+    // Updated subMetricColumns
     const subMetricColumns = {
+        "Employee Volunteering Match": [
+            getColumn('Organization', 'organization'),
+            getColumn('Hours', 'num_1'),
+            getColumn('Employee ID', 'employee_id'),
+            getColumn('Tax ID', 'tax_id'),
+            timeframeColumn,
+            dateColumn
+        ],
         "GHG Emissions": [
-            {
-                title: 'GHG Emissions',
-                dataIndex: 'value',
-                key: 'value',
-                render: (value:any) => (
-                    <span>
-                        {value.toLocaleString()}
-                    </span>
-                ),
-            },
-            {
-                title: 'CO2 Emissions (mt CO2)',
-                dataIndex: 'num_1',
-                key: 'num_1',
-            },
-            {
-                title: 'CH4 Emissions (mt CH4)',
-                dataIndex: 'num_2',
-                key: 'num_2',
-            },
-            {
-                title: 'N2O Emissions (mt N2O)',
-                dataIndex: 'num_3',
-                key: 'num_3',
-            },
-            {
-                title: 'Timeframe',
-                dataIndex: '',
-                key: '',
-                render: (value: any) => (
-                    <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-                )
-            },
-            {
-                title: 'Date',
-                dataIndex: 'date',
-                key: 'date',
-                render: (value:any) => (
-                    <span>
-                        {moment(value).format('MM/DD/YYYY')}
-                    </span>
-                ),
-            },
+            getColumn('GHG Emissions', 'value', formatValue),
+            getColumn('CO2 Emissions (mt CO2)', 'num_1'),
+            getColumn('CH4 Emissions (mt CH4)', 'num_2'),
+            getColumn('N2O Emissions (mt N2O)', 'num_3'),
+            timeframeColumn,
+            dateColumn
         ],
         "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas": [
-            {
-                title: 'Oil Production',
-                dataIndex: 'num_1',
-                key: 'num_1'
-            },
-            {
-                title: 'Gas Production',
-                dataIndex: 'num_2',
-                key: 'num_2'
-            },
-            {
-                title: 'Produced Water Production',
-                dataIndex: 'num_3',
-                key: 'num_3'
-            },
-            {
-                title: 'Synthetic Oil Production',
-                dataIndex: 'num_4',
-                key: 'num_4'
-            },
-            {
-                title: 'Synthetic Gas Production',
-                dataIndex: 'num_5',
-                key: 'num_5'
-            },
-            {
-                title: 'Timeframe',
-                dataIndex: '',
-                key: '',
-                render: (value: any) => (
-                    <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-                )
-            },
-            {
-                title: 'Date',
-                dataIndex: 'date',
-                key: 'date',
-                render: (value:any) => (
-                    <span>
-                        {moment(value).format('MM/DD/YYYY')}
-                    </span>
-                ),
-            },
-        ],
-        "Social Investment": [
-            {
-                title: 'Organization',
-                dataIndex: 'organization',
-                key: 'organization'
-            },
-            {
-                title: 'Amount Donated',
-                dataIndex: 'denominator',
-                key: 'denominator',
-                render: (value:any) => (
-                    <span>
-                        {value.toLocaleString('en-US', {style: 'currency',currency: 'USD'})}
-                    </span>
-                ),
-            },
-            {
-                title: 'Timeframe',
-                dataIndex: '',
-                key: '',
-                render: (value: any) => (
-                    <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-                )
-            },
-            {
-                title: 'Date',
-                dataIndex: 'date',
-                key: 'date',
-                render: (value:any) => (
-                    <span>
-                        {moment(value).format('MM/DD/YYYY')}
-                    </span>
-                ),
-            },
+            getColumn('Oil Production', 'num_1'),
+            getColumn('Gas Production', 'num_2'),
+            getColumn('Produced Water Production', 'num_3'),
+            getColumn('Synthetic Oil Production', 'num_4'),
+            getColumn('Synthetic Gas Production', 'num_5'),
+            timeframeColumn,
+            dateColumn
         ],
         "TRIR - Employees": [
-            {
-                title: 'TRIR Employees',
-                dataIndex: 'value',
-                key: 'value',
-            },
-            {
-                title: 'Number of Employee Recordable Incidents',
-                dataIndex: 'num_1',
-                key: 'num_2',
-            },
-            {
-                title: 'Number of Employee Fatalities',
-                dataIndex: 'num_2',
-                key: 'num_2',
-            },
-            {
-                title: 'Number of Employee Lost Time Incidents',
-                dataIndex: 'num_3',
-                key: 'num_3',
-            },
-            {
-                title: 'Employee Hours Worked',
-                dataIndex: 'denominator',
-                key: 'denominator',
-            },
-            {
-                title: 'Timeframe',
-                dataIndex: '',
-                key: '',
-                render: (value: any) => (
-                    <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-                )
-            },
-            {
-                title: 'Date',
-                dataIndex: 'date',
-                key: 'date',
-                render: (value:any) => (
-                    <span>
-                        {moment(value).format('MM/DD/YYYY')}
-                    </span>
-                ),
-            },
+            getColumn('TRIR Employees', 'value'),
+            getColumn('Number of Employee Recordable Incidents', 'num_1'),
+            getColumn('Number of Employee Fatalities', 'num_2'),
+            getColumn('Number of Employee Lost Time Incidents', 'num_3'),
+            getColumn('Employee Hours Worked', 'denominator'),
+            timeframeColumn,
+            dateColumn
         ],
-        "Employee Volunteering Match": [
-            {
-                title: 'Organization',
-                dataIndex: 'organization',
-                key: 'organization'
-            },
-            {
-                title: 'Hours',
-                dataIndex: 'num_1',
-                key: 'num_1',
-            },
-            {
-                title: 'Employee ID',
-                dataIndex: 'employee_id',
-                key: 'employee_id',
-            },
-            {
-                title: 'Tax ID',
-                dataIndex: 'tax_id',
-                key: 'tax_id',
-            },
-            {
-                title: 'Timeframe',
-                dataIndex: '',
-                key: '',
-                render: (value: any) => (
-                    <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-                )
-            },
-            {
-                title: 'Date',
-                dataIndex: 'date',
-                key: 'date',
-                render: (value:any) => (
-                    <span>
-                        {moment(value).format('MM/DD/YYYY')}
-                    </span>
-                ),
-            },
-        ],
-        "Workforce Demographics - Gender": [
-            {
-                title: 'Total Employees',
-                dataIndex: 'value',
-                key: 'value',
-            },
-            {
-                title: 'Male',
-                dataIndex: 'num_1',
-                key: 'num_2',
-            },
-            {
-                title: 'Female',
-                dataIndex: 'num_2',
-                key: 'num_2',
-            },
-            {
-                title: 'Non-Binary',
-                dataIndex: 'num_3',
-                key: 'num_3',
-            },
-            {
-                title: 'No Response',
-                dataIndex: 'num_4',
-                key: 'num_4',
-            },
-            {
-                title: 'Timeframe',
-                dataIndex: '',
-                key: '',
-                render: (value: any) => (
-                    <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-                )
-            },
-            {
-                title: 'Date',
-                dataIndex: 'date',
-                key: 'date',
-                render: (value:any) => (
-                    <span>
-                        {moment(value).format('MM/DD/YYYY')}
-                    </span>
-                ),
-            },
+        "Social Investment": [
+            getColumn('Organization', 'organization'),
+            getColumn('Amount Donated', 'denominator', formatCurrency),
+            timeframeColumn,
+            dateColumn
         ],
         "Workforce Demographics - Ethnicity": [
-            {
-                title: 'Total Employees',
-                dataIndex: 'value',
-                key: 'value',
-            },
-            {
-                title: 'White/Caucasian',
-                dataIndex: 'num_1',
-                key: 'num_2',
-            },
-            {
-                title: 'Black/African American',
-                dataIndex: 'num_2',
-                key: 'num_2',
-            },
-            {
-                title: 'Asian/Pacific American',
-                dataIndex: 'num_3',
-                key: 'num_3',
-            },
-            {
-                title: 'Latino/Hispanics',
-                dataIndex: 'num_4',
-                key: 'num_4',
-            },
-            {
-                title: 'Native American',
-                dataIndex: 'num_5',
-                key: 'num_5',
-            },
-            {
-                title: 'Other',
-                dataIndex: 'num_6',
-                key: 'num_6',
-            },
-            {
-                title: 'Timeframe',
-                dataIndex: '',
-                key: '',
-                render: (value: any) => (
-                    <span>{reportData?.period === 'YR' ? 'Annual' : reportData?.period}</span>
-                )
-            },
-            {
-                title: 'Date',
-                dataIndex: 'date',
-                key: 'date',
-                render: (value:any) => (
-                    <span>
-                        {moment(value).format('MM/DD/YYYY')}
-                    </span>
-                ),
-            },
-        ]
+            getColumn('Total Employees', 'value'),
+            getColumn('White/Caucasian', 'num_1'),
+            getColumn('Black/African American', 'num_2'),
+            getColumn('Asian/Pacific American', 'num_3'),
+            getColumn('Latino/Hispanics', 'num_4'),
+            getColumn('Native American', 'num_5'),
+            getColumn('Other', 'num_6'),
+            timeframeColumn,
+            dateColumn
+        ],
+        "Workforce Demographics - Gender": [
+            getColumn('Total Employees', 'value'),
+            getColumn('Male', 'num_1'),
+            getColumn('Female', 'num_2'),
+            getColumn('Non-Binary', 'num_3'),
+            getColumn('No Response', 'num_4'),
+            timeframeColumn,
+            dateColumn
+        ],
     }
 
 
@@ -549,7 +341,7 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
                 <Row>
                     <Col span={24}>
                         <Table
-                            title={() => `${searchParams.get("metric_name")} - ${searchParams.get("metric_subtype")}`}
+                            title={() => `${searchParams.get("metric_name")}: ${searchParams.get("metric_subtype")}`}
                             pagination={false}
                             columns={getColumns(subMetricColumns, searchParams.get("metric_subtype"))}
                             dataSource={sortBy(reportData?.esg_metrics, [function(o) { return o.date; }])} 
