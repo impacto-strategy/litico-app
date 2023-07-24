@@ -2,8 +2,8 @@ import {PageHeader, Space} from "antd";
 import styled from "styled-components";
 import { useCallback, useEffect, useState } from "react";
 import {useSearchParams} from "react-router-dom";
-import MetricSubtypeTabs from "../../Components/MetricSubtypeTabs";
-import ResourceService from "../../Services/ResourceService";
+import MetricSubtypeTabs from "../../../Components/MetricSubtypeTabs";
+import ResourceService from "../../../Services/ResourceService";
 import { groupBy } from "lodash";
 
 const Wrapper = styled.section`
@@ -20,7 +20,7 @@ const ContentWrapper = styled.div`
   margin-bottom: 32px;
 `
 
-const DataMetricSubtypes = () => {
+const MetricSubtypeDataEntrySelection = () => {
 
     const [standards, setStandards] = useState<any>()
     const [searchParams] = useSearchParams();
@@ -67,4 +67,4 @@ const DataMetricSubtypes = () => {
     )
 }
 
-export default DataMetricSubtypes
+export default MetricSubtypeDataEntrySelection;

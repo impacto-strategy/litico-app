@@ -1,17 +1,13 @@
-/* IMPORT EXTERNAL MODULES */
 import { Divider, Form, PageHeader, Space } from "antd";
 import Cookies from 'js-cookie';
 import { FC, useCallback, useEffect, useState } from "react"
-import {useSearchParams} from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 
-/* IMPORT INTERNAL MODULES */
-// COMPONENTS
-import ExcelFormOptions from "./components/ExcelFormOptions";
-import MetricSubtypeAddForm from "./components/MetricSubtypeAddForm";
-import StandardsCard from "./components/StandardsCard";
+import BulkDataFormOptions from "./components/BulkDataFormOptions";
+import ESGDataInputForm from "./components/ESGDataInputForm";
+import MetricStandardsCard from "./components/MetricStandardsCard";
 
-// MISC
 import ResourceService from "../../../Services/ResourceService";
 
 const Wrapper = styled.section`
@@ -28,7 +24,6 @@ const ContentWrapper = styled.div`
   margin-bottom: 32px;
 `
 
-/* INTERFACES */
 interface ifields {
     id: number,
     name: string,
@@ -37,27 +32,26 @@ interface ifields {
 }
 
 /**
- * Interface for page where data is added pertaining to a metric subtype.
+ * User interface for users to input new ESG metric data for specific metric and sub metric type. By dividing the code into three sub components, we wanted to ensure it was readable for developers by reducing overall file size.
  */
-const MetricSubtypesAddData: FC = (): JSX.Element => {
-    // COMPONENT HOOKS
+const ESGDataInputPage: FC = (): JSX.Element => {
+
     const [fields, setFields] = useState<ifields>();
     const [form] = Form.useForm();
     const [searchParams] = useSearchParams();
     const [standards, setMetricStandards] = useState<any>();
 
-    // COMPONENT FUNCTIONS
     const setDefaultFields = useCallback(() => {
         form.setFieldsValue({
             state: 'CO',
             basin: 'DJ Basin'
         })
-    },[form])
+    }, [form])
 
     const getStandards = useCallback(() => {
         ResourceService.index({
             resourceName: 'standards',
-            params: {metric_subtype: searchParams.get("metric_subtype")}
+            params: { metric_subtype: searchParams.get("metric_subtype") }
         }).then(({ data }) => {
             setMetricStandards(data);
             console.log(data[0].esg_metric_factors)
@@ -67,7 +61,6 @@ const MetricSubtypesAddData: FC = (): JSX.Element => {
 
     }, [searchParams, setMetricStandards, setDefaultFields])
 
-    // MISC
     let token = Cookies.get('XSRF-TOKEN')
     const headers = {
         'X-XSRF-TOKEN': token || ''
@@ -86,13 +79,14 @@ const MetricSubtypesAddData: FC = (): JSX.Element => {
                     title={searchParams.get("metric_subtype")}
                 />
                 <ContentWrapper>
-                    <ExcelFormOptions 
+                    {/* These are the excel buttons near the top of the page. */}
+                    <BulkDataFormOptions
                         headers={headers}
                         searchParams={searchParams}
                     />
-                    <StandardsCard standards={standards}/>
+                    <MetricStandardsCard standards={standards} />
                     <Divider />
-                    <MetricSubtypeAddForm 
+                    <ESGDataInputForm
                         fields={fields}
                         form={form}
                         headers={headers}
@@ -105,4 +99,4 @@ const MetricSubtypesAddData: FC = (): JSX.Element => {
     )
 }
 
-export default MetricSubtypesAddData;
+export default ESGDataInputPage;

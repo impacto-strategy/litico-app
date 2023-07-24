@@ -19,7 +19,10 @@ const ContentWrapper = styled.div`
   margin-bottom: 32px;
 `
 
-const MetricNames = () => {
+/**
+ * A component for selecting and viewing the details of an Environmental, Social, and Governance (ESG) metric subtype report.
+ */
+const ESGMetricReportSelector = () => {
 
     const {id} = useParams()
 
@@ -66,4 +69,4 @@ const MetricNames = () => {
     )
 }
 
-export default MetricNames
+export default ESGMetricReportSelector

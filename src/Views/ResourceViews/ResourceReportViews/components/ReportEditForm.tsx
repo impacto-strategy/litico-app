@@ -124,7 +124,7 @@ const ReportEditForm: FC<EditFormProps> = (props): JSX.Element => {
     const getTimeframeOptions = useCallback((subMetricName: string): any => {
         if ([
             'Community Grievances', 'GHG Emissions', 'Production - Gas', 
-            'Production - Oil', 'Spills- Volume', 'Volunteering - Community',
+            'Production - Oil', 'Spills- Volume', 'Employee Volunteering Match',
             'Workforce Demographics - Ethnicity', 'Workforce Demographics - Gender', 'Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas'
         ].includes(subMetricName)) {
             return [ {name: 'Yearly', value: 'yearly'} ]

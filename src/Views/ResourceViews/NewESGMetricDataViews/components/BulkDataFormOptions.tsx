@@ -1,4 +1,3 @@
-/* IMPORT EXTERNAL MODULES */
 import { 
     Alert,
     Button,
@@ -11,14 +10,13 @@ import { DownloadOutlined, QuestionCircleOutlined, UploadOutlined } from "@ant-d
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { CSVLink } from "react-csv";
 
-/* IMPORT INTERNAL MODULES */
 import ResourceService from "../../../../Services/ResourceService"
 
 /**
  * Interface for metric subtype that allows user to either download a blank excel form to add data in bulk or to upload a completed form.
  */
-const ExcelFormOptions: FC<any> = ({headers, searchParams}): JSX.Element => {
-    // COMPONENT HOOKS
+const BulkDataFormOptions: FC<any> = ({headers, searchParams}): JSX.Element => {
+
     const baseUrl = process.env.API_URL || 'http://localhost:8000'
     const [defaultColumns] = useState<any>([
         'ESG Pillar',
@@ -54,7 +52,6 @@ const ExcelFormOptions: FC<any> = ({headers, searchParams}): JSX.Element => {
     const [headerColumns, setHeaderColumns] = useState<any>()
     const [uploaded, setUploaded] = useState<any>(false)
 
-    // COMPONENT FUNCTIONS
     const colHeaders = useMemo(() => {
         if (headerColumns && headerColumns.length > 0) {
             return [headerColumns.map((header :any) => header.col_header), headerColumns.map((header:any) => header.default_value)]
@@ -124,4 +121,4 @@ const ExcelFormOptions: FC<any> = ({headers, searchParams}): JSX.Element => {
     )
 }
 
-export default ExcelFormOptions;
+export default BulkDataFormOptions;

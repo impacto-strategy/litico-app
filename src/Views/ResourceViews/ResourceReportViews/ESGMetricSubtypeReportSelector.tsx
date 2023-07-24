@@ -20,7 +20,10 @@ const ContentWrapper = styled.div`
   margin-bottom: 32px;
 `
 
-const MetricSubtypes = () => {
+/**
+ * A component for selecting and viewing the details of an Environmental, Social, and Governance (ESG) metric subtype report.
+ */
+const ESGMetricSubtypeReportSelector = () => {
     const {id} = useParams()
     const [searchParams] = useSearchParams();
     const [report, setReport] = useState<any>({ esg_metrics: [], year: '' })
@@ -80,4 +83,4 @@ const MetricSubtypes = () => {
     )
 }
 
-export default MetricSubtypes
+export default ESGMetricSubtypeReportSelector;
