@@ -34,8 +34,8 @@ export function AuthProvider({children}: any) {
     useEffect(() => {
         const userData: string | null = window.localStorage.getItem('_U');
 
-        // Local storage sometimes held only some data and would still allow users to the dashboard, therefore causing issues. This ensures we prevent that from happening by forcing a full logout/reset.
-        if (userData === null || !userData.includes("email")) {
+        // This helps prevent staging from crashing in the event the local storage has incorrect data.
+        if (userData === null || !userData.includes("email") ||!userData.includes("logo")) {
             new Promise((res) => {
                 AuthService.logout().finally(() => {
                     localStorage.removeItem('_U')
