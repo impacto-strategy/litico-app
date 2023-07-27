@@ -6,7 +6,7 @@ import {Route, Routes} from "react-router-dom";
 import RequireAuth from "./Components/Utility/PrivateRoute";
 // REACT VIEWS
 import AddMetric from "./Views/AddMetric";
-import Dashboard from "./Views/Dashboard";
+import Dashboard from "./Views/DashboardView/Dashboard";
 import Home from "./Views/Home";
 import Landing from "./Views/Landing";
 import Login from "./Views/AuthViews/Login";

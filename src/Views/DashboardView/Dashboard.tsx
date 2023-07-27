@@ -27,21 +27,21 @@ import {
 // import PieWidget from "../Components/PieWidget";
 // import DonationsDrilldown from "../DonationsDrilldown";
 // REACT COMPONENTS
-import ColumnWidget from "../Components/ColumnWidget";
-import DonationsVolunteerCharts from "../Components/DonationsVolunteerCharts";
-import DualAxesLineColWidget from "../Components/DualAxesLineColWidget";
-import StackedBarWidget from "../Components/StackedBarWidget";
-import GHGChart from "../Components/GHGChart";
-import LDAR from "../Components/LDAR";
-import SafetyMetrics from "../Components/SafetyMetrics";
-import ProductionChart from "../Components/ProductionChart"
-import GovernanceCheckList from "../Components/GovernanceCheckList";
+import ColumnWidget from "../../Components/ColumnWidget";
+import DonationsVolunteerCharts from "../../Components/DonationsVolunteerCharts";
+import DualAxesLineColWidget from "../../Components/DualAxesLineColWidget";
+import StackedBarWidget from "../../Components/StackedBarWidget";
+import GHGChart from "../../Components/GHGChart";
+import LDAR from "../../Components/LDAR";
+import SafetyMetrics from "../../Components/SafetyMetrics";
+import ProductionChart from "../../Components/ProductionChart"
+import GovernanceCheckList from "../../Components/GovernanceCheckList";
 // MISC INTERNAL MODULES
-import { calcSpillIntensity } from "../Services/ProductionService";
-import ResourceService from "../Services/ResourceService";
-import useAuth from "../Providers/Auth/useAuth";
-import {ArrOfObj} from "../../global"
-import { extractYear } from "../utils/utils";
+import { calcSpillIntensity } from "../../Services/ProductionService";
+import ResourceService from "../../Services/ResourceService";
+import useAuth from "../../Providers/Auth/useAuth";
+import {ArrOfObj} from "../../../global"
+import { extractYear } from "../../utils/utils";
 
 const Dashboard: FC = () => {
     // React State
