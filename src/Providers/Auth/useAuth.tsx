@@ -1,12 +1,4 @@
-import { 
-    createContext,
-    useContext,
-    useEffect,
-    useMemo,
-    useState 
-} from "react";
-import {useNavigate} from "react-router-dom";
-
+import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import AuthService from '../../Services/AuthService'
 import ApiService from "../../Services/ApiService";
 
@@ -28,7 +20,6 @@ export function AuthProvider({children}: any) {
     const [user, setUser] = useState();
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingInitial, setLoadingInitial] = useState<boolean>(true);
-    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -47,7 +38,7 @@ export function AuthProvider({children}: any) {
         } else if (userData && JSON.parse(userData).id) {
             setUser(JSON.parse(userData));
         }
-        setLoadingInitial(false);
+        setLoadingInitial(false)
     }, [])
 
 
