@@ -1,6 +1,4 @@
-/* IMPORT EXTERNAL MODULES */
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
-import {Divider} from "antd";
+import { Divider } from "antd";
 import {
     filter, 
     find, 
@@ -13,20 +11,14 @@ import {
     sumBy, 
     uniq
 } from "lodash";
+import { 
+    FC,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState
+} from "react";
 
-/* IMPORT INTERNAL MODULES */
-// UNUSED COMPONENTS
-// import Emissions2020 from "../Components/Emissions2020";
-// import Emissions2020CO2 from "../Components/Emissions2020CO2";
-// import WhitingAllData from "../Components/WhitingAllData";
-// import MethaneEmissions from "../Components/MethaneEmissions";
-// import Flaring from "../Components/Flaring";
-// import OilSpills from "../Components/OilSpills";
-// import Staff from "../Components/Staff";
-// import LineWidget from "../Components/LineWidget";
-// import PieWidget from "../Components/PieWidget";
-// import DonationsDrilldown from "../DonationsDrilldown";
-// REACT COMPONENTS
 import ColumnWidget from "../../Components/ColumnWidget";
 import DonationsVolunteerCharts from "../../Components/DonationsVolunteerCharts";
 import DualAxesLineColWidget from "../../Components/DualAxesLineColWidget";
@@ -36,11 +28,11 @@ import LDAR from "../../Components/LDAR";
 import SafetyMetrics from "../../Components/SafetyMetrics";
 import ProductionChart from "../../Components/ProductionChart"
 import GovernanceCheckList from "../../Components/GovernanceCheckList";
-// MISC INTERNAL MODULES
+
 import { calcSpillIntensity } from "../../Services/ProductionService";
 import ResourceService from "../../Services/ResourceService";
 import useAuth from "../../Providers/Auth/useAuth";
-import {ArrOfObj} from "../../../global"
+import { ArrOfObj } from "../../../global"
 import { extractYear } from "../../utils/utils";
 
 const Dashboard: FC = () => {
