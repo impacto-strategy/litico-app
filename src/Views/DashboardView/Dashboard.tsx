@@ -265,8 +265,6 @@ const Dashboard: FC = () => {
                             />
                         }
 
-                        {/* <WhitingAllData /> */}
-
                         {spills.length > 0 &&
                             <DualAxesLineColWidget
                                 data={getYearlySpillsData}
@@ -283,23 +281,6 @@ const Dashboard: FC = () => {
                         {complaints.length > 0 &&
                             <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
                         }
-
-                        {/* Charts/Graphs that are currently beyond MVP. */}
-                        {/* {user.selectedCompany.name === 'Demo Energy' &&
-                            <MethaneEmissions/>
-                        }
-                        { user.selectedCompany.name === 'Demo Energy' &&
-                            <Flaring/>
-                        } */}
-                        {/* { user.selectedCompany.name === 'Demo Energy' &&
-                            <OilSpills/>
-                        } */}
-                        {/* { user.selectedCompany.name === 'Demo Energy' &&
-                            <Emissions2020/>
-                        } */}
-                        {/* <Emissions2020CO2 data={co2Emission} units="mt CO2" title="Carbon Dioxide Emissions for Production" />
-                        <Emissions2020CO2 data={ch4Emission} units="mt CH4" title="Methane Emissions for Production" />
-                        <Emissions2020CO2 data={n20Emission} units="mt N2O" title="Nitrous Oxide Emissions for Production" /> */}
 
                         {production.length > 0 &&
                             <ProductionChart
@@ -325,9 +306,6 @@ const Dashboard: FC = () => {
                         gridTemplateColumns: 'repeat(4, 1fr)',
                         gap: '2em'
                     }}>
-                        {/* <Staff/> */}
-                        {/*<Donations/>*/}
-                        {/* <DonationsDrilldown /> */}
 
                         {getQuarterlyIncidentData.length > 0 &&
                             <SafetyMetrics
