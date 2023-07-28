@@ -1,7 +1,6 @@
 import { Divider } from "antd";
 import {
     filter, 
-    find, 
     flatten, 
     forOwn, 
     groupBy, 
@@ -29,6 +28,7 @@ import SafetyMetrics from "../../Components/SafetyMetrics";
 import ProductionChart from "../../Components/ProductionChart"
 import GovernanceCheckList from "../../Components/GovernanceCheckList";
 
+import { getDonationData } from "../../Services/DonationServices";
 import { getMetricsByYear } from "../../Services/MetricServices/index";
 import { calcSpillIntensity } from "../../Services/ProductionService";
 import ResourceService from "../../Services/ResourceService";
@@ -64,11 +64,7 @@ const Dashboard: FC = () => {
         });
     }, [])
 
-    const getDonationData = useMemo(() => {
-        return flatten(map(groupBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => extractYear(o.date)), (year: any) => ([
-            { label: extractYear(year[0].date), value: sumBy(year, (obj: any) => obj.value) }
-        ]))).reverse()
-    }, [metrics])
+
 
     const getVolunteerHoursData = useMemo(() => {
         return flatten(map(groupBy(filter(metrics.esg_metrics, (o: any) => {
@@ -226,6 +222,8 @@ const Dashboard: FC = () => {
         getDashboardData()
     }, [getDashboardData])
 
+    console.log("Get donation data:  ", getDonationData(metrics));
+
     return (
         <div className="site-layout-background">
             {hasLoaded &&
@@ -305,10 +303,10 @@ const Dashboard: FC = () => {
                         {getEthnicityData.length > 0 &&
                             <StackedBarWidget isGroup={false} isPercentage={true} data={getEthnicityData} label={'percentage'} gridColumns='3/5' title='Employee Diversity' subTitle="" />
                         }
-                        {getDonationData.length > 0 &&
+                        {getDonationData(metrics).length > 0 &&
                             <DonationsVolunteerCharts
                                 title={"Charitable Contributions"}
-                                data={getDonationData}
+                                data={getDonationData(metrics)}
                                 gridCol={"1/3"}
                                 type="Donations"
                                 tableData={sortBy(filter(metrics.esg_metrics, { 'metric_subtype': 'Social Investment' }), (o: any) => o.organization)}
