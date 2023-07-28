@@ -29,9 +29,9 @@ import ProductionChart from "../../Components/ProductionChart"
 import GovernanceCheckList from "../../Components/GovernanceCheckList";
 
 import { getDonationData } from "../../Services/DonationServices";
+import { getYearlyEmissionData } from "../../Services/EmissionsServices";
 import { getEthnicityData } from "../../Services/EthnicityServices";
 import { getGenderData } from "../../Services/GenderServices";
-import { getMetricsByYear } from "../../Services/MetricServices/index";
 import { getVolunteerHoursData } from "../../Services/VolunteerServices";
 import { calcSpillIntensity } from "../../Services/ProductionService";
 import ResourceService from "../../Services/ResourceService";
@@ -63,28 +63,6 @@ const Dashboard: FC = () => {
             setLoader(true)
         });
     }, [])
-
-    const getYearlyEmissionData = useMemo(() => {
-        let dates = uniq(map(emissions, ((metric) => new Date(metric.date).getFullYear()))).sort()
-        let basins = uniq(map(emissions, 'basin')).sort().filter(i => typeof i === 'string');
-        return flatten(map(dates, ((date) => {
-            return flatten(map(basins, ((basin) => {
-                let data = []
-                let ghg = getMetricsByYear({year: date, basin, metrics, metricSubtype: 'GHG Emissions'})
-                let intensity = getMetricsByYear({year: date, basin, metrics, metricSubtype: 'GHG Intensity - BOE'})
-                data.push({
-                    name: "GHG Emissions (CO2e)",
-                    type: date,
-                    value: ghg?.value || 0,
-                    intensity: intensity?.value || 0,
-                    basin: basin,
-                    // Utilized to avoid bugs in GHG Chart
-                    label: `${basin} Emissions Intensity (mt/BoE)`
-                })
-                return data
-            })))
-        })))
-    }, [emissions, getMetricsByYear])
 
     const getYearlyComplaintsData = useMemo(() => {
         return flatten(map([2017, 2018, 2019, 2020, 2021, 2022], (e) => {
@@ -213,7 +191,7 @@ const Dashboard: FC = () => {
 
                         {emissions.length > 0 &&
                             <GHGChart
-                                data={getYearlyEmissionData}
+                                data={getYearlyEmissionData(emissions, metrics)}
                             />
                         }
 
