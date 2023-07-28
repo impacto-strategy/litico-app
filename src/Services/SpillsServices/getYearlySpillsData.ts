@@ -4,7 +4,7 @@ import {
     map
 } from 'lodash';
 
-import { calcSpillIntensity } from '../ProductionService';
+import { calcSpillIntensity } from "../SpillsServices";
 
 const getYearlySpillsData = (spills: any, production: any) => {
     let spillsCountByYear = groupBy(spills, (e: any) => {

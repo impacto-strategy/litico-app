@@ -7,7 +7,6 @@ import {
     FC,
     useCallback,
     useEffect,
-    useMemo,
     useState
 } from "react";
 
@@ -26,6 +25,7 @@ import { getDonationData } from "../../Services/DonationServices";
 import { getYearlyEmissionData } from "../../Services/EmissionsServices";
 import { getEthnicityData } from "../../Services/EthnicityServices";
 import { getGenderData } from "../../Services/GenderServices";
+import { getQuarterlyIncidentData } from "../../Services/IncidentsServices";
 import { getYearlyProductionData } from "../../Services/ProductionServices";
 import { getYearlySpillsData } from "../../Services/SpillsServices";
 import { getVolunteerHoursData } from "../../Services/VolunteerServices";
@@ -58,38 +58,6 @@ const Dashboard: FC = () => {
             setLoader(true)
         });
     }, [])
-
-    /**
-     * Takes incident data and revamps to new collection of incident data and TRIR.
-     * 
-     * @returns - Array of Objects
-     */
-    const getQuarterlyIncidentData = useMemo(() => {
-        let data: any = [];
-        let organizedData: any = [];
-
-        organizedData = sortBy(filter(metrics.esg_metrics, { 'metric_subtype': 'TRIR - All Workers' }), (metric) => new Date(metric.date))
-        for (let i = 0; i < organizedData.length; i++) {
-            let cleanDate = new Date(organizedData[i].date);
-            let displayedDate = ''
-            if (cleanDate.getMonth() <= 3) {
-                displayedDate = `1Q ${cleanDate.getFullYear()}`
-            } else if (cleanDate.getMonth() < 7) {
-                displayedDate = `2Q ${cleanDate.getFullYear()}`
-            } else if (cleanDate.getMonth() < 10) {
-                displayedDate = `3Q ${cleanDate.getFullYear()}`
-            } else {
-                displayedDate = `4Q ${cleanDate.getFullYear()}`
-            }
-            data.push({
-                date: displayedDate,
-                incidents: organizedData[i].num_1,
-                trir: organizedData[i].value
-            })
-        }
-
-        return data
-    }, [metrics])
 
     useEffect(() => {
         getDashboardData()
@@ -168,9 +136,9 @@ const Dashboard: FC = () => {
                         gap: '2em'
                     }}>
 
-                        {getQuarterlyIncidentData.length > 0 &&
+                        {getQuarterlyIncidentData(metrics).length > 0 &&
                             <SafetyMetrics
-                                data={getQuarterlyIncidentData}
+                                data={getQuarterlyIncidentData(metrics)}
                             />
                         }
 

@@ -1,3 +1,4 @@
-import getYearlyProductionData from '../ProductionServices/getYearlyProductionData'
+import getYearlyProductionData from '../ProductionServices/getYearlyProductionData';
+import calcProductionTotal from './calcProductionTotal';
 
-export { getYearlyProductionData };
+export { calcProductionTotal, getYearlyProductionData };

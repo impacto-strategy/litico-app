@@ -1,3 +1,5 @@
 import getYearlySpillsData from "./getYearlySpillsData";
+import calcSpillsTotals from "./calcSpillsTotals";
+import calcSpillIntensity from "./calcSpillIntensity";
 
-export { getYearlySpillsData };
+export { calcSpillIntensity, calcSpillsTotals, getYearlySpillsData };
