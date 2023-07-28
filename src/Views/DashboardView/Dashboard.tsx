@@ -1,9 +1,6 @@
 import { Divider } from "antd";
 import {
     filter,
-    flatten,
-    groupBy,
-    map,
     sortBy,
 } from "lodash";
 import { 
@@ -29,9 +26,9 @@ import { getDonationData } from "../../Services/DonationServices";
 import { getYearlyEmissionData } from "../../Services/EmissionsServices";
 import { getEthnicityData } from "../../Services/EthnicityServices";
 import { getGenderData } from "../../Services/GenderServices";
-import { getYearlyProductionData } from "../../Services/ProductionService";
+import { getYearlyProductionData } from "../../Services/ProductionServices";
+import { getYearlySpillsData } from "../../Services/SpillsServices";
 import { getVolunteerHoursData } from "../../Services/VolunteerServices";
-import { calcSpillIntensity } from "../../Services/ProductionService";
 import ResourceService from "../../Services/ResourceService";
 import useAuth from "../../Providers/Auth/useAuth";
 import { ArrOfObj } from "../../../global"
@@ -61,18 +58,6 @@ const Dashboard: FC = () => {
             setLoader(true)
         });
     }, [])
-
-    const getYearlySpillsData = useMemo(() => {
-        let spillsCountByYear = groupBy(spills, (e: any) => {
-            let date = new Date(e['date'])
-            let year = date.getFullYear();
-            return year
-        });
-        const intensityCalc: any = calcSpillIntensity(production, spills);
-        return flatten(map(spillsCountByYear, (e, key) => ([
-            { name: "Spills Count", type: key, value: e.length, intensity: intensityCalc[key], items: e }
-        ])))
-    }, [production, spills])
 
     /**
      * Takes incident data and revamps to new collection of incident data and TRIR.
@@ -137,7 +122,7 @@ const Dashboard: FC = () => {
 
                         {spills.length > 0 &&
                             <DualAxesLineColWidget
-                                data={getYearlySpillsData}
+                                data={getYearlySpillsData(spills, production)}
                                 colLabel="Spill Incident Count"
                                 lineLabel="Spills Intensity (bbl spill/kbbl produced)"
                                 title="Spill Incident Count & Intensity"

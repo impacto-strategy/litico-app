@@ -21,57 +21,6 @@ interface productionData {
     water?: any
 }
 
-/**
- * Handles data where each year might be in a different timeframe only.
- * For example, 2020 might only be in monthly, while 2021 might only be in yearly.
- * 
- * @param objByTimeFrame - Object with various properties representing data in different time
- * time frames.
- * @param timeframe - String representing the timeframe of data.
- * @returns 
- */
-const sumByTimeframe = (objByTimeFrame: any, timeframe: string) => {
-    if (isEmpty(objByTimeFrame)) {
-        return;
-    }
-    if (objByTimeFrame[timeframe][0].product === "gas") {
-        return sumBy(objByTimeFrame[timeframe], 'amount') / 1000
-    } else {
-        return sumBy(objByTimeFrame[timeframe], 'amount')
-    }
-}
-
-/**
- * Transform production data in yearly data for production graph on dashboard.
- * 
- * @param data - Array of Objects representing raw production data.
- * @returns Array of objects representing yearly production data.
- */
-export const getYearlyProductionData = (data: any): any => {
-    let yearlyData: any = [];
-    // Each value is a year of production data
-    forOwn(groupBy(data, 'year'), (value: any, key: any) => {
-        let dataObj: {[key: string]: any} = {
-            date: key
-        }
-        for (const product of ['gas', 'oil', 'water']) {
-            // Retrieves the relevant product than groups the data by timeframe.
-            const productByTimeframe = groupBy(filter(value, (o: any) => {
-                return o.product === product
-            }), "timeframe")
-            if (productByTimeframe.hasOwnProperty('yearly')) {
-                dataObj[product] = sumByTimeframe(productByTimeframe, 'yearly');
-            } else if (productByTimeframe.hasOwnProperty('quarterly')) {
-                dataObj[product] = sumByTimeframe(productByTimeframe, 'quarterly');
-            } else {
-                dataObj[product] = sumByTimeframe(productByTimeframe, 'monthly');
-            }
-        }
-        yearlyData.push(dataObj);
-    })
-    return yearlyData
-}
-
 
 /**
  * Transforms an array of spills data into yearly totals.

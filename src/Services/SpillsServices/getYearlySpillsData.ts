@@ -1,14 +1,12 @@
-/* IMPORT EXTERNAL MODULES */
 import {
     flatten,
     groupBy,
     map
 } from 'lodash';
 
-/* IMPORT INTERNAL MODULES */
-import { calcSpillIntensity } from './ProductionService';
+import { calcSpillIntensity } from '../ProductionService';
 
-export const getYearlySpillsData = (spills: any, production: any) => {
+const getYearlySpillsData = (spills: any, production: any) => {
     let spillsCountByYear = groupBy(spills, (e: any) => {
         let date = new Date(e['date'])
         let year = date.getFullYear();
@@ -19,3 +17,5 @@ export const getYearlySpillsData = (spills: any, production: any) => {
         { name: "Spills Count", type: key, value: e.length, intensity: intensityCalc[key], items: e }
     ])))
 }
+
+export default getYearlySpillsData;

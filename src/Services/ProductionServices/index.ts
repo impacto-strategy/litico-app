@@ -1,3 +1,3 @@
-import { getYearlyProductionData } from "../ProductionService";
+import getYearlyProductionData from '../ProductionServices/getYearlyProductionData'
 
 export { getYearlyProductionData };
