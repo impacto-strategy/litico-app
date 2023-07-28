@@ -1,13 +1,10 @@
 import { Divider } from "antd";
 import {
-    filter, 
-    flatten, 
-    forOwn, 
-    groupBy, 
-    isEmpty, 
-    map, 
-    sortBy, 
-    sumBy
+    filter,
+    flatten,
+    groupBy,
+    map,
+    sortBy,
 } from "lodash";
 import { 
     FC,
@@ -32,6 +29,7 @@ import { getDonationData } from "../../Services/DonationServices";
 import { getYearlyEmissionData } from "../../Services/EmissionsServices";
 import { getEthnicityData } from "../../Services/EthnicityServices";
 import { getGenderData } from "../../Services/GenderServices";
+import { getYearlyProductionData } from "../../Services/ProductionService";
 import { getVolunteerHoursData } from "../../Services/VolunteerServices";
 import { calcSpillIntensity } from "../../Services/ProductionService";
 import ResourceService from "../../Services/ResourceService";
@@ -75,49 +73,6 @@ const Dashboard: FC = () => {
             { name: "Spills Count", type: key, value: e.length, intensity: intensityCalc[key], items: e }
         ])))
     }, [production, spills])
-
-    /**
-     * Sums total production for Gas, Water, and Oil by year.
-     * Data is organized by product to interact properly with Ant Design's daul axes widget.
-     * 
-     * @returns - Array of objects
-     */
-    const getYearlyProductionData = useMemo(() => {
-        let yearlyData: ArrOfObj = [];
-        // Outerloop iterates based on year
-        forOwn(groupBy(production, 'year'), (value: any, key: any) => {
-            const tmp: { [key: string]: any } = {
-                date: key
-            }
-            // Inner loop iterates based on product
-            for (const product of ['gas', 'oil', 'water']) {
-                const tempGroup = groupBy(filter(value, (o: any) => {
-                    return o.product === product
-                }), "timeframe")
-                if (tempGroup.hasOwnProperty('yearly')) {
-                    if (isEmpty(tempGroup)) {
-                        continue;
-                    }
-                    if (tempGroup['yearly'][0].product === "gas") {
-                        tmp[product] = sumBy(tempGroup['yearly'], 'amount') / 1000
-                    } else {
-                        tmp[product] = sumBy(tempGroup['yearly'], 'amount')
-                    }
-                } else {
-                    if (isEmpty(tempGroup)) {
-                        continue;
-                    }
-                    if (tempGroup['monthly'][0].product === "gas") {
-                        tmp[product] = sumBy(tempGroup['monthly'], 'amount') / 1000
-                    } else {
-                        tmp[product] = sumBy(tempGroup['monthly'], 'amount')
-                    }
-                }
-            }
-            yearlyData.push(tmp)
-        })
-        return yearlyData
-    }, [production])
 
     /**
      * Takes incident data and revamps to new collection of incident data and TRIR.
@@ -205,7 +160,7 @@ const Dashboard: FC = () => {
 
                         {production.length > 0 &&
                             <ProductionChart
-                                data={getYearlyProductionData}
+                                data={getYearlyProductionData(production)}
                                 gridColumns={'1/5'}
                                 title={'Total Oil & Gas Production'}
                             />
