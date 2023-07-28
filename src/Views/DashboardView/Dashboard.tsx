@@ -7,8 +7,7 @@ import {
     isEmpty, 
     map, 
     sortBy, 
-    sumBy, 
-    uniq
+    sumBy
 } from "lodash";
 import { 
     FC,
@@ -28,6 +27,7 @@ import SafetyMetrics from "../../Components/SafetyMetrics";
 import ProductionChart from "../../Components/ProductionChart"
 import GovernanceCheckList from "../../Components/GovernanceCheckList";
 
+import { getYearlyComplaintsData } from "../../Services/ComplaintsServices";
 import { getDonationData } from "../../Services/DonationServices";
 import { getYearlyEmissionData } from "../../Services/EmissionsServices";
 import { getEthnicityData } from "../../Services/EthnicityServices";
@@ -63,21 +63,6 @@ const Dashboard: FC = () => {
             setLoader(true)
         });
     }, [])
-
-    const getYearlyComplaintsData = useMemo(() => {
-        return flatten(map([2017, 2018, 2019, 2020, 2021, 2022], (e) => {
-            let comps: any[] = filter(complaints, (c: any) => {
-                const date = new Date(c['date'])
-                const year = date.getFullYear()
-
-                return year === e
-            })
-            return [
-                { name: "Complaints Count", type: e, value: comps.length, items: comps }
-            ]
-        }
-        ))
-    }, [complaints])
 
     const getYearlySpillsData = useMemo(() => {
         let spillsCountByYear = groupBy(spills, (e: any) => {
@@ -209,7 +194,13 @@ const Dashboard: FC = () => {
                         }
 
                         {complaints.length > 0 &&
-                            <ColumnWidget data={getYearlyComplaintsData} title="Complaints" modalTitle="Complaints" includeModal={true} gridColumns="3 / 5" />
+                            <ColumnWidget
+                                data={getYearlyComplaintsData(complaints)}
+                                title="Complaints"
+                                modalTitle="Complaints"
+                                includeModal={true}
+                                gridColumns="3 / 5"
+                            />
                         }
 
                         {production.length > 0 &&
