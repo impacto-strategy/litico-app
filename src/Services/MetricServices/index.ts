@@ -1,5 +1,4 @@
 import filterBySubtype from "./filterBySubtype";
+import getMetricsByYear from "./getMetricsByYear";
 
-module.exports = {
-    filterBySubtype
-};
+export { filterBySubtype, getMetricsByYear };

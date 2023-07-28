@@ -29,6 +29,7 @@ import SafetyMetrics from "../../Components/SafetyMetrics";
 import ProductionChart from "../../Components/ProductionChart"
 import GovernanceCheckList from "../../Components/GovernanceCheckList";
 
+import { getMetricsByYear } from "../../Services/MetricServices/index";
 import { calcSpillIntensity } from "../../Services/ProductionService";
 import ResourceService from "../../Services/ResourceService";
 import useAuth from "../../Providers/Auth/useAuth";
@@ -46,21 +47,6 @@ const Dashboard: FC = () => {
 
     // React Context
     const { user } = useAuth();
-
-    const getMetricsByYear = useCallback((year: number, basin: string, metricSubtype: string) => {
-        let data = filter(metrics.esg_metrics, { 'metric_subtype': metricSubtype })
-
-        let metricByYear = find(data, (em) => {
-            if (basin) {
-                return new Date(em.date).getFullYear() === year && em.basin === basin
-            } else {
-                return new Date(em.date).getFullYear() === year
-            }
-        })
-
-        if (!metricByYear?.value) return null
-        return metricByYear
-    }, [metrics])
 
     const getDashboardData = useCallback(() => {
         Promise.all([
@@ -118,8 +104,8 @@ const Dashboard: FC = () => {
         return flatten(map(dates, ((date) => {
             return flatten(map(basins, ((basin) => {
                 let data = []
-                let ghg = getMetricsByYear(date, basin, 'GHG Emissions')
-                let intensity = getMetricsByYear(date, basin, 'GHG Intensity - BOE')
+                let ghg = getMetricsByYear({year: date, basin, metrics, metricSubtype: 'GHG Emissions'})
+                let intensity = getMetricsByYear({year: date, basin, metrics, metricSubtype: 'GHG Intensity - BOE'})
                 data.push({
                     name: "GHG Emissions (CO2e)",
                     type: date,
