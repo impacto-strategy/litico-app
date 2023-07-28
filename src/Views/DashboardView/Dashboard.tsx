@@ -29,6 +29,7 @@ import ProductionChart from "../../Components/ProductionChart"
 import GovernanceCheckList from "../../Components/GovernanceCheckList";
 
 import { getDonationData } from "../../Services/DonationServices";
+import { getEthnicityData } from "../../Services/EthnicityServices";
 import { getMetricsByYear } from "../../Services/MetricServices/index";
 import { getVolunteerHoursData } from "../../Services/VolunteerServices";
 import { calcSpillIntensity } from "../../Services/ProductionService";
@@ -70,17 +71,6 @@ const Dashboard: FC = () => {
             { label: parseInt(m.date), type: 'Male', value: m.num_1 },
             { label: parseInt(m.date), type: 'Non-Binary', value: m.num_3 },
             { label: parseInt(m.date), type: 'No Response', value: m.num_4 }
-        ])))
-    }, [metrics])
-
-    const getEthnicityData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Ethnicity' }), (m: any) => ([
-            { label: parseInt(m.date), type: 'White/Caucasian', value: m.num_1 },
-            { label: parseInt(m.date), type: 'Black/African American', value: m.num_2 },
-            { label: parseInt(m.date), type: 'Asian/Pacific American', value: m.num_3 },
-            { label: parseInt(m.date), type: 'Latino/Hispanics', value: m.num_4 },
-            { label: parseInt(m.date), type: 'Native American', value: m.num_5 },
-            { label: parseInt(m.date), type: 'Other', value: m.num_6 }
         ])))
     }, [metrics])
 
@@ -288,8 +278,16 @@ const Dashboard: FC = () => {
                         {getGenderData.length > 0 &&
                             <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} gridColumns="1/3" title="Employees by Gender" subTitle="" />
                         }
-                        {getEthnicityData.length > 0 &&
-                            <StackedBarWidget isGroup={false} isPercentage={true} data={getEthnicityData} label={'percentage'} gridColumns='3/5' title='Employee Diversity' subTitle="" />
+                        {getEthnicityData(metrics).length > 0 &&
+                            <StackedBarWidget 
+                                isGroup={false}
+                                isPercentage={true}
+                                data={getEthnicityData(metrics)}
+                                label={'percentage'}
+                                gridColumns='3/5'
+                                title='Employee Diversity'
+                                subTitle="" 
+                            />
                         }
                         {getDonationData(metrics).length > 0 &&
                             <DonationsVolunteerCharts
