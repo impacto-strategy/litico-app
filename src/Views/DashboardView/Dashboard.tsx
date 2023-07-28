@@ -30,6 +30,7 @@ import GovernanceCheckList from "../../Components/GovernanceCheckList";
 
 import { getDonationData } from "../../Services/DonationServices";
 import { getEthnicityData } from "../../Services/EthnicityServices";
+import { getGenderData } from "../../Services/GenderServices";
 import { getMetricsByYear } from "../../Services/MetricServices/index";
 import { getVolunteerHoursData } from "../../Services/VolunteerServices";
 import { calcSpillIntensity } from "../../Services/ProductionService";
@@ -38,7 +39,6 @@ import useAuth from "../../Providers/Auth/useAuth";
 import { ArrOfObj } from "../../../global"
 
 const Dashboard: FC = () => {
-    // React State
     const [complaints, setComplaints] = useState<ArrOfObj>([])
     const [emissions, setEmissions] = useState<ArrOfObj>([])
     const [metrics, setMetrics] = useState<any>({})
@@ -46,7 +46,6 @@ const Dashboard: FC = () => {
     const [spills, setSpills] = useState<ArrOfObj>([])
     const [hasLoaded, setLoader] = useState<Boolean>(false)
 
-    // React Context
     const { user } = useAuth();
 
     const getDashboardData = useCallback(() => {
@@ -64,15 +63,6 @@ const Dashboard: FC = () => {
             setLoader(true)
         });
     }, [])
-
-    const getGenderData = useMemo(() => {
-        return flatten(map(filter(metrics.esg_metrics, { 'metric_subtype': 'Workforce Demographics - Gender' }), (m: any) => ([
-            { label: parseInt(m.date), type: 'Female', value: m.num_2 },
-            { label: parseInt(m.date), type: 'Male', value: m.num_1 },
-            { label: parseInt(m.date), type: 'Non-Binary', value: m.num_3 },
-            { label: parseInt(m.date), type: 'No Response', value: m.num_4 }
-        ])))
-    }, [metrics])
 
     const getYearlyEmissionData = useMemo(() => {
         let dates = uniq(map(emissions, ((metric) => new Date(metric.date).getFullYear()))).sort()
@@ -275,8 +265,16 @@ const Dashboard: FC = () => {
                             />
                         }
 
-                        {getGenderData.length > 0 &&
-                            <StackedBarWidget isGroup={false} isPercentage={true} data={getGenderData} label={'percentage'} gridColumns="1/3" title="Employees by Gender" subTitle="" />
+                        {getGenderData(metrics).length > 0 &&
+                            <StackedBarWidget
+                                isGroup={false}
+                                isPercentage={true}
+                                data={getGenderData(metrics)}
+                                label={'percentage'}
+                                gridColumns="1/3"
+                                title="Employees by Gender"
+                                subTitle=""
+                            />
                         }
                         {getEthnicityData(metrics).length > 0 &&
                             <StackedBarWidget 
