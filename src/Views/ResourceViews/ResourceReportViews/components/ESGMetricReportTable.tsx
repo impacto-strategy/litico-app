@@ -89,6 +89,12 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             timeframeColumn,
             dateColumn
         ],
+        "Employee Matching": [
+            getColumn('Amount Donated', 'num_1'),
+            getColumn('Name', 'contact_name'),
+            getColumn("Employee's Office", 'type_a'),
+            dateColumn
+        ],
         "Employee Volunteering Match": [
             getColumn('Organization', 'organization'),
             getColumn('Hours Volunteered', 'num_1'),
