@@ -22,7 +22,7 @@ APIClient.interceptors.response.use(
             if (
                 [401].includes(error.response.status)
             ) {
-                console.warn(error.response.status)
+                console.warn(error.response.status);
             }
         }
         return Promise.reject(error);
