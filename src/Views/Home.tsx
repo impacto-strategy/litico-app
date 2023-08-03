@@ -77,15 +77,6 @@ const Home: FC = () => {
         })
     }, [switchCompany])
 
-    if (!user) {
-        return (
-          <div>
-            Redirecting...
-            {handleLogout()}
-          </div>
-        );
-    }
-
     return (
         <Layout id={"components-layout-demo-fixed-sider"}>
             <StagingBanner/>

@@ -69,4 +69,4 @@ const ESGMetricReportSelector = () => {
     )
 }
 
-export default ESGMetricReportSelector
+export default ESGMetricReportSelector;

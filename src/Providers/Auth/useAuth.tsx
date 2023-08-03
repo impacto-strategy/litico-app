@@ -26,20 +26,9 @@ export function AuthProvider({children}: any) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const userData: string | null = window.localStorage.getItem('_U');
-
-        // This helps prevent staging from crashing in the event the local storage has incorrect data.
-        if (userData === null || !userData.includes("email") ||!userData.includes("logo")) {
-            new Promise((res) => {
-                AuthService.logout().finally(() => {
-                    localStorage.removeItem('_U')
-                    setUser(undefined)
-                    res(0);
-                })
-            });
-            navigate("/");
-        } else if (userData && JSON.parse(userData).id) {
-            setUser(JSON.parse(userData));
+        const userData = window.localStorage.getItem('_U')
+        if (userData && JSON.parse(userData).id) {
+            setUser(JSON.parse(userData))
         }
         setLoadingInitial(false)
     }, [])
