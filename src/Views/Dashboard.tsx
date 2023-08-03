@@ -94,7 +94,7 @@ const Dashboard: FC = () => {
 
     const getVolunteerHoursData = useMemo(() => {
         return flatten(map(groupBy(filter(metrics.esg_metrics, (o: any) => {
-            return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Employee Volunteering Match'
+            return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Volunteering - Community'
         }), (o: any) => extractYear(o.date)), (year: any) => ([
             { label: extractYear(year[0].date), value: sumBy(year, (obj: any) => obj.value) }
         ]))).reverse()
@@ -365,7 +365,7 @@ const Dashboard: FC = () => {
                                 gridCol={"3/5"}
                                 type="Volunter"
                                 tableData={sortBy(filter(metrics.esg_metrics, (o: any) => {
-                                    return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Employee Volunteering Match'
+                                    return o['metric_subtype'] === 'Volunteer Hours' || o['metric_subtype'] === 'Volunteering - Community'
                                 }), (o: any) => o.organization)}
                             />
                         }

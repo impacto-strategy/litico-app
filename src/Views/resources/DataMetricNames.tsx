@@ -7,8 +7,8 @@ import Cookies from 'js-cookie';
 import {Link} from "react-router-dom";
 
 /* IMPORT INTERNAL MODULES */
-import MetricPillarTabs from "../../../Components/MetricPillarTabs";
-import ResourceService from "../../../Services/ResourceService";
+import MetricPillarTabs from "../../Components/MetricPillarTabs";
+import ResourceService from "../../Services/ResourceService";
 
 const Wrapper = styled.section`
   margin: auto;
@@ -24,7 +24,7 @@ const ContentWrapper = styled.div`
   margin-bottom: 32px;
 `
 
-const MetrictypeDataEntrySelection = () => {
+const DataMetricNames = () => {
     const baseUrl = process.env.API_URL || 'http://localhost'
     const [standards, setStandards] = useState<any>()
     let token = Cookies.get('XSRF-TOKEN')
@@ -91,4 +91,4 @@ const MetrictypeDataEntrySelection = () => {
     )
 }
 
-export default MetrictypeDataEntrySelection;
+export default DataMetricNames

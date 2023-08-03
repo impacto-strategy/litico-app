@@ -35,7 +35,7 @@ const Home: FC = () => {
 
     const [admin, setAdmin] = useState(false)
 
-    const {user, logout, switchCompany} = useAuth();
+    const {user, forceLogout, logout, switchCompany} = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -44,19 +44,32 @@ const Home: FC = () => {
     };
 
     useEffect(() => {
-        ResourceService.index({
-            resourceName: 'companies'
-        }).then(({data}) => {
-            setCompanies(data)
-        }).catch((err) => {
-            console.log(err)
-        })
+        try {
+          if (user && user.email) {
+            const regex = new RegExp('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@impactostrategy.com');
+            if (regex.test(user.email)) {
+              setAdmin(true);
+            }
+      
+            ResourceService.index({
+              resourceName: 'companies',
+            })
+              .then(({ data }) => {
+                setCompanies(data);
+              })
+              .catch((err) => {
 
-        const regex = new RegExp('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@impactostrategy.com');
-        if (regex.test(user.email)) {
-            setAdmin(true)
+                console.log(err);
+                forceLogout();
+              });
+          } else {
+            throw new Error('User information is missing');
+          }
+        } catch (error) {
+          console.log(error);
+          forceLogout();
         }
-    }, [user.email])
+      }, [user]);
 
     const handleCompanyChange = useCallback((ev) => {
         switchCompany(ev.key).finally(() => {

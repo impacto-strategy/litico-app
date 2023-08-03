@@ -2,8 +2,10 @@ import {BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title,
 import annotationPlugin from 'chartjs-plugin-annotation';
 import {Card, Col, Row} from "antd";
 import {Line} from "react-chartjs-2";
-import {useCallback, useEffect, useState} from "react";
-import {sortBy} from "lodash";
+import {useEffect, useState} from "react";
+import {INSPECTIONS_CONFIG} from "../constants/cogcc/global";
+import {cogccClient} from "../Services/CogccQueryService";
+import {inspectionsTransformer} from "../transformers/cogcc/global";
 
 ChartJS.register(
     CategoryScale,
@@ -17,25 +19,14 @@ ChartJS.register(
 
 const Inspections = () => {
 
-    const [data, setData] = useState<any[]>([])
+    const [data, setData] = useState<any[] | any>([])
 
-
-    const asyncFetch = useCallback(() => {
-        fetch('https://q4yg5ip6re.execute-api.us-west-2.amazonaws.com/default/cogcc?records=inspections_bayswater')
-            .then((response) => response.json())
-            .then((json) => {
-                if (Array.isArray(json)) {
-                    let _data = sortBy(json, 'my')
-                    setData(_data)
-                }
-            })
-            .catch((error) => {
-                console.log('fetch data failed', error);
-            });
-    }, [])
 
     useEffect(() => {
-        asyncFetch()
+        cogccClient({interceptor: inspectionsTransformer})
+            .get('https://q4yg5ip6re.execute-api.us-west-2.amazonaws.com/default/cogcc?records=inspections_bayswater')
+            //TODO: Investigate typescript return type with AxiosRequest
+            .then(data => setData(data))
     }, [])
 
     return (
@@ -51,45 +42,18 @@ const Inspections = () => {
                     } bordered={false}>
                         <div>
                             {data && <Line data={{
-                                labels: [...data.flatMap(o => o.my)],
+                                labels: [...data.flatMap((o: any) => o.my)],
                                 datasets: [
                                     {
                                         label: '# of Inspections',
-                                        data: [...data.flatMap(o => o.total_inspections)],
+                                        data: [...data.flatMap((o: any) => o.total_inspections)],
                                         fill: false,
                                         borderColor: 'rgb(75, 192, 192)',
                                         tension: 0.1
                                     }
                                 ]
                             }}
-                                           options={{
-                                               responsive: true,
-
-                                               plugins: {
-                                                   legend: {
-                                                       position: 'bottom',
-                                                   }
-                                               },
-
-                                               scales: {
-                                                   y: {
-                                                       beginAtZero: true,
-                                                       ticks: {
-                                                           precision: 0
-                                                       },
-                                                       title: {
-                                                           text: "# of Monthly Inspections",
-                                                           display: true
-                                                       }
-                                                   },
-                                                   x: {
-                                                       title: {
-                                                           text: "Year - Month",
-                                                           display: true
-                                                       }
-                                                   }
-                                               }
-                                           }}
+                                           options={INSPECTIONS_CONFIG}
                             />}
                         </div>
                     </Card>
