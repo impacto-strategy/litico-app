@@ -22,10 +22,7 @@ APIClient.interceptors.response.use(
             if (
                 [401].includes(error.response.status)
             ) {
-                // AuthService.logout().finally(() => {
-                //     localStorage.removeItem('_U')
-                //     window.location.replace("/login");
-                // })
+                console.warn(error.response.status)
             }
         }
         return Promise.reject(error);
