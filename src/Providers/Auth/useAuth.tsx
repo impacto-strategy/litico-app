@@ -1,4 +1,6 @@
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
+import {useNavigate} from "react-router-dom";
+
 import AuthService from '../../Services/AuthService'
 import ApiService from "../../Services/ApiService";
 
@@ -21,7 +23,7 @@ export function AuthProvider({children}: any) {
     const [user, setUser] = useState();
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingInitial, setLoadingInitial] = useState<boolean>(true);
-
+    const navigate = useNavigate();
 
     useEffect(() => {
         const userData = window.localStorage.getItem('_U')
