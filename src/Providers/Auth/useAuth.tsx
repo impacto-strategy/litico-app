@@ -1,10 +1,12 @@
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import AuthService from '../../Services/AuthService'
 import ApiService from "../../Services/ApiService";
+import {useNavigate} from "react-router-dom";
 
 type TAuthContext = {
     user?: any,
     login: ({email, password, remember}: { email: string, password: string, remember?: boolean }) => Promise<unknown>
+    forceLogout: () => Promise<unknown>
     logout: () => Promise<unknown>
     switchCompany: (companyID: number) => Promise<unknown>
     loading?: boolean
@@ -20,7 +22,7 @@ export function AuthProvider({children}: any) {
     const [user, setUser] = useState();
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingInitial, setLoadingInitial] = useState<boolean>(true);
-
+    const navigate = useNavigate();
 
     useEffect(() => {
         const userData = window.localStorage.getItem('_U')
@@ -60,6 +62,17 @@ export function AuthProvider({children}: any) {
         });
     }
 
+    function forceLogout() {
+        return new Promise((res) => {
+            AuthService.logout().finally(() => {
+              localStorage.removeItem('_U');
+              setUser(undefined);
+              navigate("/login");
+              res(0);
+            });
+          });
+    }
+
     function switchCompany(companyID: number) {
         return new Promise((res) => {
             ApiService.get(`/api/switchCompany/${companyID}`).then(({data}) => {
@@ -79,6 +92,7 @@ export function AuthProvider({children}: any) {
             user,
             loading,
             login,
+            forceLogout,
             logout,
             switchCompany
         }),
