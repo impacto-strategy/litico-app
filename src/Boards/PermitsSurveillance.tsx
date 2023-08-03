@@ -1,63 +1,23 @@
-import {DotMap, DotMapConfig} from "@ant-design/maps";
+import {DotMap} from "@ant-design/maps";
 import {useEffect, useMemo, useState} from "react";
 import {Card, Col, Row} from "antd";
-import {differenceInBusinessDays} from "date-fns";
+import {PERMIT_SURVEILLANCE_CONFIG} from "../constants/cogcc/global";
+import {cogccClient} from "../Services/CogccQueryService";
+import {permitSurveillanceTransformer} from "../transformers/cogcc/global";
 
 const PermitSurveillance = () => {
 
 
-    const [data, setData] = useState<any[]>([]);
+    const [data, setData] = useState<any[] | any>([]);
 
     useEffect(() => {
-        asyncFetch();
+        cogccClient({interceptor: permitSurveillanceTransformer})
+            .get('https://q4yg5ip6re.execute-api.us-west-2.amazonaws.com/default/cogcc?records=drill_permits')
+            .then(data => setData(data))
     }, []);
 
-    const asyncFetch = () => {
-        fetch('https://q4yg5ip6re.execute-api.us-west-2.amazonaws.com/default/cogcc?records=drill_permits')
-            .then((response) => response.json())
-            .then((json) => {
-                if (Array.isArray(json)) {
 
-
-                    let _data = json
-
-                        .map(row => {
-
-                            row.lat = parseFloat(row.lat)
-                            row.lng = parseFloat(row.lng)
-                            row.approvalTime = differenceInBusinessDays(new Date(row['approved_date']), new Date(row['2a_date']))
-                            return {
-                                // "type": "Feature",
-                                // "geometry": {
-                                //     "type": "Point",
-                                //     "coordinates": [
-                                //         row.lng,
-                                //         row.lat
-                                //     ]
-                                // },
-                                // "properties": {
-                                //     "operator": row.operator_name,
-                                //     "permit_type": row.permit_type,
-                                // }
-                                ...row,
-                                lng: row.lng,
-                                lat: row.lat,
-                                approvalTime: row.approvalTime
-                            }
-
-
-                        })
-
-
-                    setData(_data)
-
-                }
-            })
-            .catch((error) => {
-                console.log('fetch data failed', error);
-            });
-    };
-
+    //TODO: Build a service to figure out colors for each operator
     const hexColors = useMemo(() => {
         const getRandomHexColor = () => {
             const letters = "0123456789ABCDEF";
@@ -81,95 +41,6 @@ const PermitSurveillance = () => {
         return _hexColors
     }, [])
 
-    const config: DotMapConfig = {
-        map: {
-            type: 'mapbox',
-            // style: "dark",
-            token: 'pk.eyJ1Ijoic2toYW5uYTEwMDA1IiwiYSI6ImNsaDZjbzBxcDA0cTYza21wejhpZjl6MWMifQ.5sxEGc0Rgl8mwGJDuFpIvg',
-            pitch: 0,
-            center: [-104.991531, 39.742043],
-            zoom: 8.2,
-        },
-        source: {
-            data,
-            // data: {
-            //     type: "FeatureCollection",
-            //     features: data
-            // },
-            parser: {
-                type: 'json',
-                x: 'lng',
-                y: 'lat',
-            },
-            // parser: {type: 'geojson'},
-        },
-        // shape: 'dot',
-        tooltip: {
-            items: ['permit_type', 'operator_name', 'county', 'approvalTime'],
-
-            customItems: (data) => {
-                console.log({data})
-                return [
-                    {
-                        name: 'Operator',
-                        value: data.operator_name
-                    },
-                    {
-                        name: 'Permit Type',
-                        value: data.permit_type
-                    },
-                    {
-                        name: 'Approval Time',
-                        value: data.approvalTime < 90 ? data.approvalTime + ' Business Days' : (data.approvalTime > 900 ? Math.ceil(data.approvalTime / 365) + ' Years' : Math.ceil(data.approvalTime / 30) + ' Months')
-                    }
-                ]
-            }
-        },
-        label: {
-            visible: false,
-            field: 'operator_name',
-            style: {
-                fill: '#fff',
-                opacity: 0.6,
-                fontSize: 12,
-                textAnchor: 'top',
-                textOffset: [0, 20],
-                spacing: 1,
-                padding: [5, 5],
-                stroke: '#ffffff',
-                strokeWidth: 0.3,
-                strokeOpacity: 1.0,
-            },
-        },
-
-        legend: {
-            position: 'bottomleft',
-        },
-        color: {
-            field: 'operator_name',
-            value: [
-                ...hexColors
-            ].reverse()
-        },
-        autoFit: true,
-        zoom: {
-            position: 'bottomright',
-        },
-        size: {
-            field: 'approvalTime',
-            value: [10, 30]
-        },
-        style: {
-            opacity: 0.3,
-            strokeWidth: 0,
-        },
-        state: {
-            active: {
-                color: '#FFF684',
-            },
-        },
-    };
-
 
     return (
         <div className={"container"}>
@@ -182,7 +53,7 @@ const PermitSurveillance = () => {
                         />
                     } bordered={false}>
                         <div style={{height: '60vh'}}>
-                            <DotMap {...config} />
+                            <DotMap {...PERMIT_SURVEILLANCE_CONFIG(data, hexColors)}/>
                         </div>
                     </Card>
                 </Col>
