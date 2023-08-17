@@ -11,8 +11,7 @@ import {
     DeleteOutlined,
     EditOutlined,
 } from '@ant-design/icons';
-import { 
-    find,
+import {
     sortBy
 } from 'lodash';
 import moment from 'moment';
@@ -20,7 +19,7 @@ import { FC, useCallback, useState } from 'react';
 import ResourceService from '../../../../Services/ResourceService';
 import styled from "styled-components";
 
-import ReportEditForm from './ReportEditForm';
+import ESGDataEditForm from './ESGDataEditForm';
 import { getSignedUrl } from '../../../../utils/utils';
 
 const LiticoBlue = styled.span`
@@ -320,11 +319,12 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
                             size={"large"}
                             title={"Edit Form for Report Entry"}
                         >
-                            <ReportEditForm 
+                            {/* <ReportEditForm 
                                 close={closeEditDrawer}
                                 refresh={getMetric}
                                 data={find(reportData.esg_metrics, (o) => o.id === value)}
-                            />
+                            /> */}
+                            <ESGDataEditForm />
                         </ Drawer>
                     }
                 </>
