@@ -85,6 +85,15 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             </>
         ),
     }
+
+    const categoriesColumn = {
+        title: 'Categories',
+        dataIndex: 'selection_json',
+        key: 'selection_json',
+        render: (value: any) => (
+            value === null ? (<span>N/A</span>) : (<span>{value.join(', ')}</span>)
+        )
+    }
   
     const getColumn = (title: string, dataIndex: string, render?: (value: any) => JSX.Element) => ({
         title,
@@ -158,6 +167,7 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             getColumn('Amount Donated', 'denominator', formatCurrency),
             getColumn("Employee's Office", 'type_a'),
             getColumn('Tax ID', 'tax_id'),
+            categoriesColumn,
             dateColumn
         ],
         "Workforce Demographics - Ethnicity": [
