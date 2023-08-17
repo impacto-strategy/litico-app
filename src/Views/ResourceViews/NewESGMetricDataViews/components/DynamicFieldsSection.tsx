@@ -16,7 +16,9 @@ const DynamicFieldsSection = ({ fields }: any) => {
         <Row gutter={24}>
             {fields?.map((field: any) => (
                 <Col key={field.id} lg={{span: 12}} sm={{span: 36}}>
-                    <Form.Item label={field.name}>
+                    <Form.Item 
+                        label={field.name}
+                    >
                         <Input.Group compact>
                                 {field.field_type === "checkbox" && 
                                     <Form.Item
@@ -48,10 +50,11 @@ const DynamicFieldsSection = ({ fields }: any) => {
                                 }
                                 {field.field_type === "select" &&
                                     <Form.Item
+                                        initialValue={field.field_type === "select" ? field.factor_form_options[0].option : undefined}
                                         name={['factors', field.col_label]}
                                         noStyle
                                     >
-                                        <Select defaultValue={field.factor_form_options.length > 0 ? field.factor_form_options[0].option : undefined}>
+                                        <Select>
                                             {field.factor_form_options.map((choice: any, index: number) => (
                                                 <Select.Option key={index} value={choice.option} >{choice.option}</Select.Option>
                                             ))}
