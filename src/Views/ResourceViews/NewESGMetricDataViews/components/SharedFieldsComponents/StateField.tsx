@@ -10,7 +10,11 @@ const StateField = () => {
 
     return (
         <Col lg={{span: 4}} sm={{span: 24}}>
-            <Form.Item name="state" label="State">
+            <Form.Item 
+                initialValue={"CO"}
+                name="state" 
+                label="State"
+            >
                 <Select>
                     {stateCodes.map((code: string) => (
                         <Select.Option key={code} value={code} >{code}</Select.Option>
