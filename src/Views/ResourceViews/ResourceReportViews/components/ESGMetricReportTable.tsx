@@ -135,7 +135,6 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
         "Social Investment": [
             getColumn('Organization', 'organization'),
             getColumn('Amount Donated', 'denominator', formatCurrency),
-            getColumn('Employee ID', 'employee_id'),
             getColumn("Employee's Office", 'type_a'),
             getColumn('Tax ID', 'tax_id'),
             dateColumn
