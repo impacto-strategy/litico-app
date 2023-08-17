@@ -10,8 +10,8 @@ import { InboxOutlined} from '@ant-design/icons';
 import { find } from "lodash";
 import { FC } from "react";
 
-import DynamicFieldsSection from "./DynamicFieldsSection";
-import SharedFieldsSection from "./SharedFieldsSection";
+import DynamicFieldsSection from "../../../../Components/InputFields/DynamicFieldsSection";
+import SharedFieldsSection from "../../../../Components/InputFields/SharedFieldsSection";
 
 import ResourceService from "../../../../Services/ResourceService";
 

@@ -2,7 +2,7 @@ import { Col, Form, Input, Select } from 'antd';
 import { orderBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 
-import ResourceService from '../../../../../Services/ResourceService';
+import ResourceService from '../../../Services/ResourceService';
 
 const OrganizationFacilityField = ({ standards }: any) => {
     const [facilities, setFacilities] = useState<any>();

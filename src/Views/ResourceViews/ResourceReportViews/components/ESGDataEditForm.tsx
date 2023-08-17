@@ -15,8 +15,8 @@ import {
 } from 'react';
 import {useSearchParams} from 'react-router-dom';
 
-import DynamicFieldsSection from '../../NewESGMetricDataViews/components/DynamicFieldsSection';
-import SharedFieldsSection from '../../NewESGMetricDataViews/components/SharedFieldsSection';
+import DynamicFieldsSection from '../../../../Components/InputFields/DynamicFieldsSection';
+import SharedFieldsSection from '../../../../Components/InputFields/SharedFieldsSection';
 
 import ResourceService from '../../../../Services/ResourceService';
 
