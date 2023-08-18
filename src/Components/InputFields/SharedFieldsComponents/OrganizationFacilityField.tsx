@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import ResourceService from '../../../Services/ResourceService';
 
-const OrganizationFacilityField = ({ standards }: any) => {
+const OrganizationFacilityField = ({ initialValue, standards }: any) => {
     const [facilities, setFacilities] = useState<any>();
 
     const getFacilities = useCallback(() => {
@@ -41,7 +41,11 @@ const OrganizationFacilityField = ({ standards }: any) => {
                 </Form.Item>
             }
             {standards?.[0].location_type && standards?.[0].location_type === 'organization' &&
-                    <Form.Item name="organization" label="Organization">
+                    <Form.Item 
+                        initialValue={initialValue || null}
+                        name="organization" 
+                        label="Organization"
+                    >
                         <Input/>
                     </Form.Item>
             }

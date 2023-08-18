@@ -11,7 +11,17 @@ import {
 /**
  * Handles both UI and logic for fields specific to an ESG Metric subtype. Seperation from shared fields allows for better maintainability and readibility.
  */
-const DynamicFieldsSection = ({ fields }: any) => {
+const DynamicFieldsSection = ({ fields, initialValues }: any) => {
+    const getInitialSelectValue = (field: any) => {
+        if (initialValues[field.col_label]) {
+            return initialValues[field.col_label]
+        } else if (field.field_type === "select") {
+            return field.factor_form_options[0].option
+        } else {
+            return undefined
+        }
+    }
+
     return (
         <Row gutter={24}>
             {fields?.map((field: any) => (
@@ -50,7 +60,7 @@ const DynamicFieldsSection = ({ fields }: any) => {
                                 }
                                 {field.field_type === "select" &&
                                     <Form.Item
-                                        initialValue={field.field_type === "select" ? field.factor_form_options[0].option : undefined}
+                                        initialValue={getInitialSelectValue(field)}
                                         name={['factors', field.col_label]}
                                         noStyle
                                     >
@@ -63,6 +73,7 @@ const DynamicFieldsSection = ({ fields }: any) => {
                                 }
                                 {!field.field_type &&
                                     <Form.Item
+                                        initialValue={initialValues[field.col_label]}
                                         name={['factors', field.col_label]}
                                         noStyle
                                     >

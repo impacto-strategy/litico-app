@@ -89,7 +89,6 @@ const ESGDataInputPage: FC = (): JSX.Element => {
                     <ESGDataInputForm
                         fields={fields}
                         form={form}
-                        headers={headers}
                         searchParams={searchParams}
                         standards={standards}
                     />

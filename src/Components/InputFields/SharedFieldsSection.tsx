@@ -12,9 +12,8 @@ import TimeframeField from './SharedFieldsComponents/TimeframeField';
 /**
  * Renders the fields on the ESG Metric form which mainly shared by all ESG metric subtypes. Each field was given it's own component to make conditional rendering easier since some shared fields are changing now.
  */
-const SharedFieldsSection = ({ searchParams, standards }: any) => {
+const SharedFieldsSection = ({ initialValues, searchParams, standards }: any) => {
     const [timeframeSelected, setTimeFrame] = useState<"date" | "month" | "quarter" | "year">("date");
-    
     // Set is utilized due to better performance.
     const sharedFields: any = new Set([
         {
@@ -28,24 +27,25 @@ const SharedFieldsSection = ({ searchParams, standards }: any) => {
         },
         {
             component: DateField,
-            props: { searchParams, timeframeSelected },
+            props: { initialDate: initialValues["date"], searchParams, timeframeSelected },
             excludeFrom: []
         },
         {
             component: OrganizationFacilityField,
-            props: { standards },
+            props: { initialValue: initialValues["organization"], standards },
             excludeFrom: []
         },
         {
             component: BasinField,
             excludeFrom: [
                 'Employee Matching', 
-                'Employee Volunteering Match', 
+                'Employee Volunteering Match',
                 'Social Investment'
             ]
         },
         {
             component: StateField,
+            props: { initialState: initialValues["state"] },
             excludeFrom: []
         },
         {

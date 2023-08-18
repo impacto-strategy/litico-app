@@ -319,12 +319,9 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
                             size={"large"}
                             title={"Edit Form for Report Entry"}
                         >
-                            {/* <ReportEditForm 
-                                close={closeEditDrawer}
-                                refresh={getMetric}
-                                data={find(reportData.esg_metrics, (o) => o.id === value)}
-                            /> */}
-                            <ESGDataEditForm />
+                            <ESGDataEditForm 
+                                data={reportData.esg_metrics.filter((val: any) => val.id === value)[0]}
+                            />
                         </ Drawer>
                     }
                 </>

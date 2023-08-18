@@ -3,25 +3,24 @@ import {
     Divider,
     Form,
     Input,
-    message,
-    Upload
+    message
 } from "antd";
-import { InboxOutlined} from '@ant-design/icons';
 import { find } from "lodash";
 import { FC } from "react";
 
 import DynamicFieldsSection from "../../../../Components/InputFields/DynamicFieldsSection";
 import SharedFieldsSection from "../../../../Components/InputFields/SharedFieldsSection";
+import UploadDocField from "../../../../Components/InputFields/SharedFieldsComponents/UploadDocField";
 
 import ResourceService from "../../../../Services/ResourceService";
 
 /**
  * Interface for form where ESG metric data is added pertaining to specific ESG submetric type.
  */
-const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standards}): JSX.Element => {
-    const baseUrl = process.env.API_URL || 'http://localhost';
+const ESGDataInputForm: FC<any> = ({fields, form, searchParams, standards}): JSX.Element => {
 
     const createMeasurementMetrics = (measurementIds: any[]) => {
+        console.log("What is factors?", form.getFieldValue('factors'))
         ResourceService.store({
             resourceName: 'measurement-esg-metrics',
             fields: {
@@ -36,14 +35,6 @@ const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standar
             message.success('Data was added successfully');
             form.resetFields()
         })
-    };
-
-    const normFile = (e: any) => {
-        console.log('Upload event:', e)
-        if (e?.file?.status === 'done') {
-            resources.push(e.file.response)
-        }
-        return e && e.fileList;
     };
 
     const onFinish = (values: any) => {
@@ -132,21 +123,7 @@ const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standar
 
             <Divider />
 
-            <Form.Item label="Upload Supporting Documentation" tooltip="Upload any document that compliments this entry.">
-                <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile}  noStyle>
-                    <Upload.Dragger name="file" action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers} accept=".csv,.pdf,.doc,.docx,.jpeg,.png,.jpg,.svg">
-                        <p className="ant-upload-drag-icon">
-                            <InboxOutlined/>
-                        </p>
-                        <p className="ant-upload-text">
-                            Click or drag file to this area to upload
-                        </p>
-                        <p className="ant-upload-hint">
-                            Support for a single or bulk upload.
-                        </p>
-                    </Upload.Dragger>
-                </Form.Item>
-            </Form.Item>
+            <UploadDocField />
 
             <Divider />
 
