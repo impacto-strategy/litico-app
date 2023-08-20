@@ -1,10 +1,15 @@
 import { Col, Form, Input, Select } from 'antd';
 import { orderBy } from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 import ResourceService from '../../../Services/ResourceService';
 
-const OrganizationFacilityField = ({ initialValue, standards }: any) => {
+interface IProps {
+    initialValue: string | null,
+    standards: any
+}
+
+const OrganizationFacilityField: FC<IProps> = ({ initialValue, standards }) => {
     const [facilities, setFacilities] = useState<any>();
 
     const getFacilities = useCallback(() => {
@@ -42,7 +47,7 @@ const OrganizationFacilityField = ({ initialValue, standards }: any) => {
             }
             {standards?.[0].location_type && standards?.[0].location_type === 'organization' &&
                     <Form.Item 
-                        initialValue={initialValue || null}
+                        initialValue={initialValue}
                         name="organization" 
                         label="Organization"
                     >

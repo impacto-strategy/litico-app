@@ -2,8 +2,7 @@ import {
     Button,
     Divider,
     Form,
-    Input,
-    Skeleton
+    Input
 } from 'antd';
 import { 
     FC, 
@@ -21,10 +20,6 @@ import ResourceService from '../../../../Services/ResourceService';
 
 import { ESGMetricFactors, Standards } from '../../../../../global';
 import { ESG_FIELD_MAPPING_CONFIG } from '../../../../constants/esgMetrics/global';
-
-// interface IEditFormProps {
-    
-// };
 
 /**
  * Handles both the logic and UI for editing ESG Metric Data.

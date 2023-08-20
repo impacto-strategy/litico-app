@@ -7,6 +7,8 @@ import {
     Row,
     Select
 } from 'antd';
+import moment from 'moment';
+import {FC} from 'react';
 
 type checkboxOption = {
     id: number,
@@ -16,20 +18,25 @@ type checkboxOption = {
     pivot: {esg_metric_factor_id: number, factor_form_option_id: number}
 }
 
+interface IProps {
+    fields: any,
+    initialValues: any
+}
+
 /**
  * Handles both UI and logic for fields specific to an ESG Metric subtype. Seperation from shared fields allows for better maintainability and readibility.
  */
-const DynamicFieldsSection = ({ fields, initialValues }: any) => {
+const DynamicFieldsSection: FC<IProps> = ({ fields, initialValues }) => {
     /**
      * Some fields are select and since the initialValue can vary, a special function handling different scenarios allows for better user experience.
      */
     const getInitialSelectValue = (field: any) => {
-        if (initialValues[field.col_label]) {
+        if (initialValues && initialValues[field.col_label]) {
             return initialValues[field.col_label]
         } else if (field.field_type === "select") {
             return field.factor_form_options[0].option
         } else {
-            return undefined
+            return null
         }
     }
 
@@ -43,7 +50,7 @@ const DynamicFieldsSection = ({ fields, initialValues }: any) => {
                         <Input.Group compact>
                             {field.field_type === "checkbox" && 
                                 <Form.Item
-                                    initialValue={initialValues[field.col_label]}
+                                    initialValue={initialValues ? initialValues[field.col_label]: null}
                                     name={['factors', field.col_label]}
                                     noStyle
                                 >
@@ -57,6 +64,7 @@ const DynamicFieldsSection = ({ fields, initialValues }: any) => {
                             }
                             {field.field_type === "date_time" &&
                                 <Form.Item
+                                    initialValue={initialValues ? moment(initialValues[field.col_label], "YYYY-MM-DD hh:mm:ss") : null}
                                     name={['factors', field.col_label]}
                                     noStyle
                                 >
@@ -65,7 +73,7 @@ const DynamicFieldsSection = ({ fields, initialValues }: any) => {
                             }
                             {field.field_type === "textarea" &&
                                 <Form.Item
-                                    initialValue={initialValues[field.col_label]}
+                                    initialValue={initialValues ? initialValues[field.col_label] : null}
                                     name={['factors', field.col_label]}
                                     noStyle
                                 >
@@ -87,7 +95,7 @@ const DynamicFieldsSection = ({ fields, initialValues }: any) => {
                             }
                             {!field.field_type &&
                                 <Form.Item
-                                    initialValue={initialValues[field.col_label]}
+                                    initialValue={initialValues ? initialValues[field.col_label] : null}
                                     name={['factors', field.col_label]}
                                     noStyle
                                 >

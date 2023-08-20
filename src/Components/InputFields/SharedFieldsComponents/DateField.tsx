@@ -1,11 +1,17 @@
 import { Col, DatePicker, Form } from 'antd';
 import moment from 'moment';
-import { useCallback } from 'react';
+import { FC, useCallback } from 'react';
 
-const DateField = ({initialDate, searchParams, timeframeSelected}: any) => {
+interface IProps {
+    initialDate: string | null,
+    searchParams: any,
+    timeframeSelected: any
+}
+
+const DateField: FC<IProps> = ({initialDate, searchParams, timeframeSelected}) => {
 
     const setInitialDate = useCallback(() => {
-        if (timeframeSelected === "date") {
+        if (timeframeSelected === "date" && initialDate !== null) {
             return moment(initialDate, "YYYY-MM-DD");
         } else {
             return null

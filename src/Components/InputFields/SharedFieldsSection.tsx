@@ -18,7 +18,7 @@ const SharedFieldsSection = ({ initialValues, searchParams, standards }: any) =>
     const sharedFields: any = new Set([
         {
             component: TimeframeField,
-            props: { searchParams, setTimeFrame },
+            props: { initialValue: initialValues ? initialValues["timeframe"] : null, searchParams, setTimeFrame },
             excludeFrom: [
                 'Employee Matching', 
                 'Employee Volunteering Match', 
@@ -27,12 +27,12 @@ const SharedFieldsSection = ({ initialValues, searchParams, standards }: any) =>
         },
         {
             component: DateField,
-            props: { initialDate: initialValues["date"], searchParams, timeframeSelected },
+            props: { initialDate: initialValues ? initialValues["date"] : null, searchParams, timeframeSelected },
             excludeFrom: []
         },
         {
             component: OrganizationFacilityField,
-            props: { initialValue: initialValues["organization"], standards },
+            props: { initialValue: initialValues ? initialValues["organization"] : null, standards },
             excludeFrom: []
         },
         {
@@ -45,7 +45,7 @@ const SharedFieldsSection = ({ initialValues, searchParams, standards }: any) =>
         },
         {
             component: StateField,
-            props: { initialState: initialValues["state"] },
+            props: { initialState: initialValues ? initialValues["state"] : null },
             excludeFrom: []
         },
         {
