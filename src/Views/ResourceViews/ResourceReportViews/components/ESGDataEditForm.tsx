@@ -59,7 +59,6 @@ const ESGDataEditForm: FC<any> = ({ data }): JSX.Element => {
         Object.keys(mapper).forEach(function(key) {
             initialValues[mapper[key]] = data[key];
         });
-        // Need to handle date seperately as it requires a specific format.
         setInitialValues(initialValues);
     }
 
