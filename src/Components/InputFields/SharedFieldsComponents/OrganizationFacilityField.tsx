@@ -32,7 +32,7 @@ const OrganizationFacilityField: FC<IProps> = ({ initialValue, standards }) => {
             sm={{span: 24}}
         >
             { standards?.[0].location_type && standards?.[0].location_type === 'facility' &&
-                <Form.Item name="organization" label="Facility" initialValue={'All Facilities'}>
+                <Form.Item name="organization" label="Facility" initialValue={initialValue ? initialValue : 'All Facilities'}>
                     <Select>
                         {facilities?.map((facility: any) => (
                             <Select.Option 

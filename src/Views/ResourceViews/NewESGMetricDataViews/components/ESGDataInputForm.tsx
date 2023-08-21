@@ -33,6 +33,8 @@ const ESGDataInputForm: FC<any> = ({fields, form, searchParams, standards}): JSX
         }).then((res) => {
             message.success('Data was added successfully');
             form.resetFields()
+        }).catch((e) => {
+            console.log("Measurement Creation Unsuccessful: ", e);
         })
     };
 
@@ -40,7 +42,6 @@ const ESGDataInputForm: FC<any> = ({fields, form, searchParams, standards}): JSX
         let measurementIds: any[] = [];
         delete values.factors.employee_id
         delete values.factors.tax_id
-
         let requests = Object.keys(values.factors).map(async (key) => {
             let formValues = Object.assign({}, values);
             let factor = find(fields, { 'col_label': key });
