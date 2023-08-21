@@ -54,7 +54,6 @@ const ESGDataInputPage: FC = (): JSX.Element => {
             params: { metric_subtype: searchParams.get("metric_subtype") }
         }).then(({ data }) => {
             setMetricStandards(data);
-            console.log(data[0].esg_metric_factors)
             setFields(data[0].esg_metric_factors);
             setDefaultFields();
         })

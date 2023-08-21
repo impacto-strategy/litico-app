@@ -13,12 +13,17 @@ import TimeframeField from './SharedFieldsComponents/TimeframeField';
  * Renders the fields on the ESG Metric form which mainly shared by all ESG metric subtypes. Each field was given it's own component to make conditional rendering easier since some shared fields are changing now.
  */
 const SharedFieldsSection = ({ initialValues, searchParams, standards }: any) => {
-    const [timeframeSelected, setTimeFrame] = useState<"date" | "month" | "quarter" | "year">("date");
+    const [timeframeSelected, setTimeFrame] = useState<"date" | "month" | "quarter" | "year">(initialValues ? initialValues["timeframe"] : "date");
     // Set is utilized due to better performance.
     const sharedFields: any = new Set([
         {
             component: TimeframeField,
-            props: { initialValue: initialValues ? initialValues["timeframe"] : null, searchParams, setTimeFrame },
+            props: { 
+                initialValue: initialValues ? initialValues["timeframe"] : null,
+                timeframeSelected,
+                searchParams, 
+                setTimeFrame 
+            },
             excludeFrom: [
                 'Employee Matching', 
                 'Employee Volunteering Match', 
@@ -37,6 +42,7 @@ const SharedFieldsSection = ({ initialValues, searchParams, standards }: any) =>
         },
         {
             component: BasinField,
+            props: { initialValue: initialValues ? initialValues["basin"] : null },
             excludeFrom: [
                 'Employee Matching', 
                 'Employee Volunteering Match',
@@ -50,6 +56,7 @@ const SharedFieldsSection = ({ initialValues, searchParams, standards }: any) =>
         },
         {
             component: SourceField,
+            props: { initialValue: initialValues ? initialValues["source"] : null },
             excludeFrom: [
                 'Employee Matching', 
                 'Employee Volunteering Match', 
@@ -58,6 +65,7 @@ const SharedFieldsSection = ({ initialValues, searchParams, standards }: any) =>
         },
         {
             component: RiskField,
+            props: { initialValue: initialValues ? initialValues["risk"] : null },
             excludeFrom:[
                 'Employee Matching', 
                 'Employee Volunteering Match', 

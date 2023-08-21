@@ -1,12 +1,13 @@
 import { Col, Form, Select } from 'antd'
-import { Dispatch, FC, useCallback } from 'react';
+import { Dispatch, FC, useCallback, useEffect } from 'react';
 
 interface IProps {
     initialValue: string | null,
+    timeframeSelected: string,
     searchParams: URLSearchParams,
     setTimeFrame: Dispatch<React.SetStateAction<"date" | "month" | "quarter" | "year">> // AKA setState for timeframe
 }
-const TimeframeField: FC<IProps> = ({ initialValue, searchParams, setTimeFrame }) => {
+const TimeframeField: FC<IProps> = ({ initialValue, timeframeSelected, searchParams, setTimeFrame }) => {
 
     const getTimeframeOptions = useCallback((subMetricName: string): any => {
         if (
@@ -46,13 +47,17 @@ const TimeframeField: FC<IProps> = ({ initialValue, searchParams, setTimeFrame }
         }
     }, [])
 
+    useEffect(() => {
+        updateTimeFrame(initialValue, setTimeFrame)
+    }, [setTimeFrame])
+
     return (
         <Col
             lg={{span: 12}}
             sm={{span: 24}}
         >
             <Form.Item
-                initialValue={initialValue}
+                initialValue={timeframeSelected}
                 name="timeframe"
                 label="Timeframe"
                 required tooltip="This is a required field"

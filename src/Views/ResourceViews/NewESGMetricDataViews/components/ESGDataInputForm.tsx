@@ -20,7 +20,6 @@ import ResourceService from "../../../../Services/ResourceService";
 const ESGDataInputForm: FC<any> = ({fields, form, searchParams, standards}): JSX.Element => {
 
     const createMeasurementMetrics = (measurementIds: any[]) => {
-        console.log("What is factors?", form.getFieldValue('factors'))
         ResourceService.store({
             resourceName: 'measurement-esg-metrics',
             fields: {
@@ -119,7 +118,10 @@ const ESGDataInputForm: FC<any> = ({fields, form, searchParams, standards}): JSX
 
             <Divider />
 
-            <DynamicFieldsSection fields={fields} />
+            <DynamicFieldsSection 
+                fields={fields}
+                initialValues={null}
+            />
 
             <Divider />
 

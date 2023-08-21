@@ -11,10 +11,18 @@ interface IProps {
 const DateField: FC<IProps> = ({initialDate, searchParams, timeframeSelected}) => {
 
     const setInitialDate = useCallback(() => {
-        if (timeframeSelected === "date" && initialDate !== null) {
-            return moment(initialDate, "YYYY-MM-DD");
-        } else {
+        if (initialDate === null) {
             return null
+        }
+        switch(timeframeSelected) {
+            case "month":
+                return moment(initialDate, "YYYY-MM");
+            case "quarter":
+                return moment(initialDate, "YYYY-MM-DD");
+            case "year":
+                return moment(initialDate, "YYYY");
+            default:
+                return moment(initialDate, "YYYY-MM-DD");
         }
     }, [initialDate, timeframeSelected]);
 

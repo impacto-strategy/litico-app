@@ -17,6 +17,18 @@ export const ESG_FIELD_MAPPING_CONFIG: any = {
     "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas": {
     },
     "TRIR - Employees": {
+        "basin": "basin",
+        "date": "date",
+        "num_1": "num_employee_incidents",
+        "num_2": "num_employee_fatalities",
+        "num_3": "num_employee_lost_time_incidents",
+        "denominator": "employee_hours",
+        "narrative": "comments",
+        "organization": "organization",
+        "risk": "risk",
+        "source": "source",
+        "state": "state",
+        "timeframe": "timeframe"
     },
     "Social Investment": {
         "date": "date",
