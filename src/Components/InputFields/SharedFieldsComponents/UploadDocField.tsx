@@ -10,7 +10,6 @@ import { FC } from 'react';
 const UploadDocField: FC = (): JSX.Element => {
 
     const normFile = (e: any) => {
-        console.log('Upload event:', e)
         if (e?.file?.status === 'done') {
             resources.push(e.file.response)
         }

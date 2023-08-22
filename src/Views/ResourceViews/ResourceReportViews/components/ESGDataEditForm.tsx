@@ -52,11 +52,9 @@ const ESGDataEditForm: FC<any> = ({ closeEditDrawer, data, reloadTable }): JSX.E
     const getInitialValues = (data: any) => {
         let initialValues: any = {};
         const mapper = ESG_FIELD_MAPPING_CONFIG[searchParams.get("metric_subtype")!];
-        console.log("What is our mapper?", mapper);
         Object.keys(mapper).forEach(function(key) {
             initialValues[mapper[key]] = data[key];
         });
-        console.log("Our initial values: ", initialValues);
         setInitialValues(initialValues);
     }
 
