@@ -1,12 +1,16 @@
 import { Col, Form, Select } from 'antd';
 
-const BasinField = () => {
+const BasinField = ({ initialValue }: any) => {
     return (
         <Col
             lg={{span: 12}}
             sm={{span: 24}}
         >
-            <Form.Item name="basin" label="Basin">
+            <Form.Item
+                initialValue={initialValue}
+                name="basin" 
+                label="Basin"
+            >
                 <Select>
                         <Select.Option 
                             key={"Basin"} 

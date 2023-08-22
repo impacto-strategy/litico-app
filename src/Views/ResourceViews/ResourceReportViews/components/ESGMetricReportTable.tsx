@@ -11,8 +11,7 @@ import {
     DeleteOutlined,
     EditOutlined,
 } from '@ant-design/icons';
-import { 
-    find,
+import {
     sortBy
 } from 'lodash';
 import moment from 'moment';
@@ -20,7 +19,7 @@ import { FC, useCallback, useState } from 'react';
 import ResourceService from '../../../../Services/ResourceService';
 import styled from "styled-components";
 
-import ReportEditForm from './ReportEditForm';
+import ESGDataEditForm from './ESGDataEditForm';
 import { getSignedUrl } from '../../../../utils/utils';
 
 const LiticoBlue = styled.span`
@@ -70,6 +69,30 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
         key: 'date',
         render: formatDate,
     };
+
+    const resourceColumn = {
+        title: 'Resources',
+        dataIndex: 'resources',
+        key: 'resources',
+        render: (value: any) => (
+            <>
+            {value?.map((link:string, idx:number) => {
+                return (
+                    <a key={link} href={getSignedUrl(link)}>Resource {idx +1} </a>
+                );
+            })}
+            </>
+        ),
+    }
+
+    const categoriesColumn = {
+        title: 'Categories',
+        dataIndex: 'selection_json',
+        key: 'selection_json',
+        render: (value: any) => (
+            value === null ? (<span>N/A</span>) : (<span>{value.join(', ')}</span>)
+        )
+    }
   
     const getColumn = (title: string, dataIndex: string, render?: (value: any) => JSX.Element) => ({
         title,
@@ -87,13 +110,15 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             getColumn('Reason for Call', 'description'),
             getColumn('Resolution', 'narrative'),
             timeframeColumn,
-            dateColumn
+            dateColumn,
+            resourceColumn
         ],
         "Employee Matching": [
             getColumn('Amount Donated', 'num_1'),
             getColumn('Name', 'contact_name'),
             getColumn("Employee's Office", 'type_a'),
-            dateColumn
+            dateColumn,
+            resourceColumn
         ],
         "Employee Volunteering Match": [
             getColumn('Organization', 'organization'),
@@ -101,7 +126,8 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             getColumn('Employee ID', 'employee_id'),
             getColumn("Employee's Office", 'type_a'),
             getColumn('Tax ID', 'tax_id'),
-            dateColumn
+            dateColumn,
+            resourceColumn
         ],
         "GHG Emissions": [
             getColumn('GHG Emissions', 'value', formatValue),
@@ -110,7 +136,8 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             getColumn('N2O Emissions (mt N2O)', 'num_3'),
             getColumn('Source', 'source'),
             timeframeColumn,
-            dateColumn
+            dateColumn,
+            resourceColumn
         ],
         "Production - Oil, Gas, Produced Water, Synthetic Oil, Synthetic Gas": [
             getColumn('Oil Production', 'num_1'),
@@ -120,7 +147,8 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             getColumn('Synthetic Gas Production', 'num_5'),
             getColumn('Source', 'source'),
             timeframeColumn,
-            dateColumn
+            dateColumn,
+            resourceColumn
         ],
         "TRIR - Employees": [
             getColumn('TRIR Employees', 'value'),
@@ -130,14 +158,15 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             getColumn('Employee Hours Worked', 'denominator'),
             getColumn('Source', 'source'),
             timeframeColumn,
-            dateColumn
+            dateColumn,
+            resourceColumn
         ],
         "Social Investment": [
             getColumn('Organization', 'organization'),
             getColumn('Amount Donated', 'denominator', formatCurrency),
-            getColumn('Employee ID', 'employee_id'),
             getColumn("Employee's Office", 'type_a'),
             getColumn('Tax ID', 'tax_id'),
+            categoriesColumn,
             dateColumn
         ],
         "Workforce Demographics - Ethnicity": [
@@ -150,7 +179,8 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             getColumn('Other', 'num_6'),
             getColumn('Source', 'source'),
             timeframeColumn,
-            dateColumn
+            dateColumn,
+            resourceColumn
         ],
         "Workforce Demographics - Gender": [
             getColumn('Total Employees', 'value'),
@@ -160,7 +190,8 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
             getColumn('No Response', 'num_4'),
             getColumn('Source', 'source'),
             timeframeColumn,
-            dateColumn
+            dateColumn,
+            resourceColumn
         ],
     }
 
@@ -235,20 +266,7 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
     const getColumns = (objectOfColumns: any, metricSubtype: string | null) => {
         let baseColumns = determineColumns(objectOfColumns, metricSubtype)
         // Columns that every option shares in common.
-        const additionalColumns = [{
-            title: 'Resources',
-            dataIndex: 'resources',
-            key: 'resources',
-            render: (value: any) => (
-                <>
-                {value?.map((link:string, idx:number) => {
-                    return (
-                        <a key={link} href={getSignedUrl(link)}>Resource {idx +1} </a>
-                    );
-                })}
-                </>
-            ),
-        },
+        const additionalColumns = [
         {
             title: 'User',
             dataIndex: 'user_name',
@@ -301,10 +319,10 @@ const ESGMetricReportTable: FC<any> = ({ getMetric, reportData, searchParams }) 
                             size={"large"}
                             title={"Edit Form for Report Entry"}
                         >
-                            <ReportEditForm 
-                                close={closeEditDrawer}
-                                refresh={getMetric}
-                                data={find(reportData.esg_metrics, (o) => o.id === value)}
+                            <ESGDataEditForm 
+                                closeEditDrawer={(e: any) => closeEditDrawer(e)}
+                                data={reportData.esg_metrics.filter((val: any) => val.id === value)[0]}
+                                reloadTable={getMetric}
                             />
                         </ Drawer>
                     }

@@ -122,6 +122,7 @@ const ESGMetricDataReportView = () => {
                     <ContentWrapper>
                         <Skeleton active loading={initLoading}>
                             <ESGMetricReportTable 
+                                getMetric={getMetric}
                                 reportData={reportData}
                                 searchParams={searchParams}
                             />
