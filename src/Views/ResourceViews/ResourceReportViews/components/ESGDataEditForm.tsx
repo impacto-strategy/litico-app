@@ -2,7 +2,8 @@ import {
     Button,
     Divider,
     Form,
-    Input
+    Input,
+    message
 } from 'antd';
 import { 
     FC, 
@@ -24,7 +25,7 @@ import { ESG_FIELD_MAPPING_CONFIG } from '../../../../constants/esgMetrics/globa
 /**
  * Handles both the logic and UI for editing ESG Metric Data.
  */
-const ESGDataEditForm: FC<any> = ({ data }): JSX.Element => {
+const ESGDataEditForm: FC<any> = ({ closeEditDrawer, data, reloadTable }): JSX.Element => {
     const [fields, setFields] = useState<ESGMetricFactors | null>();
     const [initialValues, setInitialValues] = useState<any>();
     const [standard, setStandard] = useState<Standards | null>();
@@ -59,8 +60,44 @@ const ESGDataEditForm: FC<any> = ({ data }): JSX.Element => {
         setInitialValues(initialValues);
     }
 
-    const onFinish = () => {
-        
+    const onFinish = (updatedValues: any) => {
+        const mapper = ESG_FIELD_MAPPING_CONFIG[searchParams.get("metric_subtype")!]
+        let finalData: any = {};
+
+        Object.keys(mapper).forEach((key: any) => {
+            if (updatedValues.hasOwnProperty(mapper[key])) {
+                if (updatedValues[mapper[key]]) {
+                    finalData[key] = updatedValues[mapper[key]];
+                }
+            } else if (updatedValues["factors"].hasOwnProperty(mapper[key])) {
+                if (updatedValues["factors"][mapper[key]]) {
+                    finalData[key] = updatedValues["factors"][mapper[key]];
+                }
+            }
+        })
+
+        // Add the remaining data we need for the backend:
+        finalData["id"] = data["id"];
+        finalData["company_id"] = data["company_id"]
+        finalData["metric_subtype"] = data["metric_subtype"];
+
+        ResourceService.update({
+            fields: JSON.parse(JSON.stringify(finalData)),
+            resourceName: 'esg-metrics',
+            resourceID: finalData.id
+        }).then((res) => {
+            if (res.data) {
+                message.success('Data was added successfully');
+                form.resetFields();
+                // Reload report component to show updated data.
+                reloadTable();
+                // Closes form
+                closeEditDrawer();
+            }
+        }).catch((err) => {
+            console.log(err);
+            message.error(`Unable to update, Try again later`);
+        })
     }
 
     useEffect(() => {
