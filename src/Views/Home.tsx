@@ -67,8 +67,6 @@ const Home: FC = () => {
                 console.log(err);
                 forceLogout();
               });
-          } else {
-            throw new Error('User information is missing');
           }
         } catch (error) {
           console.log(error);

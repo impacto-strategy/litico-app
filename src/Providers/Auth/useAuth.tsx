@@ -40,8 +40,12 @@ export function AuthProvider({children}: any) {
             AuthService.login({
                 email, password, remember
             }).then(({data}) => {
-                if (data.id) {
-                    localStorage.setItem('_U', JSON.stringify(data))
+                if (data.id && data.selectedCompany !== null && typeof data.selectedCompany !== undefined) {
+                    localStorage.setItem('_U', JSON.stringify(data));
+                }
+                if (data.selectedCompany === null || typeof data.selectedCompany === undefined) {
+                    data.selectedCompany = data.companies[0];
+                    localStorage.setItem('_U', JSON.stringify(data));
                 }
                 console.log({data})
                 setUser(data)
