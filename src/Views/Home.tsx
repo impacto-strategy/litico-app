@@ -39,6 +39,11 @@ const Home: FC = () => {
     const {user, forceLogout, logout, switchCompany} = useAuth();
     const navigate = useNavigate();
 
+    // Decomposed conditional to promote readibility and reusability.
+    const checkUser = () => {
+        return user && user.email && user.selectedCompany !== null && typeof user.selectedCompany !== 'undefined'
+    }
+
     const handleLogout = () => {
         logout();
         navigate("/");
@@ -46,7 +51,7 @@ const Home: FC = () => {
 
     useEffect(() => {
         try {
-          if (user && user.email) {
+          if (checkUser()) {
             const regex = new RegExp('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@impactostrategy.com');
             if (regex.test(user.email)) {
               setAdmin(true);
@@ -59,7 +64,6 @@ const Home: FC = () => {
                 setCompanies(data);
               })
               .catch((err) => {
-
                 console.log(err);
                 forceLogout();
               });
@@ -78,8 +82,7 @@ const Home: FC = () => {
         })
     }, [switchCompany])
 
-    
-    if (user){
+    if (checkUser()){
         return (
             <Layout id={"components-layout-demo-fixed-sider"}>
                 <StagingBanner/>
