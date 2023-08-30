@@ -1,15 +1,14 @@
 import { Col, Form, Select } from 'antd'
-import { useCallback } from 'react';
+import { Dispatch, FC, useCallback, useEffect } from 'react';
 
-const TimeframeField = ({searchParams, setTimeFrame}: any) => {
-    // Commented out temporarily until forms have all options available.
-    // const timeframeOptions = [
-    //     {name: 'Yearly', value: 'yearly'},
-    //     {name: 'Quarterly', value: 'quarterly'},
-    //     {name: 'Monthly', value: 'monthly'}
-    // ]
+interface IProps {
+    initialValue: string | null,
+    timeframeSelected: string,
+    searchParams: URLSearchParams,
+    setTimeFrame: Dispatch<React.SetStateAction<"date" | "month" | "quarter" | "year">> // AKA setState for timeframe
+}
+const TimeframeField: FC<IProps> = ({ initialValue, timeframeSelected, searchParams, setTimeFrame }) => {
 
-    // Temporary timeframe options function.
     const getTimeframeOptions = useCallback((subMetricName: string): any => {
         if (
             subMetricName === "GHG Emissions" ||
@@ -48,12 +47,17 @@ const TimeframeField = ({searchParams, setTimeFrame}: any) => {
         }
     }, [])
 
+    useEffect(() => {
+        updateTimeFrame(initialValue, setTimeFrame)
+    }, [setTimeFrame])
+
     return (
         <Col
             lg={{span: 12}}
             sm={{span: 24}}
         >
-            <Form.Item 
+            <Form.Item
+                initialValue={timeframeSelected}
                 name="timeframe"
                 label="Timeframe"
                 required tooltip="This is a required field"
