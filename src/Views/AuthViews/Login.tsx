@@ -1,11 +1,12 @@
 import {useLocation, useNavigate} from 'react-router-dom'
-import {Button, Col, Form, Input, Row} from 'antd';
+import {Button, Col, Form, Input, Modal, Row} from 'antd';
 import useAuth from "../../Providers/Auth/useAuth"
 import styled from "styled-components";
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {useEffect, useState} from "react";
 import {AxiosResponse} from "axios";
 import StagingBanner from '../../Components/StagingBanner';
+import { checkUserHasData } from '../../utils/userUtils';
 
 const Wrapper = styled.div`
   padding: 70px 0;
@@ -52,26 +53,39 @@ const Login = () => {
     const navigate = useNavigate();
     const {login, user} = useAuth();
 
-    const {state} = useLocation();
+    const {state}: any = useLocation();
 
     const [errors, setErrors] = useState([])
     const [loading, setLoading] = useState(false)
 
 
     useEffect(() => {
-        if(user){
-            navigate('/dashboard')
+        if(user && checkUserHasData(user)){
+            navigate('/dashboard');
         }
     }, [navigate, user])
 
     const onFinish = (values: any) => {
-
         setLoading(true)
         login({...values}).then(() => {
-            navigate((state as any).from.pathname || "/dashboard");
+            if (state && state.from && state.from.pathname) {
+                navigate(state.from.pathname);
+            } else {
+                navigate("/dashboard");
+            }
         }).catch((e: AxiosResponse) => {
+            console.log("What is the error? ", e);
             if (e?.data?.errors?.email) {
                 setErrors(e.data.errors.email)
+            } else {
+                Modal.error({
+                    title: 'Something Went Wrong, try again in a few minutes',
+                    content: e,
+                    okText: 'Retry',
+                    onOk() {
+                        navigate("/login");
+                    },
+                })
             }
             setLoading(false)
         })

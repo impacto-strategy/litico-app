@@ -1,7 +1,19 @@
-import { Skeleton } from 'antd';
-import React, {FC, useCallback, useEffect, useState} from "react";
+import { 
+    Modal,
+    Skeleton 
+} from 'antd';
+import { 
+    FC, 
+    useCallback, 
+    useEffect, 
+    useState 
+} from "react";
 import useAuth from "../Providers/Auth/useAuth";
-import {Link, Outlet, useNavigate} from "react-router-dom";
+import { 
+    Link, 
+    Outlet, 
+    useNavigate 
+} from "react-router-dom";
 import {
     BarChartOutlined,
     ContainerOutlined,
@@ -11,8 +23,10 @@ import {
     SwitcherOutlined
 } from '@ant-design/icons';
 import {Col, Dropdown, Layout, Menu, Row} from 'antd';
+
 import ResourceService from "../Services/ResourceService";
 import StagingBanner from "../Components/StagingBanner";
+import { checkUserHasData } from '../utils/userUtils';
 
 const {Header, Content, Sider} = Layout;
 
@@ -50,27 +64,50 @@ const Home: FC = () => {
     };
 
     useEffect(() => {
-        try {
-          if (checkUser()) {
-            const regex = new RegExp('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@impactostrategy.com');
-            if (regex.test(user.email)) {
-              setAdmin(true);
+        if (user) {
+            if (checkUserHasData(user)) {
+                ResourceService.index({
+                    resourceName: 'companies',
+                })
+                .then(({ data }) => {
+                    setCompanies(data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    Modal.error({
+                        title: 'Something Went Wrong',
+                        content: err.message,
+                        okText: 'Restart',
+                        onOk() {
+                            forceLogout();
+                            navigate("/login");
+                        },
+                    })
+                });
+                const regex = new RegExp('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@impactostrategy.com');
+                if (regex.test(user.email)) {
+                    setAdmin(true);
+                }
+            } else {
+                Modal.error({
+                    title: 'Please login again',
+                    content: 'Click to re-login',
+                    okText: 'Login',
+                    onOk() {
+                        forceLogout();
+                        navigate("/login");
+                    },
+                })
             }
-      
-            ResourceService.index({
-              resourceName: 'companies',
-            })
-              .then(({ data }) => {
-                setCompanies(data);
-              })
-              .catch((err) => {
-                console.log(err);
-                forceLogout();
-              });
-          }
-        } catch (error) {
-          console.log(error);
-          forceLogout();
+        } else {
+            Modal.warning({
+                title: 'Session Expired',
+                content: 'Your session has expired. Please log in again.',
+                okText: 'Log In',
+                onOk() {
+                    navigate("/login");
+                },
+            });
         }
       }, [user]);
 
@@ -80,109 +117,121 @@ const Home: FC = () => {
         })
     }, [switchCompany])
 
-    if (checkUser()){
+    if(checkUser()) {
         return (
-            <Layout id={"components-layout-demo-fixed-sider"}>
-                <StagingBanner/>
-                <Sider
-                    breakpoint="lg"
-                    collapsible
-                    onBreakpoint={(broken) => {
-                        setCollapsed(broken)
-                    }}
-                    collapsed={collapsed} theme={"light"} style={{
-                    overflow: 'auto',
-                    height: '100vh',
-                    position: 'fixed',
-                    left: 0,
-                }}>
-                    <>
-                        <div className="logo">
-                            L<span hidden={collapsed}>itico</span>
-                            <b>BETA</b>
-                        </div>
-                        <Menu theme="light" mode="inline" defaultSelectedKeys={['0']}>
-                            <Menu.Item key="0" icon={<BarChartOutlined/>}>
-                                <Link to={`/dashboard`}>
-                                    Dashboard
-                                </Link>
-                            </Menu.Item>
-                            <Menu.Item key="9" icon={<BarChartOutlined/>}>
-                                <Link to={`/beta`}>
-                                    Regulatory Surveillance
-                                </Link>
-                            </Menu.Item>
-                            <Menu.Item key="1" icon={<ContainerOutlined/>}>
-                                <Link to={`/reports`}>
-                                    Reports
-                                </Link>
-                            </Menu.Item>
-                            {admin &&
-                                <Menu.Item key="6" icon={<SwitcherOutlined/>}>
-                                    <Link to={`/standards`}>
-                                        Standards
+                <Layout id={"components-layout-demo-fixed-sider"}>
+                    <StagingBanner/>
+                    <Sider
+                        breakpoint="lg"
+                        collapsible
+                        onBreakpoint={(broken) => {
+                            setCollapsed(broken)
+                        }}
+                        collapsed={collapsed} theme={"light"} style={{
+                        overflow: 'auto',
+                        height: '100vh',
+                        position: 'fixed',
+                        left: 0,
+                    }}>
+                        <>
+                            <div className="logo">
+                                L<span hidden={collapsed}>itico</span>
+                                <b>BETA</b>
+                            </div>
+                            <Menu theme="light" mode="inline" defaultSelectedKeys={['0']}>
+                                <Menu.Item key="0" icon={<BarChartOutlined/>}>
+                                    <Link to={`/dashboard`}>
+                                        Dashboard
                                     </Link>
                                 </Menu.Item>
-                            }
-                            <Menu.Item key="8" icon={<DatabaseOutlined/>}>
-                                <Link to={`/metric-names`}>
-                                    Add Data
-                                </Link>
-                            </Menu.Item>
-                        </Menu>
-                        <div className="hidden-mobile" style={{position: 'absolute', bottom: '50px', paddingLeft: '24px'}}>
-                            <a href="https://forms.clickup.com/10638937/f/a4njt-2500/6FUYOTTMDN0H7VQY35" target="blank">Send
-                                Feedback</a>
-                        </div>
-                        <div className="hidden-desktop" style={{position: 'absolute', bottom: '50px', paddingLeft: '6px'}}>
-                            <a href="https://forms.clickup.com/10638937/f/a4njt-2500/6FUYOTTMDN0H7VQY35"
-                            target="blank">Feedback</a>
-                        </div>
-                    </>
-                </Sider>
-                <Layout className="site-layout" style={{marginLeft: collapsed ? 80 : 200, transition: '.2s ease'}}>
-                    <Header className="site-layout-background" style={{padding: 0}}>
+                                <Menu.Item key="9" icon={<BarChartOutlined/>}>
+                                    <Link to={`/beta`}>
+                                        Regulatory Surveillance
+                                    </Link>
+                                </Menu.Item>
+                                <Menu.Item key="1" icon={<ContainerOutlined/>}>
+                                    <Link to={`/reports`}>
+                                        Reports
+                                    </Link>
+                                </Menu.Item>
+                                {admin &&
+                                    <Menu.Item key="6" icon={<SwitcherOutlined/>}>
+                                        <Link to={`/standards`}>
+                                            Standards
+                                        </Link>
+                                    </Menu.Item>
+                                }
+                                <Menu.Item key="8" icon={<DatabaseOutlined/>}>
+                                    <Link to={`/metric-names`}>
+                                        Add Data
+                                    </Link>
+                                </Menu.Item>
+                            </Menu>
+                            <div className="hidden-mobile" style={{position: 'absolute', bottom: '50px', paddingLeft: '24px'}}>
+                                <a href="https://forms.clickup.com/10638937/f/a4njt-2500/6FUYOTTMDN0H7VQY35" target="blank">Send
+                                    Feedback</a>
+                            </div>
+                            <div className="hidden-desktop" style={{position: 'absolute', bottom: '50px', paddingLeft: '6px'}}>
+                                <a href="https://forms.clickup.com/10638937/f/a4njt-2500/6FUYOTTMDN0H7VQY35"
+                                target="blank">Feedback</a>
+                            </div>
+                        </>
+                    </Sider>
+                    <Layout className="site-layout" style={{marginLeft: collapsed ? 80 : 200, transition: '.2s ease'}}>
+                        <Header className="site-layout-background" style={{padding: 0}}>
 
-                        <Row>
-                            <Col lg={{span: 8}} md={{span: 4}} className="hidden-mobile" sm={4}>
-                                <div onClick={() => setCollapsed(!collapsed)} className={"trigger"}>
-                                    {collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}</div>
-                            </Col>
-                            <Col sm={24} md={{span: 16, offset: 4}} lg={{span: 8, offset: 8}}>
-                                <div className={"companySelector"}>
-                                    <Dropdown overlay={<CompanyMenu onClick={handleCompanyChange} companies={companies}/>}
-                                            trigger={['click']}>
-                                        <div style={{
-                                            cursor: 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '0.5rem'
-                                        }}>
-                                            <img
-                                                src={user.selectedCompany.logo}
-                                                width={24} alt={""}/>
-                                            <div>{user.selectedCompany.name}</div>
-                                        </div>
-                                    </Dropdown>
-                                    <span>{user.name}</span>
-                                    {user && (
-                                        <span style={{cursor: 'pointer'}} onClick={handleLogout}>
-                                            Logout
-                                        </span>
-                                    )}
-                                </div>
-                            </Col>
+                            <Row>
+                                <Col lg={{span: 8}} md={{span: 4}} className="hidden-mobile" sm={4}>
+                                    <div onClick={() => setCollapsed(!collapsed)} className={"trigger"}>
+                                        {collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}</div>
+                                </Col>
+                                <Col sm={24} md={{span: 16, offset: 4}} lg={{span: 8, offset: 8}}>
+                                    <div className={"companySelector"}>
+                                        <Dropdown overlay={<CompanyMenu onClick={handleCompanyChange} companies={companies}/>}
+                                                trigger={['click']}>
+                                            <div style={{
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '0.5rem'
+                                            }}>
+                                                <img
+                                                    src={user.selectedCompany.logo}
+                                                    width={24} alt={""}/>
+                                                <div>{user.selectedCompany.name}</div>
+                                            </div>
+                                        </Dropdown>
+                                        <span>{user.name}</span>
+                                        {user && (
+                                            <span style={{cursor: 'pointer'}} onClick={handleLogout}>
+                                                Logout
+                                            </span>
+                                        )}
+                                    </div>
+                                </Col>
 
-                        </Row>
-                    </Header>
-                    <Content style={{margin: '24px 16px 0', overflow: 'initial', minHeight: 'calc(100vh - 64px)'}}>
-                        <Outlet/>
-                    </Content>
+                            </Row>
+                        </Header>
+                        <Content style={{margin: '24px 16px 0', overflow: 'initial', minHeight: 'calc(100vh - 64px)'}}>
+                            <Outlet/>
+                        </Content>
+                    </Layout>
                 </Layout>
-            </Layout>
         )
     } else {
-        return (<Skeleton active />)
+        /*
+            This if else statement prevents the original from rendering before user has been checked and verified.
+            We want useEffect to run and check user then handle any possible errors.
+        */
+        return (
+            <>
+                <Skeleton active/>
+                <br />
+                <Skeleton active/>
+                <br />
+                <Skeleton active/>
+            </>
+        )
     }
 }
 
