@@ -20,7 +20,7 @@ const AuthContext = createContext<TAuthContext>(
 
 
 export function AuthProvider({children}: any) {
-    const [user, setUser] = useState();
+    const [user, setUser] = useState<any>();
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingInitial, setLoadingInitial] = useState<boolean>(true);
     const navigate = useNavigate();
@@ -29,8 +29,10 @@ export function AuthProvider({children}: any) {
         const userData = window.localStorage.getItem('_U')
         if (userData && JSON.parse(userData).id) {
             setUser(JSON.parse(userData))
+        } else {
+            setUser(null);
         }
-        setLoadingInitial(false)
+        setLoadingInitial(false);
     }, [])
 
 
@@ -40,15 +42,22 @@ export function AuthProvider({children}: any) {
             AuthService.login({
                 email, password, remember
             }).then(({data}) => {
-                if (data.id) {
-                    localStorage.setItem('_U', JSON.stringify(data))
+                if (data.id && data.selectedCompany !== null && typeof data.selectedCompany !== undefined) {
+                    localStorage.setItem('_U', JSON.stringify(data));
+                    setUser(data)
                 }
-                setUser(data)
+                if (data.selectedCompany === null || typeof data.selectedCompany === undefined) {
+                    data.selectedCompany = data.companies[0];
+                    localStorage.setItem('_U', JSON.stringify(data));
+                    setUser(data)
+                }
                 res(0)
-            }).catch(e => rej(e.response))
-                .finally(() => {
-                    setLoading(false)
-                })
+            }).catch((e) => {
+                console.log("Logging caused an error: ", e);
+                rej(e.response)
+            }).finally(() => {
+                setLoading(false)
+            })
         });
     }
 
