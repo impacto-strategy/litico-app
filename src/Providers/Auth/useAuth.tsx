@@ -47,7 +47,6 @@ export function AuthProvider({children}: any) {
                     data.selectedCompany = data.companies[0];
                     localStorage.setItem('_U', JSON.stringify(data));
                 }
-                console.log({data})
                 setUser(data)
                 res(0)
             }).catch(e => rej(e.response))

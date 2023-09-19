@@ -3,23 +3,21 @@ import {
     Divider,
     Form,
     Input,
-    message,
-    Upload
+    message
 } from "antd";
-import { InboxOutlined} from '@ant-design/icons';
 import { find } from "lodash";
 import { FC } from "react";
 
-import DynamicFieldsSection from "./DynamicFieldsSection";
-import SharedFieldsSection from "./SharedFieldsSection";
+import DynamicFieldsSection from "../../../../Components/InputFields/DynamicFieldsSection";
+import SharedFieldsSection from "../../../../Components/InputFields/SharedFieldsSection";
+import UploadDocField from "../../../../Components/InputFields/SharedFieldsComponents/UploadDocField";
 
 import ResourceService from "../../../../Services/ResourceService";
 
 /**
  * Interface for form where ESG metric data is added pertaining to specific ESG submetric type.
  */
-const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standards}): JSX.Element => {
-    const baseUrl = process.env.API_URL || 'http://localhost';
+const ESGDataInputForm: FC<any> = ({fields, form, searchParams, standards}): JSX.Element => {
 
     const createMeasurementMetrics = (measurementIds: any[]) => {
         ResourceService.store({
@@ -35,22 +33,15 @@ const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standar
         }).then((res) => {
             message.success('Data was added successfully');
             form.resetFields()
+        }).catch((e) => {
+            console.log("Measurement Creation Unsuccessful: ", e);
         })
-    };
-
-    const normFile = (e: any) => {
-        console.log('Upload event:', e)
-        if (e?.file?.status === 'done') {
-            resources.push(e.file.response)
-        }
-        return e && e.fileList;
     };
 
     const onFinish = (values: any) => {
         let measurementIds: any[] = [];
         delete values.factors.employee_id
         delete values.factors.tax_id
-
         let requests = Object.keys(values.factors).map(async (key) => {
             let formValues = Object.assign({}, values);
             let factor = find(fields, { 'col_label': key });
@@ -128,25 +119,14 @@ const ESGDataInputForm: FC<any> = ({fields, form, headers, searchParams, standar
 
             <Divider />
 
-            <DynamicFieldsSection fields={fields} />
+            <DynamicFieldsSection 
+                fields={fields}
+                initialValues={null}
+            />
 
             <Divider />
 
-            <Form.Item label="Upload Supporting Documentation" tooltip="Upload any document that compliments this entry.">
-                <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile}  noStyle>
-                    <Upload.Dragger name="file" action={`${baseUrl}/api/resources`} withCredentials={true} headers={headers} accept=".csv,.pdf,.doc,.docx,.jpeg,.png,.jpg,.svg">
-                        <p className="ant-upload-drag-icon">
-                            <InboxOutlined/>
-                        </p>
-                        <p className="ant-upload-text">
-                            Click or drag file to this area to upload
-                        </p>
-                        <p className="ant-upload-hint">
-                            Support for a single or bulk upload.
-                        </p>
-                    </Upload.Dragger>
-                </Form.Item>
-            </Form.Item>
+            <UploadDocField />
 
             <Divider />
 

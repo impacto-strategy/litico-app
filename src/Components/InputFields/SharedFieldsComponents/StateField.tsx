@@ -1,6 +1,7 @@
 import {Col, Form, Select} from 'antd';
+import {FC} from 'react';
 
-const StateField = () => {
+const StateField: FC<any> = ({ initialState }) => {
     const stateCodes = [
         'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS',
         'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY',
@@ -10,7 +11,11 @@ const StateField = () => {
 
     return (
         <Col lg={{span: 4}} sm={{span: 24}}>
-            <Form.Item name="state" label="State">
+            <Form.Item 
+                initialValue={initialState || "CO"}
+                name="state" 
+                label="State"
+            >
                 <Select>
                     {stateCodes.map((code: string) => (
                         <Select.Option key={code} value={code} >{code}</Select.Option>

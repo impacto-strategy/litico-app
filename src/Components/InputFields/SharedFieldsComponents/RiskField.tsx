@@ -1,6 +1,6 @@
 import { Col, Form, Select } from 'antd';
 
-const RiskField = () => {
+const RiskField = ({ initialValue }: any) => {
     const riskOptions = [
         {name: 'High', value: 'high'},
         {name: 'Medium', value: 'medium'},
@@ -12,7 +12,11 @@ const RiskField = () => {
             lg={{span: 12}}
             sm={{span: 24}}
         >
-            <Form.Item name="risk" label="Risk">
+            <Form.Item
+                initialValue={initialValue}
+                name="risk"
+                label="Risk"
+            >
                 <Select>
                     {riskOptions.map((option: any) => (
                         <Select.Option 

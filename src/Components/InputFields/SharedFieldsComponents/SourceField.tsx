@@ -1,12 +1,16 @@
 import { Col, Form, Input } from 'antd';
 
-const SourceField = () => {
+const SourceField = ({ initialValue }: any) => {
     return (
         <Col
             lg={{span: 12}}
             sm={{span: 24}}
         >
-            <Form.Item name="source" label="Source">
+            <Form.Item
+                initialValue={initialValue}
+                name="source"
+                label="Source"
+            >
                 <Input />
             </Form.Item>
         </Col>
