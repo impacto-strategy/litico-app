@@ -117,7 +117,7 @@ const Home: FC = () => {
         })
     }, [switchCompany])
 
-    if(checkUser()) {
+    if (checkUser()){
         return (
                 <Layout id={"components-layout-demo-fixed-sider"}>
                     <StagingBanner/>
