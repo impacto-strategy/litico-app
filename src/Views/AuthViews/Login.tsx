@@ -102,7 +102,13 @@ const Login = () => {
                             <FormWrap>
                                 <div><Title>
                                     <div className="logo">
-                                        <a style={{color: '#333'}}href="/">Litico</a>
+                                        <a href="/">
+                                            <img 
+                                                src="/Logo.PNG" 
+                                                alt="Litico™" 
+                                                style={{ height: '40px' }} 
+                                            />
+                                        </a>
                                     </div>
                                 </Title>
                                 </div>
